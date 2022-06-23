@@ -18,6 +18,11 @@ allprojects {
 
     repositories {
         mavenCentral()
+        maven {
+            name 'KosmX\'s maven'
+            url 'https://maven.kosmx.dev/'
+        }
+        mavenLocal()
     }
 
     dependencies {

@@ -69,8 +69,6 @@ public class EmoteDataPlayer implements IAnimation {
 
     public void stop() {
         isRunning = false;
-        //if(this.perspectiveRedux) PerspectiveReduxProxy.setPerspective(false);
-        //if(this.perspective != null) MinecraftClient.getInstance().options.setPerspective(perspective); //TODO
     }
 
     @Override

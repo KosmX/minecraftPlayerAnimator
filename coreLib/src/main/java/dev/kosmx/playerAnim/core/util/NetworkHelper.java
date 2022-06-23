@@ -8,7 +8,7 @@ import java.util.UUID;
 
 /**
  * I can't use Minecraft's string and uuid byte reader in a bukkit plugin, I need to implement these.
- * This can still here but it can be removed if unused
+ * This can still here, but it can be removed if unused
  */
 public final class NetworkHelper {
     public static String readString(ByteBuffer buf) throws IOException {

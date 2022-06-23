@@ -1,0 +1,18 @@
+{
+  "required": true,
+  "package": "dev.kosmx.playerAnim.mixin",
+  "compatibilityLevel": "JAVA_16",
+  "client": [
+    "ArmorFeatureRendererMixin",
+    "ClientPlayerMixin",
+    "FeatureRendererMixin",
+    "HeldItemMixin",
+    "ModelPartMixin",
+    "PlayerRendererMixin"
+  ],
+  "mixins": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
