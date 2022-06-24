@@ -1,4 +1,4 @@
-package dev.kosmx.playerAnim.impl;
+package dev.kosmx.playerAnim.impl.animation;
 
 
 import dev.kosmx.playerAnim.api.TransformType;
@@ -19,6 +19,7 @@ public class AnimationApplier extends AnimationPlayer {
         part.z = pos.getZ();
         Vec3f rot = this.get3DTransform(partName, TransformType.ROTATION, new Vec3f(part.xRot, part.yRot, part.zRot));
         part.setRotation(rot.getX(), rot.getY(), rot.getZ());
+        IBendHelper.INSTANCE.bend(part, getBend(partName));
     }
 
 }

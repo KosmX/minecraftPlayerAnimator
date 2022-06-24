@@ -119,7 +119,5 @@ public class NBSFileUtils {
         return i;
     }
 
-    //public void write //TODO
-    //Emotecraft does not need to write these. so maybe later
 
 }

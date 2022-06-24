@@ -3,13 +3,8 @@
   "package": "dev.kosmx.playerAnim.mixin",
   "compatibilityLevel": "JAVA_16",
   "client": [
-    "ArmorFeatureRendererMixin",
-    "BipedEntityModelMixin",
-    "ClientPlayerMixin",
-    "FeatureRendererMixin",
-    "HeldItemMixin",
-    "ModelPartMixin",
-    "PlayerRendererMixin"
+    "LivingEntityRenderRedirect",
+    "PlayerModelMixin"
   ],
   "mixins": [
   ],

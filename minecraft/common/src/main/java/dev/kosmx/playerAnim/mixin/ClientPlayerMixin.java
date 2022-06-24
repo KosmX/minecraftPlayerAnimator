@@ -2,7 +2,7 @@ package dev.kosmx.playerAnim.mixin;
 
 import com.mojang.authlib.GameProfile;
 import dev.kosmx.playerAnim.api.layered.AnimationStack;
-import dev.kosmx.playerAnim.impl.AnimationApplier;
+import dev.kosmx.playerAnim.impl.animation.AnimationApplier;
 import dev.kosmx.playerAnim.impl.IAnimatedPlayer;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.core.BlockPos;

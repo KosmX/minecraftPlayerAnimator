@@ -63,6 +63,10 @@ sourcesJar {
     def commonSources = project(":${project.module_name}:common").sourcesJar
     dependsOn commonSources
     from commonSources.archiveFile.map { zipTree(it) }
+
+    def apiSources = project(":coreLib").sourcesJar
+    dependsOn apiSources
+    from apiSources.archiveFile.map { zipTree(it) }
 }
 
 components.java {

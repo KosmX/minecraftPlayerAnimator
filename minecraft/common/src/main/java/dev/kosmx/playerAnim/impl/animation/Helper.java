@@ -1,4 +1,4 @@
-package dev.kosmx.playerAnim.impl;
+package dev.kosmx.playerAnim.impl.animation;
 
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import org.jetbrains.annotations.Nullable;
@@ -18,7 +18,7 @@ public final class Helper {
     }
 
     @ExpectPlatform
-    public static boolean isBendyLibPresent() {
+    private static boolean isBendyLibPresent() {
         throw new AssertionError();
     }
 }

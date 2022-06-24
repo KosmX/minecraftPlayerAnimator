@@ -6,7 +6,7 @@ import dev.kosmx.playerAnim.api.TransformType;
 import dev.kosmx.playerAnim.core.impl.AnimationPlayer;
 import dev.kosmx.playerAnim.core.util.Pair;
 import dev.kosmx.playerAnim.core.util.Vec3f;
-import dev.kosmx.playerAnim.impl.Helper;
+import dev.kosmx.playerAnim.impl.animation.Helper;
 import dev.kosmx.playerAnim.impl.IAnimatedPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
