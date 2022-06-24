@@ -4,6 +4,7 @@ import dev.kosmx.playerAnim.core.util.Pair;
 import io.github.kosmx.bendylib.ModelPartAccessor;
 import io.github.kosmx.bendylib.impl.BendableCuboid;
 import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.core.Direction;
 
 import javax.annotation.Nullable;
 
@@ -24,6 +25,11 @@ public class BendHelper implements IBendHelper {
             //ModelPartAccessor.getCuboid(modelPart, 0).getAndActivateMutator(null);
             ModelPartAccessor.optionalGetCuboid(modelPart, 0).ifPresent(mutableCuboid -> mutableCuboid.getAndActivateMutator(null));
         }
+    }
+
+    @Override
+    public void initBend(ModelPart modelPart, Direction direction) {
+        ModelPartAccessor.optionalGetCuboid(modelPart, 0).ifPresent(mutableModelPart -> mutableModelPart.registerMutator("bend", data -> new BendableCuboid.Builder().setDirection(direction).build(data)));
     }
 
 

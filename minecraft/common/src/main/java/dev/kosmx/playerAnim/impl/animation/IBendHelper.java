@@ -3,7 +3,9 @@ package dev.kosmx.playerAnim.impl.animation;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
 import dev.kosmx.playerAnim.core.util.Pair;
+import dev.kosmx.playerAnim.impl.Helper;
 import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.core.Direction;
 
 import javax.annotation.Nullable;
 
@@ -25,6 +27,8 @@ public interface IBendHelper {
 
     void bend(ModelPart modelPart, @Nullable Pair<Float, Float> pair);
 
+    void initBend(ModelPart modelPart, Direction direction);
+
     class DummyBendable implements IBendHelper {
 
         @Override
@@ -34,6 +38,11 @@ public interface IBendHelper {
 
         @Override
         public void bend(ModelPart modelPart, @org.jetbrains.annotations.Nullable Pair<Float, Float> pair) {
+
+        }
+
+        @Override
+        public void initBend(ModelPart modelPart, Direction direction) {
 
         }
     }

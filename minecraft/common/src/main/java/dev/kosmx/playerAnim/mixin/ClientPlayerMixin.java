@@ -23,10 +23,10 @@ public abstract class ClientPlayerMixin extends Player implements IAnimatedPlaye
     @Unique
     private final AnimationApplier animationApplier = new AnimationApplier(animationStack);
 
-
     public ClientPlayerMixin(Level level, BlockPos blockPos, float f, GameProfile gameProfile, @Nullable ProfilePublicKey profilePublicKey) {
         super(level, blockPos, f, gameProfile, profilePublicKey);
     }
+
 
     @Override
     public AnimationStack getAnimationStack() {

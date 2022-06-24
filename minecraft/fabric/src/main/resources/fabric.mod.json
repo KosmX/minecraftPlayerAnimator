@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "id": "examplemod",
+  "id": "player-animator",
   "version": "${version}",
   "name": "Example Mod",
   "description": "This is an example description! Tell everyone what your mod is about!",
@@ -15,17 +15,12 @@
   "icon": "assets/examplemod/icon.png",
   "environment": "*",
   "entrypoints": {
-    "main": [
-      "net.examplemod.fabric.ExampleModFabric"
-    ]
+    "preLaunch": ["dev.kosmx.playerAnim.impl.fabric.PreLaunchEntry"]
   },
   "mixins": [
-    "examplemod.mixins.json",
-    "examplemod-common.mixins.json"
+    "playerAnimator-common.mixins.json"
   ],
   "depends": {
-    "fabric": "*",
-    "minecraft": ">=1.19",
-    "architectury": ">=5.6.22"
+    "minecraft": ">=1.16"
   }
 }

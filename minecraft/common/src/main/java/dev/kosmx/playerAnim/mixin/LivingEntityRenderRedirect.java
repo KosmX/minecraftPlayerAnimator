@@ -3,7 +3,7 @@ package dev.kosmx.playerAnim.mixin;
 import com.mojang.blaze3d.vertex.PoseStack;
 import dev.kosmx.playerAnim.impl.IAnimatedPlayer;
 import dev.kosmx.playerAnim.impl.IUpperPartHelper;
-import dev.kosmx.playerAnim.impl.animation.Helper;
+import dev.kosmx.playerAnim.impl.Helper;
 import dev.kosmx.playerAnim.impl.animation.IBendHelper;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.MultiBufferSource;
