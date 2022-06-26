@@ -28,6 +28,7 @@ import java.util.function.Supplier;
  *
  */
 @Immutable
+@SuppressWarnings("unused")
 public final class KeyframeAnimation implements Supplier<UUID> {
     //Time, while the player can move to the beginning pose
 
@@ -52,30 +53,19 @@ public final class KeyframeAnimation implements Supplier<UUID> {
      */
     public final boolean isUUIDGenerated;
 
-    //Store emote data in the emote object
-    @Nullable
-    public final String name;
-    @Nullable
-    public final String description;
-    @Nullable
-    public final String author;
+    /**
+     * <b>Mutable</b> extra members for extra information store
+     */
+    private final HashMap<String, Object> extraData = new HashMap<>();
 
-    @Nullable
-    public NBS song;
+    public final AnimationFormat animationFormat;
 
-    public final AnimationFormat emoteFormat;
-
-    @Nullable
-    public ByteBuffer iconData;
 
     public boolean isBuiltin = false;
 
 
-    private KeyframeAnimation(int beginTick, int endTick, int stopTick, boolean isInfinite, int returnToTick, HashMap<String, StateCollection> bodyParts, boolean isEasingBefore, boolean nsfw, UUID uuid, @Nullable String name, @Nullable String description, @Nullable String author, AnimationFormat emoteFormat, ByteBuffer iconData, NBS song) {
+    private KeyframeAnimation(int beginTick, int endTick, int stopTick, boolean isInfinite, int returnToTick, HashMap<String, StateCollection> bodyParts, boolean isEasingBefore, boolean nsfw, UUID uuid, AnimationFormat emoteFormat, HashMap<String, Object> extraData) {
         this.beginTick = Math.max(beginTick, 0);
-        this.name = name;
-        this.description = description;
-        this.author = author;
         this.endTick = Math.max(beginTick + 1, endTick);
         this.stopTick = stopTick <= endTick ? endTick + 3 : stopTick;
         this.isInfinite = isInfinite;
@@ -90,18 +80,17 @@ public final class KeyframeAnimation implements Supplier<UUID> {
             this.isUUIDGenerated = false;
         }
         this.uuid = uuid;
-        this.emoteFormat = emoteFormat;
-        this.iconData = iconData;
-        this.song = song;
+        this.animationFormat = emoteFormat;
         assert emoteFormat != null;
         this.bodyParts.forEach((s, stateCollection) -> stateCollection.lock());
+        this.extraData.putAll(extraData);
     }
 
     /**
      * Some data from source are ignored
      *
-     * @param o
-     * @return
+     * @param o other
+     * @return are the object equals or the same
      */
     @Override
     public boolean equals(Object o) {
@@ -116,7 +105,7 @@ public final class KeyframeAnimation implements Supplier<UUID> {
         if (isInfinite != emoteData.isInfinite) return false;
         if (returnToTick != emoteData.returnToTick) return false;
         if (isEasingBefore != emoteData.isEasingBefore) return false;
-        if (!Objects.equals(this.iconData, emoteData.iconData)) return false;
+        if (!Objects.equals(this.extraData, emoteData.extraData)) return false;
 
         return bodyParts.equals(emoteData.bodyParts);
     }
@@ -143,9 +132,9 @@ public final class KeyframeAnimation implements Supplier<UUID> {
 
         long dataHash = result * 31L + this.bodyParts.hashCode();
 
-        long nameHash = this.name == null ? 0 : name.hashCode();
-        long descHash = this.description == null ? 0 : description.hashCode();
-        long authHash = result * 31L + (this.author == null ? 0 : author.hashCode());
+        long nameHash = this.extraData.hashCode();
+        long descHash = 0;
+        long authHash = result * 31L + this.extraData.hashCode();
         //long iconHash = this.iconData == null ? 0 : iconData.hashCode() + authHash * 31;
 
 
@@ -162,7 +151,7 @@ public final class KeyframeAnimation implements Supplier<UUID> {
         for (Map.Entry<String, StateCollection> part : this.bodyParts.entrySet()) {
             newParts.put(part.getKey(), part.getValue().copy());
         }
-        return new EmoteBuilder(beginTick, endTick, stopTick, isInfinite, returnToTick, newParts, isEasingBefore, nsfw, uuid, name, description, author, emoteFormat, iconData, song);
+        return new EmoteBuilder(beginTick, endTick, stopTick, isInfinite, returnToTick, newParts, isEasingBefore, nsfw, uuid, animationFormat, extraData);
     }
 
 
@@ -197,6 +186,8 @@ public final class KeyframeAnimation implements Supplier<UUID> {
         return isInfinite;
     }
 
+
+    @SuppressWarnings("ConstantConditions")
     public static class StateCollection {
         public final State x;
         public final State y;
@@ -222,7 +213,7 @@ public final class KeyframeAnimation implements Supplier<UUID> {
                 this.bend = new State("bend", 0, 0, true);
             } else {
                 this.bend = null;
-                this.bendDirection = null; //This will causes some errors, but fixes the invalid data problem
+                this.bendDirection = null; //This will cause some errors, but fixes the invalid data problem
             }
             this.isBendable = bendable;
         }
@@ -334,7 +325,7 @@ public final class KeyframeAnimation implements Supplier<UUID> {
 
             /**
              * Creates a <b>mutable</b> copy
-             * @param state copy this, non null
+             * @param state copy this, non-null
              */
             @SuppressWarnings("CopyConstructorMissesField") //I know, I want to make mutable copy of this
             public State(State state) {
@@ -378,7 +369,7 @@ public final class KeyframeAnimation implements Supplier<UUID> {
 
             @Override
             public int hashCode() {
-                int result = (defaultValue != +0.0f ? Float.floatToIntBits(defaultValue) : 0);
+                int result = (defaultValue != 0.0f ? Float.floatToIntBits(defaultValue) : 0);
                 result = 31 * result + keyFrames.hashCode();
                 result = 31 * result + (isAngle ? 1 : 0);
                 return result;
@@ -442,6 +433,7 @@ public final class KeyframeAnimation implements Supplier<UUID> {
              * @param ease  with what easing
              * @return is the keyframe valid
              */
+            @SuppressWarnings("UnusedReturnValue")
             public boolean addKeyFrame(int tick, float value, Ease ease) {
                 if (Float.isNaN(value)) throw new IllegalArgumentException("value can't be NaN");
                 return this.addKeyFrame(new KeyFrame(tick, value, ease));
@@ -539,11 +531,8 @@ public final class KeyframeAnimation implements Supplier<UUID> {
         public final StateCollection leftArm;
         public final StateCollection rightLeg;
         public final StateCollection leftLeg;
-        ;
         public final StateCollection leftItem;
-        ;
         public final StateCollection rightItem;
-        ;
         public final StateCollection torso;
         public boolean isEasingBefore = false;
         //public float validationThreshold = staticThreshold;
@@ -566,6 +555,9 @@ public final class KeyframeAnimation implements Supplier<UUID> {
         private final float validationThreshold;
 
         public String name = null;
+
+        //Common names used in Emotecraft
+        //If not null, it will be added to extraData
         @Nullable
         public String description = null;
         @Nullable
@@ -576,6 +568,8 @@ public final class KeyframeAnimation implements Supplier<UUID> {
 
         @Nullable
         public ByteBuffer iconData;
+
+        public HashMap<String, Object> extraData = new HashMap<>();
 
         public EmoteBuilder(AnimationFormat source) {
             this(staticThreshold, source);
@@ -606,8 +600,7 @@ public final class KeyframeAnimation implements Supplier<UUID> {
         }
 
         private EmoteBuilder(int beginTick, int endTick, int stopTick, boolean isInfinite,
-                             int returnToTick, HashMap<String, StateCollection> bodyParts, boolean isEasingBefore, boolean nsfw, @Nullable UUID uuid,
-                             @Nullable String name, @Nullable String description, @Nullable String author, AnimationFormat emoteFormat, @Nullable ByteBuffer iconData, @Nullable NBS song) {
+                             int returnToTick, HashMap<String, StateCollection> bodyParts, boolean isEasingBefore, boolean nsfw, @Nullable UUID uuid, AnimationFormat emoteFormat, HashMap<String, Object> extraData) {
             this.validationThreshold = staticThreshold;
             this.bodyParts.putAll(bodyParts);
 
@@ -629,12 +622,13 @@ public final class KeyframeAnimation implements Supplier<UUID> {
             this.isEasingBefore = isEasingBefore;
             this.nsfw = nsfw;
             this.uuid = uuid;
-            this.name = name;
-            this.description = description;
-            this.author = author;
+            this.extraData.putAll(extraData);
+            this.name = extraData.containsKey("name") && extraData.get("name") instanceof String ? (String) extraData.get("name") : null;
+            this.description = extraData.containsKey("description") && extraData.get("description") instanceof String ? (String) extraData.get("description") : null;
+            this.author = extraData.containsKey("author") && extraData.get("author") instanceof String ? (String) extraData.get("author") : null;
             this.emoteEmoteFormat = emoteFormat;
-            this.iconData = iconData;
-            this.song = song;
+            this.iconData = extraData.containsKey("iconData") && extraData.get("iconData") instanceof ByteBuffer ? (ByteBuffer) extraData.get("iconData") : null;
+            this.song = extraData.containsKey("song") && extraData.get("song") instanceof NBS ? (NBS) extraData.get("song") : null;
 
         }
 
@@ -704,7 +698,13 @@ public final class KeyframeAnimation implements Supplier<UUID> {
         }
 
         public KeyframeAnimation build() {
-            return new KeyframeAnimation(beginTick, endTick, stopTick, isLooped, returnTick, bodyParts, isEasingBefore, nsfw, uuid, name, description, author, emoteEmoteFormat, iconData, song);
+            if (name != null) extraData.put("name", name);
+            if (description != null) extraData.put("description", description);
+            if (author != null) extraData.put("author", author);
+            if (iconData != null) extraData.put("iconData", iconData);
+            if (song != null) extraData.put("song", song);
+
+            return new KeyframeAnimation(beginTick, endTick, stopTick, isLooped, returnTick, bodyParts, isEasingBefore, nsfw, uuid, emoteEmoteFormat, extraData);
         }
 
         public EmoteBuilder setUuid(UUID uuid) {
@@ -719,7 +719,7 @@ public final class KeyframeAnimation implements Supplier<UUID> {
         return "EmoteBuilder{" +
                 "uuid=" + uuid +
                 ", length=" + this.getLength() +
-                ", song=" + song +
+                ", extra=" + extraData +
                 '}';
     }
 }
