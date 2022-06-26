@@ -1,16 +1,16 @@
 package dev.kosmx.playerAnim.core.data.quarktool;
 
 
-import dev.kosmx.playerAnim.core.data.EmoteData;
+import dev.kosmx.playerAnim.core.data.KeyframeAnimation;
 import dev.kosmx.playerAnim.core.util.Ease;
 
 public class PartMap {
-    public EmoteData.StateCollection part;
+    public KeyframeAnimation.StateCollection part;
     public PartValue x;
     public PartValue y;
     public PartValue z;
 
-    public PartMap(EmoteData.StateCollection part){
+    public PartMap(KeyframeAnimation.StateCollection part){
         this.part = part;
         this.x = new PartValue(this.part.pitch);
         this.y = new PartValue(this.part.yaw);
@@ -20,10 +20,10 @@ public class PartMap {
     static class PartValue {
         private float value;
         private int lastTick;
-        private final EmoteData.StateCollection.State timeline;
+        private final KeyframeAnimation.StateCollection.State timeline;
 
 
-        private PartValue(EmoteData.StateCollection.State timeline){
+        private PartValue(KeyframeAnimation.StateCollection.State timeline){
             this.timeline = timeline;
         }
 
@@ -35,7 +35,7 @@ public class PartMap {
         public void addValue(int tickFrom, int tickTo, float value, Ease ease) throws QuarkParsingError{
             if(tickFrom < this.lastTick){
                 throw new QuarkParsingError();
-            }else if(tickFrom == this.lastTick && timeline.keyFrames.size() != 0){
+            }else if(tickFrom == this.lastTick && timeline.getKeyFrames().size() != 0){
                 timeline.replaceEase(timeline.findAtTick(tickFrom), ease);
                 //timeline.keyFrames.get(timeline.findAtTick(tickFrom)).ease =ease;
             }else{

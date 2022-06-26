@@ -1,8 +1,10 @@
 package dev.kosmx.playerAnim.core.data;
 
 
+import dev.kosmx.playerAnim.api.layered.KeyframeAnimationPlayer;
 import dev.kosmx.playerAnim.core.data.opennbs.NBS;
 import dev.kosmx.playerAnim.core.util.Ease;
+import lombok.Getter;
 
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
@@ -10,11 +12,23 @@ import java.nio.ByteBuffer;
 import java.util.*;
 import java.util.function.Supplier;
 
-//TODO
 /**
  * Used to store Emote data
+ *
+ * Animation data
+ * Notable key points in <i>time</i>:
+ * begin: probably the first keyframe, before this, the default model can move to starting pose
+ * end: last animation keyframe
+ * stop: animating ends, after end the character can go back to its default pose
+ *
+ * isInfinite:
+ * if true, the animation will jump back to returnToTick after endTick <i>inclusive</i>
+ *
+ * To play an animation use {@link KeyframeAnimationPlayer}
+ *
  */
-public final class EmoteData implements Supplier<UUID> {
+@Immutable
+public final class KeyframeAnimation implements Supplier<UUID> {
     //Time, while the player can move to the beginning pose
 
     public static final StateCollection.State EMPTY_STATE = new StateCollection.State("empty", 0, 0, false);
@@ -28,24 +42,6 @@ public final class EmoteData implements Supplier<UUID> {
 
     public final HashMap<String, StateCollection> bodyParts;
     //Deprecated variables will be removed in the animation rework part.
-    @Deprecated
-    public final StateCollection head;
-    @Deprecated
-    public final StateCollection body;
-    @Deprecated
-    public final StateCollection rightArm;
-    @Deprecated
-    public final StateCollection leftArm;
-    @Deprecated
-    public final StateCollection rightLeg;
-    @Deprecated
-    public final StateCollection leftLeg;
-    @Deprecated
-    public final StateCollection rightItem;
-    @Deprecated
-    public final StateCollection leftItem;
-    @Deprecated
-    public final StateCollection torso;
     public final boolean isEasingBefore;
     public final boolean nsfw;
 
@@ -67,8 +63,7 @@ public final class EmoteData implements Supplier<UUID> {
     @Nullable
     public NBS song;
 
-    public static float staticThreshold = 8;
-    public final EmoteFormat emoteFormat;
+    public final AnimationFormat emoteFormat;
 
     @Nullable
     public ByteBuffer iconData;
@@ -76,7 +71,7 @@ public final class EmoteData implements Supplier<UUID> {
     public boolean isBuiltin = false;
 
 
-    private EmoteData(int beginTick, int endTick, int stopTick, boolean isInfinite, int returnToTick, HashMap<String, StateCollection> bodyParts, boolean isEasingBefore, boolean nsfw, UUID uuid, @Nullable String name, @Nullable String description, @Nullable String author, EmoteFormat emoteFormat, ByteBuffer iconData, NBS song) {
+    private KeyframeAnimation(int beginTick, int endTick, int stopTick, boolean isInfinite, int returnToTick, HashMap<String, StateCollection> bodyParts, boolean isEasingBefore, boolean nsfw, UUID uuid, @Nullable String name, @Nullable String description, @Nullable String author, AnimationFormat emoteFormat, ByteBuffer iconData, NBS song) {
         this.beginTick = Math.max(beginTick, 0);
         this.name = name;
         this.description = description;
@@ -98,16 +93,8 @@ public final class EmoteData implements Supplier<UUID> {
         this.emoteFormat = emoteFormat;
         this.iconData = iconData;
         this.song = song;
-        head = bodyParts.get("head");
-        body = bodyParts.get("body");
-        rightArm = bodyParts.get("rightArm");
-        leftArm = bodyParts.get("leftArm");
-        rightLeg = bodyParts.get("rightLeg");
-        leftLeg = bodyParts.get("leftLeg");
-        rightItem = bodyParts.get("rightItem");
-        leftItem = bodyParts.get("leftItem");
-        torso = bodyParts.get("torso");
         assert emoteFormat != null;
+        this.bodyParts.forEach((s, stateCollection) -> stateCollection.lock());
     }
 
     /**
@@ -119,9 +106,9 @@ public final class EmoteData implements Supplier<UUID> {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof EmoteData)) return false;
+        if (!(o instanceof KeyframeAnimation)) return false;
 
-        EmoteData emoteData = (EmoteData) o;
+        KeyframeAnimation emoteData = (KeyframeAnimation) o;
 
         if (beginTick != emoteData.beginTick) return false;
         if (endTick != emoteData.endTick) return false;
@@ -154,11 +141,11 @@ public final class EmoteData implements Supplier<UUID> {
         result = 31 * result + returnToTick;
         result = 31 * result + (isEasingBefore ? 1 : 0);
 
-        long dataHash = result * 31 + this.bodyParts.hashCode();
+        long dataHash = result * 31L + this.bodyParts.hashCode();
 
         long nameHash = this.name == null ? 0 : name.hashCode();
         long descHash = this.description == null ? 0 : description.hashCode();
-        long authHash = result * 31 + (this.author == null ? 0 : author.hashCode());
+        long authHash = result * 31L + (this.author == null ? 0 : author.hashCode());
         //long iconHash = this.iconData == null ? 0 : iconData.hashCode() + authHash * 31;
 
 
@@ -166,7 +153,7 @@ public final class EmoteData implements Supplier<UUID> {
     }
 
 
-    public EmoteData copy() {
+    public KeyframeAnimation copy() {
         return this.mutableCopy().build();
     }
 
@@ -198,7 +185,7 @@ public final class EmoteData implements Supplier<UUID> {
     }
 
     /**
-     * Will return invalid information if {@link EmoteData#isInfinite} is true
+     * Will return invalid information if {@link KeyframeAnimation#isInfinite} is true
      *
      * @return The length of the emote in ticks (20 t/s)
      */
@@ -211,8 +198,6 @@ public final class EmoteData implements Supplier<UUID> {
     }
 
     public static class StateCollection {
-        @Deprecated
-        public final String name;
         public final State x;
         public final State y;
         public final State z;
@@ -225,8 +210,7 @@ public final class EmoteData implements Supplier<UUID> {
         public final State bendDirection;
         public final boolean isBendable;
 
-        public StateCollection(float x, float y, float z, float pitch, float yaw, float roll, String name, float translationThreshold, boolean bendable) {
-            this.name = name;
+        public StateCollection(float x, float y, float z, float pitch, float yaw, float roll, float translationThreshold, boolean bendable) {
             this.x = new State("x", x, translationThreshold, false);
             this.y = new State("y", y, translationThreshold, false);
             this.z = new State("z", z, translationThreshold, false);
@@ -244,7 +228,6 @@ public final class EmoteData implements Supplier<UUID> {
         }
 
         public StateCollection(StateCollection stateCollection) {
-            this.name = stateCollection.name;
             this.x = stateCollection.x.copy();
             this.y = stateCollection.y.copy();
             this.z = stateCollection.z.copy();
@@ -269,15 +252,14 @@ public final class EmoteData implements Supplier<UUID> {
             StateCollection that = (StateCollection) o;
 
             if (isBendable != that.isBendable) return false;
-            if (name != null ? !name.equals(that.name) : that.name != null) return false;
             if (!x.equals(that.x)) return false;
             if (!y.equals(that.y)) return false;
             if (!z.equals(that.z)) return false;
             if (!pitch.equals(that.pitch)) return false;
             if (!yaw.equals(that.yaw)) return false;
             if (!roll.equals(that.roll)) return false;
-            if (bend != null ? !bend.equals(that.bend) : that.bend != null) return false;
-            return bendDirection != null ? bendDirection.equals(that.bendDirection) : that.bendDirection == null;
+            if (!Objects.equals(bend, that.bend)) return false;
+            return Objects.equals(bendDirection, that.bendDirection);
         }
 
         @Override
@@ -311,6 +293,17 @@ public final class EmoteData implements Supplier<UUID> {
             }
         }
 
+        public void lock() {
+            x.lock();
+            y.lock();
+            z.lock();
+            pitch.lock();
+            yaw.lock();
+            roll.lock();
+            if (bend != null) bend.lock();
+            if (bendDirection != null) bendDirection.lock();
+        }
+
         protected void optimize(boolean isLooped, int ret) {
             x.optimize(isLooped, ret);
             y.optimize(isLooped, ret);
@@ -329,13 +322,21 @@ public final class EmoteData implements Supplier<UUID> {
         }
 
         public static class State {
+            private boolean isModifiable = true;
             public final float defaultValue;
             public final float threshold;
-            public final List<KeyFrame> keyFrames = new ArrayList<>();
+            @Getter
+            private List<KeyFrame> keyFrames = new ArrayList<>();
             public final String name;
             private final boolean isAngle;
-            public boolean isEnabled = false;
+            @Getter
+            private boolean isEnabled = false;
 
+            /**
+             * Creates a <b>mutable</b> copy
+             * @param state copy this, non null
+             */
+            @SuppressWarnings("CopyConstructorMissesField") //I know, I want to make mutable copy of this
             public State(State state) {
                 this.defaultValue = state.defaultValue;
                 this.threshold = state.threshold;
@@ -357,6 +358,22 @@ public final class EmoteData implements Supplier<UUID> {
                 if (!keyFrames.equals(state.keyFrames)) return false;
                 if (isEnabled != state.isEnabled) return false;
                 return Objects.equals(name, state.name);
+            }
+
+            /**
+             * Locks the object making it effectively immutable
+             */
+            public void lock() {
+                this.isModifiable = false;
+                this.keyFrames = Collections.unmodifiableList(keyFrames);
+            }
+
+            public void setEnabled(boolean newValue) {
+                if (this.isModifiable) {
+                    this.isEnabled = newValue;
+                } else {
+                    throw new AssertionError("Can not modify locked things");
+                }
             }
 
             @Override
@@ -471,6 +488,7 @@ public final class EmoteData implements Supplier<UUID> {
             public State copy() {
                 return new State(this);
             }
+
         }
     }
 
@@ -509,6 +527,12 @@ public final class EmoteData implements Supplier<UUID> {
 
     public static class EmoteBuilder {
 
+        /**
+         * Statically set validation threshold, just a hint
+         */
+        public static float staticThreshold = 8;
+
+
         public final StateCollection head;
         public final StateCollection body;
         public final StateCollection rightArm;
@@ -537,7 +561,7 @@ public final class EmoteData implements Supplier<UUID> {
         public int stopTick = 0;
         public boolean isLooped = false;
         public int returnTick;
-        final EmoteFormat emoteEmoteFormat;
+        final AnimationFormat emoteEmoteFormat;
 
         private final float validationThreshold;
 
@@ -553,21 +577,21 @@ public final class EmoteData implements Supplier<UUID> {
         @Nullable
         public ByteBuffer iconData;
 
-        public EmoteBuilder(EmoteFormat source) {
+        public EmoteBuilder(AnimationFormat source) {
             this(staticThreshold, source);
         }
 
-        public EmoteBuilder(float validationThreshold, EmoteFormat emoteFormat) {
+        public EmoteBuilder(float validationThreshold, AnimationFormat emoteFormat) {
             this.validationThreshold = validationThreshold;
-            head = new StateCollection(0, 0, 0, 0, 0, 0, "head", validationThreshold, false);
-            body = new StateCollection(0, 0, 0, 0, 0, 0, "body", validationThreshold / 8f, true);
-            rightArm = new StateCollection(-5, 2, 0, 0, 0, 0f, "rightArm", validationThreshold, true);
-            leftArm = new StateCollection(5, 2, 0, 0, 0, 0f, "leftArm", validationThreshold, true);
-            leftLeg = new StateCollection(1.9f, 12, 0.1f, 0, 0, 0, "leftLeg", validationThreshold, true);
-            rightLeg = new StateCollection(-1.9f, 12, 0.1f, 0, 0, 0, "rightLeg", validationThreshold, true);
-            leftItem = new StateCollection(0, 0, 0, 0, 0, 0, "leftItem", validationThreshold, false);
-            rightItem = new StateCollection(0, 0, 0, 0, 0, 0, "rightItem", validationThreshold, false);
-            torso = new StateCollection(-1.9f, 12, 0.1f, 0, 0, 0, "torso", validationThreshold, true);
+            head = new StateCollection(0, 0, 0, 0, 0, 0, validationThreshold, false);
+            body = new StateCollection(0, 0, 0, 0, 0, 0, validationThreshold / 8f, true);
+            rightArm = new StateCollection(-5, 2, 0, 0, 0, 0f, validationThreshold, true);
+            leftArm = new StateCollection(5, 2, 0, 0, 0, 0f, validationThreshold, true);
+            leftLeg = new StateCollection(1.9f, 12, 0.1f, 0, 0, 0, validationThreshold, true);
+            rightLeg = new StateCollection(-1.9f, 12, 0.1f, 0, 0, 0, validationThreshold, true);
+            leftItem = new StateCollection(0, 0, 0, 0, 0, 0, validationThreshold, false);
+            rightItem = new StateCollection(0, 0, 0, 0, 0, 0, validationThreshold, false);
+            torso = new StateCollection(-1.9f, 12, 0.1f, 0, 0, 0, validationThreshold, true);
 
             bodyParts.put("head", head);
             bodyParts.put("body", body);
@@ -583,7 +607,7 @@ public final class EmoteData implements Supplier<UUID> {
 
         private EmoteBuilder(int beginTick, int endTick, int stopTick, boolean isInfinite,
                              int returnToTick, HashMap<String, StateCollection> bodyParts, boolean isEasingBefore, boolean nsfw, @Nullable UUID uuid,
-                             @Nullable String name, @Nullable String description, @Nullable String author, EmoteFormat emoteFormat, @Nullable ByteBuffer iconData, @Nullable NBS song) {
+                             @Nullable String name, @Nullable String description, @Nullable String author, AnimationFormat emoteFormat, @Nullable ByteBuffer iconData, @Nullable NBS song) {
             this.validationThreshold = staticThreshold;
             this.bodyParts.putAll(bodyParts);
 
@@ -644,7 +668,7 @@ public final class EmoteData implements Supplier<UUID> {
          */
         public StateCollection getOrCreateNewPart(String name, float x, float y, float z, float pitch, float yaw, float roll, boolean bendable) {
             if (!bodyParts.containsKey(name)) {
-                bodyParts.put(name, new StateCollection(x, y, z, pitch, yaw, roll, name, validationThreshold, bendable));
+                bodyParts.put(name, new StateCollection(x, y, z, pitch, yaw, roll, validationThreshold, bendable));
             }
             return bodyParts.get(name);
         }
@@ -679,8 +703,8 @@ public final class EmoteData implements Supplier<UUID> {
             return this;
         }
 
-        public EmoteData build() {
-            return new EmoteData(beginTick, endTick, stopTick, isLooped, returnTick, bodyParts, isEasingBefore, nsfw, uuid, name, description, author, emoteEmoteFormat, iconData, song);
+        public KeyframeAnimation build() {
+            return new KeyframeAnimation(beginTick, endTick, stopTick, isLooped, returnTick, bodyParts, isEasingBefore, nsfw, uuid, name, description, author, emoteEmoteFormat, iconData, song);
         }
 
         public EmoteBuilder setUuid(UUID uuid) {

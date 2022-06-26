@@ -3,7 +3,7 @@ package dev.kosmx.playerAnim.core.data;
 /**
  * Where is the emote from
  */
-public enum EmoteFormat {
+public enum AnimationFormat {
     JSON_EMOTECRAFT("json"),
     JSON_MC_ANIM("json"),
     QUARK("emote"),
@@ -14,7 +14,7 @@ public enum EmoteFormat {
     private final String extension;
 
 
-    EmoteFormat(String extension) {
+    AnimationFormat(String extension) {
         this.extension = extension;
     }
 

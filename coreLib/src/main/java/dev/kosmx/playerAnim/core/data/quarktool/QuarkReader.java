@@ -1,7 +1,7 @@
 package dev.kosmx.playerAnim.core.data.quarktool;
 
-import dev.kosmx.playerAnim.core.data.EmoteData;
-import dev.kosmx.playerAnim.core.data.EmoteFormat;
+import dev.kosmx.playerAnim.core.data.KeyframeAnimation;
+import dev.kosmx.playerAnim.core.data.AnimationFormat;
 
 import java.io.BufferedReader;
 import java.util.ArrayList;
@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 public class QuarkReader {
-    private final EmoteData.EmoteBuilder emote = new EmoteData.EmoteBuilder(EmoteFormat.QUARK);
+    private final KeyframeAnimation.EmoteBuilder emote = new KeyframeAnimation.EmoteBuilder(AnimationFormat.QUARK);
     private boolean isSuccess = false;
     private String name;
     final PartMap head = new PartMap(emote.head);
@@ -44,7 +44,7 @@ public class QuarkReader {
         this.emote.endTick = length;
     }
 
-    public EmoteData getEmote(){
+    public KeyframeAnimation getEmote(){
         if(isSuccess){
             /*return new EmoteHolder(this.emote.build().optimizeEmote(),
                                    EmoteInstance.instance.getDefaults().textFromString(this.name).formatted(EmotesTextFormatting.WHITE),

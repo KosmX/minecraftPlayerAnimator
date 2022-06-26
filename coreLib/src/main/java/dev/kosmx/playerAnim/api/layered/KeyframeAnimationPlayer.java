@@ -1,7 +1,7 @@
 package dev.kosmx.playerAnim.api.layered;
 
 import dev.kosmx.playerAnim.api.TransformType;
-import dev.kosmx.playerAnim.core.data.EmoteData;
+import dev.kosmx.playerAnim.core.data.KeyframeAnimation;
 import dev.kosmx.playerAnim.core.util.*;
 
 import javax.annotation.Nullable;
@@ -12,11 +12,11 @@ import java.util.Map;
  * Animation player for EmoteX emote format,
  * It does not mean, you can not use it, It means Emotecraft uses this too!
  */
-public class EmoteDataPlayer implements IAnimation {
+public class KeyframeAnimationPlayer implements IAnimation {
 
 
 
-    private final EmoteData data;
+    private final KeyframeAnimation data;
     private boolean isRunning = true;
     private int currentTick = 0;
     private boolean isLoopStarted = false;
@@ -34,11 +34,11 @@ public class EmoteDataPlayer implements IAnimation {
      * @param emote emote to play
      * @param t begin playing from tick
      */
-    public EmoteDataPlayer(EmoteData emote, int t) {
+    public KeyframeAnimationPlayer(KeyframeAnimation emote, int t) {
         this.data = emote;
 
         this.bodyParts = new HashMap<>(emote.bodyParts.size());
-        for(Map.Entry<String, EmoteData.StateCollection> part:emote.bodyParts.entrySet()){
+        for(Map.Entry<String, KeyframeAnimation.StateCollection> part:emote.bodyParts.entrySet()){
             this.bodyParts.put(part.getKey(), new BodyPart(part.getValue()));
         }
 
@@ -109,7 +109,7 @@ public class EmoteDataPlayer implements IAnimation {
     }
 
 
-    public EmoteData getData() {
+    public KeyframeAnimation getData() {
         return data;
     }
 
@@ -134,7 +134,7 @@ public class EmoteDataPlayer implements IAnimation {
 
     public class BodyPart {
         @Nullable
-        public final EmoteData.StateCollection part;
+        public final KeyframeAnimation.StateCollection part;
         public final Axis x;
         public final Axis y;
         public final Axis z;
@@ -145,7 +145,7 @@ public class EmoteDataPlayer implements IAnimation {
         public final RotationAxis bend;
 
 
-        public BodyPart(@Nullable EmoteData.StateCollection part) {
+        public BodyPart(@Nullable KeyframeAnimation.StateCollection part) {
             this.part = part;
             if(part != null) {
                 this.x = new Axis(part.x);
@@ -195,47 +195,47 @@ public class EmoteDataPlayer implements IAnimation {
     }
 
     public class Axis {
-        protected final EmoteData.StateCollection.State keyframes;
+        protected final KeyframeAnimation.StateCollection.State keyframes;
 
 
-        public Axis(EmoteData.StateCollection.State keyframes) {
+        public Axis(KeyframeAnimation.StateCollection.State keyframes) {
             this.keyframes = keyframes;
         }
 
-        private EmoteData.KeyFrame findBefore(int pos, float currentState) {
+        private KeyframeAnimation.KeyFrame findBefore(int pos, float currentState) {
             if (pos == -1) {
                 return (currentTick < data.beginTick) ?
-                        new EmoteData.KeyFrame(0, currentState) :
+                        new KeyframeAnimation.KeyFrame(0, currentState) :
                         (currentTick < data.endTick) ?
-                                new EmoteData.KeyFrame(data.beginTick, keyframes.defaultValue) :
-                                new EmoteData.KeyFrame(data.endTick, keyframes.defaultValue);
+                                new KeyframeAnimation.KeyFrame(data.beginTick, keyframes.defaultValue) :
+                                new KeyframeAnimation.KeyFrame(data.endTick, keyframes.defaultValue);
             }
-            EmoteData.KeyFrame frame = this.keyframes.keyFrames.get(pos);
+            KeyframeAnimation.KeyFrame frame = this.keyframes.getKeyFrames().get(pos);
             if (!isInfinite() && currentTick >= getData().endTick && pos == keyframes.length() - 1 && frame.tick < getData().endTick) {
-                return new EmoteData.KeyFrame(getData().endTick, frame.value, frame.ease);
+                return new KeyframeAnimation.KeyFrame(getData().endTick, frame.value, frame.ease);
             }
             return frame;
         }
 
-        private EmoteData.KeyFrame findAfter(int pos, float currentState) {
+        private KeyframeAnimation.KeyFrame findAfter(int pos, float currentState) {
             if (this.keyframes.length() > pos + 1) {
-                return this.keyframes.keyFrames.get(pos + 1);
+                return this.keyframes.getKeyFrames().get(pos + 1);
             }
 
             if (isInfinite()) {
-                return new EmoteData.KeyFrame(getData().endTick + 1, keyframes.defaultValue);
+                return new KeyframeAnimation.KeyFrame(getData().endTick + 1, keyframes.defaultValue);
             }
 
             if (currentTick < getData().endTick && this.keyframes.length() > 0) {
-                EmoteData.KeyFrame lastFrame = this.keyframes.keyFrames.get(this.keyframes.length() - 1);
-                return new EmoteData.KeyFrame(getData().endTick, lastFrame.value, lastFrame.ease);
+                KeyframeAnimation.KeyFrame lastFrame = this.keyframes.getKeyFrames().get(this.keyframes.length() - 1);
+                return new KeyframeAnimation.KeyFrame(getData().endTick, lastFrame.value, lastFrame.ease);
             }
 
             return currentTick >= data.endTick ?
-                    new EmoteData.KeyFrame(data.stopTick, currentState) :
+                    new KeyframeAnimation.KeyFrame(data.stopTick, currentState) :
                     currentTick >= getData().beginTick ?
-                            new EmoteData.KeyFrame(getData().endTick, keyframes.defaultValue) :
-                            new EmoteData.KeyFrame(getData().beginTick, keyframes.defaultValue);
+                            new KeyframeAnimation.KeyFrame(getData().endTick, keyframes.defaultValue) :
+                            new KeyframeAnimation.KeyFrame(getData().beginTick, keyframes.defaultValue);
         }
 
 
@@ -246,13 +246,13 @@ public class EmoteDataPlayer implements IAnimation {
          * @return value
          */
         public float getValueAtCurrentTick(float currentValue) {
-            if(keyframes.isEnabled) {
+            if(keyframes.isEnabled()) {
                 int pos = keyframes.findAtTick(currentTick);
-                EmoteData.KeyFrame keyBefore = findBefore(pos, currentValue);
+                KeyframeAnimation.KeyFrame keyBefore = findBefore(pos, currentValue);
                 if (isLoopStarted && keyBefore.tick < data.returnToTick) {
                     keyBefore = findBefore(keyframes.findAtTick(data.endTick), currentValue);
                 }
-                EmoteData.KeyFrame keyAfter = findAfter(pos, currentValue);
+                KeyframeAnimation.KeyFrame keyAfter = findAfter(pos, currentValue);
                 if (data.isInfinite && keyAfter.tick > data.endTick) {
                     keyAfter = findAfter(keyframes.findAtTick(data.returnToTick), currentValue);
                 }
@@ -268,7 +268,7 @@ public class EmoteDataPlayer implements IAnimation {
          * @param after  Keyframe after
          * @return value
          */
-        protected final float getValueFromKeyframes(EmoteData.KeyFrame before, EmoteData.KeyFrame after) {
+        protected final float getValueFromKeyframes(KeyframeAnimation.KeyFrame before, KeyframeAnimation.KeyFrame after) {
             int tickBefore = before.tick;
             int tickAfter = after.tick;
             if (tickBefore >= tickAfter) {
@@ -284,7 +284,7 @@ public class EmoteDataPlayer implements IAnimation {
 
     public class RotationAxis extends Axis {
 
-        public RotationAxis(EmoteData.StateCollection.State keyframes) {
+        public RotationAxis(KeyframeAnimation.StateCollection.State keyframes) {
             super(keyframes);
         }
 
