@@ -12,13 +12,14 @@ import java.util.Map;
  * Animation player for EmoteX emote format,
  * It does not mean, you can not use it, It means Emotecraft uses this too!
  */
+@SuppressWarnings({"unused", "ConstantConditions"})
 public class KeyframeAnimationPlayer implements IAnimation {
 
 
 
     private final KeyframeAnimation data;
     private boolean isRunning = true;
-    private int currentTick = 0;
+    private int currentTick;
     private boolean isLoopStarted = false;
 
     protected float tickDelta;
@@ -37,8 +38,8 @@ public class KeyframeAnimationPlayer implements IAnimation {
     public KeyframeAnimationPlayer(KeyframeAnimation emote, int t) {
         this.data = emote;
 
-        this.bodyParts = new HashMap<>(emote.bodyParts.size());
-        for(Map.Entry<String, KeyframeAnimation.StateCollection> part:emote.bodyParts.entrySet()){
+        this.bodyParts = new HashMap<>(emote.getBodyParts().size());
+        for(Map.Entry<String, KeyframeAnimation.StateCollection> part:emote.getBodyParts().entrySet()){
             this.bodyParts.put(part.getKey(), new BodyPart(part.getValue()));
         }
 

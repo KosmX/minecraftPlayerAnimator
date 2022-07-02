@@ -152,9 +152,9 @@ public class GeckoLibSerializer {
                     continue;
                 }
                 if (upperNext) {
-                    builder.append(Character.toUpperCase(c));
+                    builder.appendCodePoint(Character.toUpperCase(c));
                 } else {
-                    builder.append(c);
+                    builder.appendCodePoint(c);
                 }
                 upperNext = false;
             }
