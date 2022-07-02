@@ -57,7 +57,7 @@ public final class KeyframeAnimation implements Supplier<UUID> {
     /**
      * <b>Mutable</b> extra members for extra information store
      */
-    private final HashMap<String, Object> extraData = new HashMap<>();
+    public final HashMap<String, Object> extraData = new HashMap<>();
 
     /**
      * Where is the animation from, not used in equals or hash.
