@@ -41,7 +41,8 @@ public final class KeyframeAnimation implements Supplier<UUID> {
     //if infinite, where to return
     public final int returnToTick;
 
-    public final HashMap<String, StateCollection> bodyParts;
+    @Getter
+    private final Map<String, StateCollection> bodyParts;
     //Deprecated variables will be removed in the animation rework part.
     public final boolean isEasingBefore;
     public final boolean nsfw;
@@ -58,6 +59,9 @@ public final class KeyframeAnimation implements Supplier<UUID> {
      */
     private final HashMap<String, Object> extraData = new HashMap<>();
 
+    /**
+     * Where is the animation from, not used in equals or hash.
+     */
     public final AnimationFormat animationFormat;
 
 
@@ -70,7 +74,13 @@ public final class KeyframeAnimation implements Supplier<UUID> {
         this.stopTick = stopTick <= endTick ? endTick + 3 : stopTick;
         this.isInfinite = isInfinite;
         this.returnToTick = returnToTick;
-        this.bodyParts = bodyParts;
+        HashMap<String, StateCollection> bodyMap = new HashMap<>();
+        for (Map.Entry<String, StateCollection> entry : bodyParts.entrySet()) {
+            bodyMap.put(entry.getKey(), entry.getValue().copy());
+        }
+        bodyMap.forEach((s, stateCollection) -> stateCollection.lock());
+        this.bodyParts = Collections.unmodifiableMap(bodyMap);
+
         this.isEasingBefore = isEasingBefore;
         this.nsfw = nsfw;
         if (uuid == null) {
@@ -82,7 +92,6 @@ public final class KeyframeAnimation implements Supplier<UUID> {
         this.uuid = uuid;
         this.animationFormat = emoteFormat;
         assert emoteFormat != null;
-        this.bodyParts.forEach((s, stateCollection) -> stateCollection.lock());
         this.extraData.putAll(extraData);
     }
 
@@ -146,12 +155,12 @@ public final class KeyframeAnimation implements Supplier<UUID> {
         return this.mutableCopy().build();
     }
 
-    public EmoteBuilder mutableCopy() {
+    public AnimationBuilder mutableCopy() {
         HashMap<String, StateCollection> newParts = new HashMap<>();
         for (Map.Entry<String, StateCollection> part : this.bodyParts.entrySet()) {
             newParts.put(part.getKey(), part.getValue().copy());
         }
-        return new EmoteBuilder(beginTick, endTick, stopTick, isInfinite, returnToTick, newParts, isEasingBefore, nsfw, uuid, animationFormat, extraData);
+        return new AnimationBuilder(beginTick, endTick, stopTick, isInfinite, returnToTick, newParts, isEasingBefore, nsfw, uuid, animationFormat, extraData);
     }
 
 
@@ -187,6 +196,16 @@ public final class KeyframeAnimation implements Supplier<UUID> {
     }
 
 
+    @Nullable
+    public StateCollection getPart(String partID) {
+        return this.bodyParts.get(partID);
+    }
+
+    public Optional<StateCollection> getPartOptional(String id) {
+        return Optional.ofNullable(getPart(id));
+    }
+
+
     @SuppressWarnings("ConstantConditions")
     public static class StateCollection {
         public final State x;
@@ -199,6 +218,7 @@ public final class KeyframeAnimation implements Supplier<UUID> {
         public final State bend;
         @Nullable
         public final State bendDirection;
+        @Getter
         public final boolean isBendable;
 
         public StateCollection(float x, float y, float z, float pitch, float yaw, float roll, float translationThreshold, boolean bendable) {
@@ -233,6 +253,10 @@ public final class KeyframeAnimation implements Supplier<UUID> {
                 this.bend = null;
                 this.bendDirection = null;
             }
+        }
+
+        public StateCollection(float threshold) {
+            this(0, 0, 0, 0, 0, 0, threshold, true);
         }
 
         @Override
@@ -517,7 +541,7 @@ public final class KeyframeAnimation implements Supplier<UUID> {
         }
     }
 
-    public static class EmoteBuilder {
+    public static class AnimationBuilder {
 
         /**
          * Statically set validation threshold, just a hint
@@ -571,11 +595,11 @@ public final class KeyframeAnimation implements Supplier<UUID> {
 
         public HashMap<String, Object> extraData = new HashMap<>();
 
-        public EmoteBuilder(AnimationFormat source) {
+        public AnimationBuilder(AnimationFormat source) {
             this(staticThreshold, source);
         }
 
-        public EmoteBuilder(float validationThreshold, AnimationFormat emoteFormat) {
+        public AnimationBuilder(float validationThreshold, AnimationFormat emoteFormat) {
             this.validationThreshold = validationThreshold;
             head = new StateCollection(0, 0, 0, 0, 0, 0, validationThreshold, false);
             body = new StateCollection(0, 0, 0, 0, 0, 0, validationThreshold / 8f, true);
@@ -599,8 +623,8 @@ public final class KeyframeAnimation implements Supplier<UUID> {
             this.emoteEmoteFormat = emoteFormat;
         }
 
-        private EmoteBuilder(int beginTick, int endTick, int stopTick, boolean isInfinite,
-                             int returnToTick, HashMap<String, StateCollection> bodyParts, boolean isEasingBefore, boolean nsfw, @Nullable UUID uuid, AnimationFormat emoteFormat, HashMap<String, Object> extraData) {
+        private AnimationBuilder(int beginTick, int endTick, int stopTick, boolean isInfinite,
+                                 int returnToTick, HashMap<String, StateCollection> bodyParts, boolean isEasingBefore, boolean nsfw, @Nullable UUID uuid, AnimationFormat emoteFormat, HashMap<String, Object> extraData) {
             this.validationThreshold = staticThreshold;
             this.bodyParts.putAll(bodyParts);
 
@@ -632,17 +656,17 @@ public final class KeyframeAnimation implements Supplier<UUID> {
 
         }
 
-        public EmoteBuilder setDescription(String s) {
+        public AnimationBuilder setDescription(String s) {
             description = s;
             return this;
         }
 
-        public EmoteBuilder setName(String s) {
+        public AnimationBuilder setName(String s) {
             name = s;
             return this;
         }
 
-        public EmoteBuilder setAuthor(String s) {
+        public AnimationBuilder setAuthor(String s) {
             author = s;
             return this;
         }
@@ -678,8 +702,14 @@ public final class KeyframeAnimation implements Supplier<UUID> {
             return bodyParts.get(name);
         }
 
+        public StateCollection getOrCreatePart(String name) {
+            if (!bodyParts.containsKey(name)) {
+                bodyParts.put(name, new StateCollection(this.validationThreshold));
+            }
+            return bodyParts.get(name);
+        }
 
-        public EmoteBuilder fullyEnableParts() {
+        public AnimationBuilder fullyEnableParts() {
             for (Map.Entry<String, StateCollection> part : bodyParts.entrySet()) {
                 part.getValue().fullyEnablePart(false);
             }
@@ -690,7 +720,7 @@ public final class KeyframeAnimation implements Supplier<UUID> {
          * Remove unnecessary keyframes from this emote.
          * If the keyframe before and after are the same as the currently checked, the keyframe will be removed
          */
-        public EmoteBuilder optimizeEmote() {
+        public AnimationBuilder optimizeEmote() {
             for (Map.Entry<String, StateCollection> part : bodyParts.entrySet()) {
                 part.getValue().optimize(isLooped, returnTick);
             }
@@ -707,7 +737,7 @@ public final class KeyframeAnimation implements Supplier<UUID> {
             return new KeyframeAnimation(beginTick, endTick, stopTick, isLooped, returnTick, bodyParts, isEasingBefore, nsfw, uuid, emoteEmoteFormat, extraData);
         }
 
-        public EmoteBuilder setUuid(UUID uuid) {
+        public AnimationBuilder setUuid(UUID uuid) {
             this.uuid = uuid;
             return this;
         }
@@ -716,7 +746,7 @@ public final class KeyframeAnimation implements Supplier<UUID> {
 
     @Override
     public String toString() {
-        return "EmoteBuilder{" +
+        return "AnimationBuilder{" +
                 "uuid=" + uuid +
                 ", length=" + this.getLength() +
                 ", extra=" + extraData +

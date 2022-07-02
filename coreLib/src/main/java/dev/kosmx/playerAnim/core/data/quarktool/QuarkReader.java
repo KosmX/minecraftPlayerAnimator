@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 public class QuarkReader {
-    private final KeyframeAnimation.EmoteBuilder emote = new KeyframeAnimation.EmoteBuilder(AnimationFormat.QUARK);
+    private final KeyframeAnimation.AnimationBuilder emote = new KeyframeAnimation.AnimationBuilder(AnimationFormat.QUARK);
     private boolean isSuccess = false;
     private String name;
     final PartMap head = new PartMap(emote.head);
