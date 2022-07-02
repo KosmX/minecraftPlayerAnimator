@@ -1,6 +1,9 @@
-package dev.kosmx.playerAnim.core.data;
+package dev.kosmx.playerAnim.core.data.gson;
 
 import com.google.gson.*;
+import com.google.gson.reflect.TypeToken;
+import dev.kosmx.playerAnim.core.data.AnimationFormat;
+import dev.kosmx.playerAnim.core.data.KeyframeAnimation;
 import dev.kosmx.playerAnim.core.data.quarktool.QuarkReader;
 import dev.kosmx.playerAnim.core.util.Easing;
 
@@ -16,7 +19,14 @@ public class AnimationJson implements JsonDeserializer<List<KeyframeAnimation>>,
 
     private final static int modVersion = 3;
 
-    //public static
+    /**
+     * TypeToken helper for serializing
+     *
+     * @return TypeToken for animation deserialization
+     */
+    public static Type getListedTypeToken() {
+        return new TypeToken<List<KeyframeAnimation>>() {}.getType();
+    }
 
     /**
      * I think, we can stick with this <i>legacy</i> name: <code>emote</code>

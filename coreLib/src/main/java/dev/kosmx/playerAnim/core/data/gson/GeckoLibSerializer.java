@@ -1,8 +1,10 @@
-package dev.kosmx.playerAnim.core.data;
+package dev.kosmx.playerAnim.core.data.gson;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import dev.kosmx.playerAnim.core.data.AnimationFormat;
+import dev.kosmx.playerAnim.core.data.KeyframeAnimation;
 import dev.kosmx.playerAnim.core.util.Ease;
 import dev.kosmx.playerAnim.core.util.Easing;
 

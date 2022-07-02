@@ -1,5 +1,6 @@
 package dev.kosmx.playerAnim.core.data;
 
+import dev.kosmx.playerAnim.core.data.gson.GeckoLibSerializer;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
