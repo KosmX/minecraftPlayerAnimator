@@ -3,7 +3,7 @@ package dev.kosmx.playerAnim.mixin;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
 import dev.kosmx.playerAnim.api.TransformType;
-import dev.kosmx.playerAnim.core.impl.AnimationPlayer;
+import dev.kosmx.playerAnim.core.impl.AnimationProcessor;
 import dev.kosmx.playerAnim.core.util.Pair;
 import dev.kosmx.playerAnim.core.util.Vec3f;
 import dev.kosmx.playerAnim.impl.Helper;
@@ -26,7 +26,7 @@ public class HeldItemMixin {
     private void renderMixin(LivingEntity livingEntity, ItemStack stack, ItemTransforms.TransformType transformationMode, HumanoidArm arm, PoseStack matrices, MultiBufferSource vertexConsumers, int light, CallbackInfo ci){
         if(Helper.isBendEnabled() && livingEntity instanceof IAnimatedPlayer player){
             if(player.getAnimation().isActive()){
-                AnimationPlayer anim = player.getAnimation();
+                AnimationProcessor anim = player.getAnimation();
 
                 Vec3f data = anim.get3DTransform(arm == HumanoidArm.LEFT ? "leftArm" : "rightArm", TransformType.BEND, new Vec3f(0f, 0f, 0f));
 
@@ -49,7 +49,7 @@ public class HeldItemMixin {
     private void changeItemLocation(LivingEntity livingEntity, ItemStack itemStack, ItemTransforms.TransformType transformType, HumanoidArm arm, PoseStack matrices, MultiBufferSource multiBufferSource, int i, CallbackInfo ci) {
         if(livingEntity instanceof IAnimatedPlayer player) {
             if (player.getAnimation().isActive()) {
-                AnimationPlayer anim = player.getAnimation();
+                AnimationProcessor anim = player.getAnimation();
 
                 Vec3f rot = anim.get3DTransform(arm == HumanoidArm.LEFT ? "leftItem" : "rightItem", TransformType.ROTATION, Vec3f.ZERO);
                 Vec3f pos = anim.get3DTransform(arm == HumanoidArm.LEFT ? "leftItem" : "rightItem", TransformType.POSITION, Vec3f.ZERO).scale(1/16f);

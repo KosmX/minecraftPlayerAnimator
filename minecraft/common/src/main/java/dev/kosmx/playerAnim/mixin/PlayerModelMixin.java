@@ -1,6 +1,6 @@
 package dev.kosmx.playerAnim.mixin;
 
-import dev.kosmx.playerAnim.core.impl.AnimationPlayer;
+import dev.kosmx.playerAnim.core.impl.AnimationProcessor;
 import dev.kosmx.playerAnim.core.util.SetableSupplier;
 import dev.kosmx.playerAnim.impl.IAnimatedPlayer;
 import dev.kosmx.playerAnim.impl.IMutableModel;
@@ -24,7 +24,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.List;
 import java.util.function.Function;
 
 @Mixin(value = PlayerModel.class, priority = 2000)//Apply after NotEnoughAnimation's inject
@@ -41,7 +40,7 @@ public class PlayerModelMixin<T extends LivingEntity> extends HumanoidModel<T> {
     @Shadow @Final public ModelPart rightPants;
     @Shadow @Final public ModelPart leftPants;
     @Unique
-    private final SetableSupplier<AnimationPlayer> emoteSupplier = new SetableSupplier<>();
+    private final SetableSupplier<AnimationProcessor> emoteSupplier = new SetableSupplier<>();
     //private BendHelper mutatedTorso;
     //private MutableModelPart head :D ... it were be funny XD
 

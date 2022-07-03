@@ -3,11 +3,11 @@ package dev.kosmx.playerAnim.impl.animation;
 
 import dev.kosmx.playerAnim.api.TransformType;
 import dev.kosmx.playerAnim.api.layered.IAnimation;
-import dev.kosmx.playerAnim.core.impl.AnimationPlayer;
+import dev.kosmx.playerAnim.core.impl.AnimationProcessor;
 import dev.kosmx.playerAnim.core.util.Vec3f;
 import net.minecraft.client.model.geom.ModelPart;
 
-public class AnimationApplier extends AnimationPlayer {
+public class AnimationApplier extends AnimationProcessor {
     public AnimationApplier(IAnimation animation) {
         super(animation);
     }

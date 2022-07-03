@@ -8,12 +8,13 @@ import dev.kosmx.playerAnim.core.util.Vec3f;
 
 /**
  * Tool to easily play animation to the player.
+ * internal, do not use
  */
-public class AnimationPlayer {
+public class AnimationProcessor {
     private final IAnimation animation;
     private float tickDelta = 0f;
 
-    public AnimationPlayer(IAnimation animation) {
+    public AnimationProcessor(IAnimation animation) {
         this.animation = animation;
     }
 

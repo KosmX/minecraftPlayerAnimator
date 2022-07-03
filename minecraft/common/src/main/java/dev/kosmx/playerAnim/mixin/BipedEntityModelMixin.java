@@ -2,7 +2,7 @@ package dev.kosmx.playerAnim.mixin;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import dev.kosmx.playerAnim.core.impl.AnimationPlayer;
+import dev.kosmx.playerAnim.core.impl.AnimationProcessor;
 import dev.kosmx.playerAnim.core.util.SetableSupplier;
 import dev.kosmx.playerAnim.impl.Helper;
 import dev.kosmx.playerAnim.impl.IMutableModel;
@@ -31,7 +31,7 @@ public abstract class BipedEntityModelMixin<T extends LivingEntity> extends Agea
     @Shadow
     public ModelPart leftArm;
     @Unique
-    private SetableSupplier<AnimationPlayer> animation = new SetableSupplier<>();
+    private SetableSupplier<AnimationProcessor> animation = new SetableSupplier<>();
 
     @Inject(method = "<init>(Lnet/minecraft/client/model/geom/ModelPart;Ljava/util/function/Function;)V", at = @At("RETURN"))
     private void initBend(ModelPart modelPart, Function<ResourceLocation, RenderType> function, CallbackInfo ci){
@@ -47,7 +47,7 @@ public abstract class BipedEntityModelMixin<T extends LivingEntity> extends Agea
     }
 
     @Override
-    public void setEmoteSupplier(SetableSupplier<AnimationPlayer> emoteSupplier){
+    public void setEmoteSupplier(SetableSupplier<AnimationProcessor> emoteSupplier){
         this.animation = emoteSupplier;
     }
 
@@ -73,7 +73,7 @@ public abstract class BipedEntityModelMixin<T extends LivingEntity> extends Agea
                 }
             });
 
-            SetableSupplier<AnimationPlayer> emoteSupplier = this.animation;
+            SetableSupplier<AnimationProcessor> emoteSupplier = this.animation;
             matrices.pushPose();
             IBendHelper.rotateMatrixStack(matrices, emoteSupplier.get().getBend("body"));
             this.headParts().forEach((part)->{
@@ -98,7 +98,7 @@ public abstract class BipedEntityModelMixin<T extends LivingEntity> extends Agea
     @Shadow @Final public ModelPart hat;
 
     @Override
-    public SetableSupplier<AnimationPlayer> getEmoteSupplier(){
+    public SetableSupplier<AnimationProcessor> getEmoteSupplier(){
         return animation;
     }
 }
