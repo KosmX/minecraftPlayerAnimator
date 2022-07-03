@@ -36,7 +36,7 @@ java {
 publishing {
     publications {
         mavenJava(MavenPublication) {
-            artifactId = 'animCore'
+            artifactId = 'anim-core'
 
             from components.java
 

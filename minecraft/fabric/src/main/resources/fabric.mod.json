@@ -12,7 +12,6 @@
     "sources": "https://github.com/FabricMC/fabric-example-mod"
   },
   "license": "Insert License Here",
-  "icon": "assets/examplemod/icon.png",
   "environment": "*",
   "entrypoints": {
     "preLaunch": ["dev.kosmx.playerAnim.impl.fabric.PreLaunchEntry"]
