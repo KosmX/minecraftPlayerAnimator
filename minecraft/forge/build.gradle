@@ -31,6 +31,10 @@ dependencies {
 
     common(project(path: ":${project.module_name}:common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":${project.module_name}:common", configuration: "transformProductionForge")) { transitive = false }
+
+    common(shadowCommon(project(path: ":coreLib")) {transitive false}) {transitive false} //Why can I nest these?
+
+    //modImplementation 'io.github.kosmx.bendy-lib:bendy-lib-forge:2.1.0'
 }
 
 processResources {
@@ -85,6 +89,27 @@ publishing {
 
     // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
     repositories {
-        // Add repositories to publish to here.
+        repositories {
+
+            if (project.keysExists) {
+                maven {
+                    url = 'https://maven.kosmx.dev/'
+                    credentials {
+                        username = project.keys.kosmx_maven_user
+                        password = project.keys.kosmx_maven
+                    }
+                }
+                maven {
+                    name = "GitHubPackages"
+                    url = "https://maven.pkg.github.com/kosmx/fabricPlayerAnimation"
+                    credentials {
+                        username = System.getenv("GITHUB_ACTOR")
+                        password = System.getenv("GITHUB_TOKEN")
+                    }
+                }
+            } else {
+                mavenLocal()
+            }
+        }
     }
 }

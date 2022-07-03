@@ -1,7 +1,7 @@
 package dev.kosmx.playerAnim.core.util;
 
 /**
- * Easing form <a href="https://easings.net/">easings.net</a><br>
+ * Easings form <a href="https://easings.net/">easings.net</a><br>
  * + constant + linear
  */
 public enum Ease {

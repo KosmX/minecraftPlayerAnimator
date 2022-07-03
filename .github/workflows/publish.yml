@@ -1,0 +1,29 @@
+
+name: Publish
+
+on: [workflow_dispatch]
+
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  publish:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'microsoft'
+          java-version: '17'
+
+      # Runs a single command using the runners shell
+      - name: Publish package
+        run: gradle publish --no-daemon
+        env:
+          MAVEN_USER: ${{ secrets.MAVEN_USER }}
+          KOSMX_MAVEN_TOKEN: ${{ secrets.MAVEN_PASS }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

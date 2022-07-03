@@ -14,7 +14,7 @@ dependencies {
 
     //modApi "dev.architectury:architectury:${rootProject.architectury_version}"
 
-    modApi 'io.github.kosmx.bendy-lib:bendy-lib:2.1.0'
+    modCompileOnly 'io.github.kosmx.bendy-lib:bendy-lib:2.1.0'
 
     }
 
@@ -23,11 +23,44 @@ publishing {
         mavenCommon(MavenPublication) {
             artifactId = rootProject.archives_base_name
             from components.java
+
+            /*
+            pom.withXml {
+
+                def depsNode = asNode().appendNode("dependencies")
+
+                def apiNode = depsNode.appendNode("dependency")
+                apiNode.appendNode("groupId", project.group)
+                apiNode.appendNode("artifactId", "animCore")
+                apiNode.appendNode("version", project.version)
+                apiNode.appendNode("scope", "compile")
+            }//*/
         }
     }
 
     // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
     repositories {
-        // Add repositories to publish to here.
+        repositories {
+
+            if (project.keysExists) {
+                maven {
+                    url = 'https://maven.kosmx.dev/'
+                    credentials {
+                        username = project.keys.kosmx_maven_user
+                        password = project.keys.kosmx_maven
+                    }
+                }
+                maven {
+                    name = "GitHubPackages"
+                    url = "https://maven.pkg.github.com/kosmx/fabricPlayerAnimation"
+                    credentials {
+                        username = System.getenv("GITHUB_ACTOR")
+                        password = System.getenv("GITHUB_TOKEN")
+                    }
+                }
+            } else {
+                mavenLocal()
+            }
+        }
     }
 }

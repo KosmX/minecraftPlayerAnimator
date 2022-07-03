@@ -28,7 +28,7 @@ import java.util.function.Supplier;
  *
  */
 @Immutable
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "UnusedReturnValue"})
 public final class KeyframeAnimation implements Supplier<UUID> {
     //Time, while the player can move to the beginning pose
 
@@ -78,7 +78,7 @@ public final class KeyframeAnimation implements Supplier<UUID> {
         for (Map.Entry<String, StateCollection> entry : bodyParts.entrySet()) {
             bodyMap.put(entry.getKey(), entry.getValue().copy());
         }
-        bodyMap.forEach((s, stateCollection) -> stateCollection.lock());
+        bodyMap.forEach((s, stateCollection) -> stateCollection.verifyAndLock(getLength()));
         this.bodyParts = Collections.unmodifiableMap(bodyMap);
 
         this.isEasingBefore = isEasingBefore;
@@ -207,7 +207,7 @@ public final class KeyframeAnimation implements Supplier<UUID> {
 
 
     @SuppressWarnings("ConstantConditions")
-    public static class StateCollection {
+    public static final class StateCollection {
         public final State x;
         public final State y;
         public final State z;
@@ -308,18 +308,19 @@ public final class KeyframeAnimation implements Supplier<UUID> {
             }
         }
 
-        public void lock() {
-            x.lock();
-            y.lock();
-            z.lock();
-            pitch.lock();
-            yaw.lock();
-            roll.lock();
-            if (bend != null) bend.lock();
-            if (bendDirection != null) bendDirection.lock();
+        public void verifyAndLock(int maxLength) {
+            x.lockAndVerify(maxLength);
+            y.lockAndVerify(maxLength);
+            z.lockAndVerify(maxLength);
+            pitch.lockAndVerify(maxLength);
+            yaw.lockAndVerify(maxLength);
+            roll.lockAndVerify(maxLength);
+            if (bend != null) bend.lockAndVerify(maxLength);
+            if (bendDirection != null) bendDirection.lockAndVerify(maxLength);
         }
 
-        protected void optimize(boolean isLooped, int ret) {
+
+        private void optimize(boolean isLooped, int ret) {
             x.optimize(isLooped, ret);
             y.optimize(isLooped, ret);
             z.optimize(isLooped, ret);
@@ -336,7 +337,7 @@ public final class KeyframeAnimation implements Supplier<UUID> {
             return new StateCollection(this);
         }
 
-        public static class State {
+        public static final class State {
             private boolean isModifiable = true;
             public final float defaultValue;
             public final float threshold;
@@ -349,7 +350,7 @@ public final class KeyframeAnimation implements Supplier<UUID> {
 
             /**
              * Creates a <b>mutable</b> copy
-             * @param state copy this, non-null
+             * @param state deep copy this, non-null
              */
             @SuppressWarnings("CopyConstructorMissesField") //I know, I want to make mutable copy of this
             public State(State state) {
@@ -378,9 +379,20 @@ public final class KeyframeAnimation implements Supplier<UUID> {
             /**
              * Locks the object making it effectively immutable
              */
-            public void lock() {
+            private void lock() {
                 this.isModifiable = false;
                 this.keyFrames = Collections.unmodifiableList(keyFrames);
+            }
+
+            /**
+             * Locks the object, throws exception if contains invalid data
+             * @param maxLength length of animation
+             */
+            public void lockAndVerify(int maxLength) {
+                for (KeyFrame keyFrame : getKeyFrames()) {
+                    if (keyFrame == null || keyFrame.tick < 0 || keyFrame.tick > maxLength || keyFrame.ease == null || !Float.isFinite(keyFrame.value)) throw new IllegalStateException("Animation is invalid: " + keyFrame);
+                }
+                this.lock();
             }
 
             public void setEnabled(boolean newValue) {
@@ -457,7 +469,6 @@ public final class KeyframeAnimation implements Supplier<UUID> {
              * @param ease  with what easing
              * @return is the keyframe valid
              */
-            @SuppressWarnings("UnusedReturnValue")
             public boolean addKeyFrame(int tick, float value, Ease ease) {
                 if (Float.isNaN(value)) throw new IllegalArgumentException("value can't be NaN");
                 return this.addKeyFrame(new KeyFrame(tick, value, ease));
@@ -486,7 +497,7 @@ public final class KeyframeAnimation implements Supplier<UUID> {
                 replace(new KeyFrame(original.tick, original.value, ease), pos);
             }
 
-            protected void optimize(boolean isLooped, int returnToTick) {
+            private void optimize(boolean isLooped, int returnToTick) {
                 for (int i = 1; i < this.keyFrames.size() - 1; i++) {
                     if (keyFrames.get(i - 1).value != keyFrames.get(i).value) {
                         continue;
@@ -504,12 +515,11 @@ public final class KeyframeAnimation implements Supplier<UUID> {
             public State copy() {
                 return new State(this);
             }
-
         }
     }
 
     @Immutable
-    public static class KeyFrame {
+    public static final class KeyFrame {
 
         public final int tick;
         public final float value;
@@ -538,6 +548,15 @@ public final class KeyframeAnimation implements Supplier<UUID> {
             result = 31 * result + Float.hashCode(value);
             result = 31 * result + ease.getId();
             return result;
+        }
+
+        @Override
+        public String toString() {
+            return "KeyFrame{" +
+                    "tick=" + tick +
+                    ", value=" + value +
+                    ", ease=" + ease +
+                    '}';
         }
     }
 

@@ -1,6 +1,7 @@
 plugins {
     id 'java-library'
-    id "io.freefair.lombok" version "6.5.0.2"
+    id 'maven-publish'
+    //id "io.freefair.lombok" version "6.5.0.2" This breaks javadoc (???) I'll use annotationProcessor
 }
 
 dependencies {
@@ -9,6 +10,13 @@ dependencies {
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
+
+
+    compileOnly 'org.projectlombok:lombok:1.18.24'
+    annotationProcessor 'org.projectlombok:lombok:1.18.24'
+
+    testCompileOnly 'org.projectlombok:lombok:1.18.24'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.24'
 }
 
 compileJava {
@@ -18,4 +26,54 @@ compileJava {
 
 test {
     useJUnitPlatform()
+}
+
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifactId = 'animCore'
+
+            from components.java
+
+            pom{
+                name = "playerAnimatorCORE"
+                description = "Minecraft animation api"
+                url = 'https://github.com/KosmX/emotes'
+                developers {
+                    developer {
+                        id = 'kosmx'
+                        name = 'KosmX'
+                        email = 'kosmx.mc@gmail.com'
+                    }
+                }
+            }
+        }
+    }
+    repositories {
+
+        if (project.keysExists) {
+            maven {
+                url = 'https://maven.kosmx.dev/'
+                credentials {
+                    username = project.keys.kosmx_maven_user
+                    password = project.keys.kosmx_maven
+                }
+            }
+            maven {
+                name = "GitHubPackages"
+                url = "https://maven.pkg.github.com/kosmx/fabricPlayerAnimation"
+                credentials {
+                    username = System.getenv("GITHUB_ACTOR")
+                    password = System.getenv("GITHUB_TOKEN")
+                }
+            }
+        } else {
+            mavenLocal()
+        }
+    }
 }

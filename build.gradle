@@ -38,3 +38,26 @@ allprojects {
         withSourcesJar()
     }
 }
+
+
+ext.ENV = System.getenv()
+
+ext.keysExists = ENV.GH_TOKEN != null || project.getGradle().getStartParameter().isDryRun();
+
+if(keysExists) {
+    project.ext.keys = new Properties()
+    if (project.getGradle().getStartParameter().isDryRun()) {
+        println("Dry run, loading publish scripts")
+        //All of these are fake, don't waste your time with it. (Copied from API docs and random generated)
+        //project.ext.keys.modrinth_token = "gho_pJ9dGXVKpfzZp4PUHSxYEq9hjk0h288Gwj4S"
+        //project.ext.keys.curseforge_key = "00000000-0000-0000-0000-000000000000"
+        project.ext.keys.kosmx_maven = "V2h5IGRpZCB5b3UgZGVjb2RlIGl0PyAg"
+        project.ext.keys.kosmx_maven_user = "username"
+    } else {
+        println("Keys loaded, loading publish scripts")
+        //project.ext.keys.modrinth_token = ENV.MODRINTH_TOKEN
+        //project.ext.keys.curseforge_key = ENV.CURSEFORGE_TOKEN
+        project.ext.keys.kosmx_maven = ENV.KOSMX_MAVEN_TOKEN
+        project.ext.kosmx_maven_user = ENV.KOSMX_MAVEN_USER
+    }
+}
