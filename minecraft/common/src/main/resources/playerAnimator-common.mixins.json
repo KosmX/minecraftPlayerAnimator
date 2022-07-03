@@ -9,7 +9,8 @@
     "FeatureRendererMixin",
     "HeldItemMixin",
     "ModelPartMixin",
-    "PlayerRendererMixin"
+    "PlayerRendererMixin",
+    "PlayerModelMixin"
   ],
   "mixins": [
   ],

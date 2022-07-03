@@ -247,7 +247,7 @@ public class KeyframeAnimationPlayer implements IAnimation {
          * @return value
          */
         public float getValueAtCurrentTick(float currentValue) {
-            if(keyframes.isEnabled()) {
+            if(keyframes != null && keyframes.isEnabled()) {
                 int pos = keyframes.findAtTick(currentTick);
                 KeyframeAnimation.KeyFrame keyBefore = findBefore(pos, currentValue);
                 if (isLoopStarted && keyBefore.tick < data.returnToTick) {

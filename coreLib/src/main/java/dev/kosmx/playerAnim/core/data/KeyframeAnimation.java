@@ -65,9 +65,6 @@ public final class KeyframeAnimation implements Supplier<UUID> {
     public final AnimationFormat animationFormat;
 
 
-    public boolean isBuiltin = false;
-
-
     private KeyframeAnimation(int beginTick, int endTick, int stopTick, boolean isInfinite, int returnToTick, HashMap<String, StateCollection> bodyParts, boolean isEasingBefore, boolean nsfw, UUID uuid, AnimationFormat emoteFormat, HashMap<String, Object> extraData) {
         this.beginTick = Math.max(beginTick, 0);
         this.endTick = Math.max(beginTick + 1, endTick);
@@ -390,7 +387,7 @@ public final class KeyframeAnimation implements Supplier<UUID> {
              */
             public void lockAndVerify(int maxLength) {
                 for (KeyFrame keyFrame : getKeyFrames()) {
-                    if (keyFrame == null || keyFrame.tick < 0 || keyFrame.tick > maxLength || keyFrame.ease == null || !Float.isFinite(keyFrame.value)) throw new IllegalStateException("Animation is invalid: " + keyFrame);
+                    if (keyFrame == null || keyFrame.tick < 0 || keyFrame.ease == null || !Float.isFinite(keyFrame.value)) throw new IllegalStateException("Animation is invalid: " + keyFrame);
                 }
                 this.lock();
             }
@@ -761,11 +758,19 @@ public final class KeyframeAnimation implements Supplier<UUID> {
             return this;
         }
 
+        @Override
+        public String toString() {
+            return "AnimationBuilder{" +
+                    "uuid=" + uuid +
+                    ", extra=" + extraData +
+                    '}';
+        }
+
     }
 
     @Override
     public String toString() {
-        return "AnimationBuilder{" +
+        return "KeyframeAnimation{" +
                 "uuid=" + uuid +
                 ", length=" + this.getLength() +
                 ", extra=" + extraData +

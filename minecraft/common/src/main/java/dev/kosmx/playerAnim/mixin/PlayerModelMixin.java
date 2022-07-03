@@ -6,8 +6,7 @@ import dev.kosmx.playerAnim.impl.IAnimatedPlayer;
 import dev.kosmx.playerAnim.impl.IMutableModel;
 import dev.kosmx.playerAnim.impl.IUpperPartHelper;
 import dev.kosmx.playerAnim.impl.animation.AnimationApplier;
-import io.github.kosmx.bendylib.ModelPartAccessor;
-import io.github.kosmx.bendylib.impl.BendableCuboid;
+import dev.kosmx.playerAnim.impl.animation.IBendHelper;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.model.geom.ModelPart;
@@ -68,7 +67,7 @@ public class PlayerModelMixin<T extends LivingEntity> extends HumanoidModel<T> {
 
     @Unique
     private void addBendMutator(ModelPart part, Direction d){
-        ModelPartAccessor.optionalGetCuboid(part, 0).ifPresent(mutableCuboid ->mutableCuboid.registerMutator("bend", data -> new BendableCuboid.Builder().setDirection(d).build(data)));
+        IBendHelper.INSTANCE.initBend(part, d);
     }
 
     @Unique
