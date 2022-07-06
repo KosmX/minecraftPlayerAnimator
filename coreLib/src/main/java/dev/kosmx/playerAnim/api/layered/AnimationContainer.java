@@ -8,7 +8,7 @@ import dev.kosmx.playerAnim.core.util.Vec3f;
  * It will clone the behaviour of the held animation
  *
  * you can put endless AnimationContainer into each other
- * @param <T>
+ * @param <T> Nullable animation
  */
 public class AnimationContainer<T extends IAnimation> implements IAnimation {
     protected T anim;

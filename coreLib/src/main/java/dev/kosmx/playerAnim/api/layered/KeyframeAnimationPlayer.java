@@ -45,7 +45,7 @@ public class KeyframeAnimationPlayer implements IAnimation {
 
         this.currentTick = t;
         if(isInfinite() && t > data.returnToTick){
-            currentTick = (t - data.returnToTick)%(data.endTick - data.returnToTick) + data.returnToTick;
+            currentTick = (t - data.returnToTick)%(data.endTick - data.returnToTick + 1) + data.returnToTick;
         }
     }
 

@@ -70,6 +70,7 @@ public final class KeyframeAnimation implements Supplier<UUID> {
         this.endTick = Math.max(beginTick + 1, endTick);
         this.stopTick = stopTick <= endTick ? endTick + 3 : stopTick;
         this.isInfinite = isInfinite;
+        if (returnToTick > endTick) throw new IllegalArgumentException("Trying to construct invalid animation");
         this.returnToTick = returnToTick;
         HashMap<String, StateCollection> bodyMap = new HashMap<>();
         for (Map.Entry<String, StateCollection> entry : bodyParts.entrySet()) {
@@ -387,7 +388,7 @@ public final class KeyframeAnimation implements Supplier<UUID> {
              */
             public void lockAndVerify(int maxLength) {
                 for (KeyFrame keyFrame : getKeyFrames()) {
-                    if (keyFrame == null || keyFrame.tick < 0 || keyFrame.ease == null || !Float.isFinite(keyFrame.value)) throw new IllegalStateException("Animation is invalid: " + keyFrame);
+                    if (keyFrame == null || keyFrame.tick < 0 || keyFrame.ease == null || !Float.isFinite(keyFrame.value)) throw new IllegalArgumentException("Animation is invalid: " + keyFrame);
                 }
                 this.lock();
             }
@@ -743,7 +744,12 @@ public final class KeyframeAnimation implements Supplier<UUID> {
             return this;
         }
 
-        public KeyframeAnimation build() {
+        /**
+         *
+         * @return Immutable copy of this
+         * @throws IllegalArgumentException if trying to build with invalid data.
+         */
+        public KeyframeAnimation build() throws IllegalArgumentException {
             if (name != null) extraData.put("name", name);
             if (description != null) extraData.put("description", description);
             if (author != null) extraData.put("author", author);
