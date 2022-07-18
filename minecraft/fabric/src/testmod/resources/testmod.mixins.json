@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "package": "dev.kosmx.animatorTestmod.mixin",
+  "compatibilityLevel": "JAVA_16",
+  "client": [
+  ],
+  "mixins": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

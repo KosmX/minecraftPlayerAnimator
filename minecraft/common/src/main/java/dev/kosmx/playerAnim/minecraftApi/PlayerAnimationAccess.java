@@ -4,7 +4,7 @@ import dev.kosmx.playerAnim.api.IPlayer;
 import dev.kosmx.playerAnim.api.layered.AnimationStack;
 import net.minecraft.client.player.AbstractClientPlayer;
 
-public abstract class PlayerAnimationAccess {
+public final class PlayerAnimationAccess {
 
     /**
      * Get the animation stack for a player entity on the client.

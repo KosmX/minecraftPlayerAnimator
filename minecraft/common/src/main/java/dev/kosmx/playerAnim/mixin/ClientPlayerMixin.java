@@ -32,14 +32,8 @@ public abstract class ClientPlayerMixin implements IAnimatedPlayer {
         return animationApplier;
     }
 
-    /*
-    @Intrinsic(displace = true)
-    @Override
-    public void tick() {
-        super.tick();
-        animationStack.tick();
-    }*/
 
+    @SuppressWarnings("ConstantConditions") // When injected into PlayerEntity, instance check can tell if a ClientPlayer or ServerPlayer
     @Inject(method = "tick", at = @At("HEAD"))
     private void tick(CallbackInfo ci) {
         if (AbstractClientPlayer.class.isInstance(this)) {
