@@ -12,20 +12,13 @@ sourceSets {
         compileClasspath += main.compileClasspath
         runtimeClasspath += main.runtimeClasspath
     }
+    main {
+        runtimeClasspath += testmod.runtimeClasspath
+    }
 }
 
 loom {
     accessWidenerPath = project(":${project.module_name}:common").loom.accessWidenerPath
-
-    runs {
-        testmodClient {
-            client()
-            //ideConfigGenerated project.rootProject == project
-            ideConfigGenerated(true)
-            name = "Testmod Client"
-            source sourceSets.testmod
-        }
-    }
 }
 
 
