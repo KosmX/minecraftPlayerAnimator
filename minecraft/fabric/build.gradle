@@ -7,9 +7,27 @@ architectury {
     fabric()
 }
 
+sourceSets {
+    testmod {
+        compileClasspath += main.compileClasspath
+        runtimeClasspath += main.runtimeClasspath
+    }
+}
+
 loom {
     accessWidenerPath = project(":${project.module_name}:common").loom.accessWidenerPath
+
+    runs {
+        testmodClient {
+            client()
+            //ideConfigGenerated project.rootProject == project
+            ideConfigGenerated(true)
+            name = "Testmod Client"
+            source sourceSets.testmod
+        }
+    }
 }
+
 
 configurations {
     common
