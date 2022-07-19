@@ -5,12 +5,13 @@
   "client": [
     "ArmorFeatureRendererMixin",
     "BipedEntityModelMixin",
-    "ClientPlayerMixin",
+    "PlayerEntityMixin",
     "FeatureRendererMixin",
     "HeldItemMixin",
     "ModelPartMixin",
     "PlayerRendererMixin",
-    "PlayerModelMixin"
+    "PlayerModelMixin",
+    "ClientPlayerMixin"
   ],
   "mixins": [
   ],
