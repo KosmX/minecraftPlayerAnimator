@@ -34,6 +34,10 @@ public class ModifierLayer<T extends IAnimation> implements IAnimation {
         Collections.addAll(this.modifiers, modifiers);
     }
 
+    public ModifierLayer() {
+        this(null);
+    }
+
     @Override
     public void tick() {
         for (int i = 0; i < modifiers.size(); i++) {

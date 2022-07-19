@@ -2,18 +2,26 @@ package dev.kosmx.playerAnim.api.layered.modifier;
 
 import dev.kosmx.playerAnim.api.TransformType;
 import dev.kosmx.playerAnim.core.util.Vec3f;
+import lombok.NoArgsConstructor;
 
 /**
  * Modifies the animation speed.
  * speed = 2 means twice the speed, the animation will take half as long
  * <code>length = 1/speed</code>
  */
+@NoArgsConstructor
 public class SpeedModifier extends AbstractModifier {
-    public float speed;
+    public float speed = 1;
 
     private float delta = 0;
 
     private float shiftedDelta = 0;
+
+
+    public SpeedModifier(float speed) {
+        if (!Float.isFinite(speed)) throw new IllegalArgumentException("Speed must be a finite number");
+        this.speed = speed;
+    }
 
     @Override
     public void tick() {
@@ -33,9 +41,9 @@ public class SpeedModifier extends AbstractModifier {
         delta *= speed;
         while (delta > 1) {
             delta -= 1;
-            tick();
+            super.tick();
         }
-        setupAnim(delta);
+        super.setupAnim(delta);
         this.shiftedDelta = delta;
     }
 

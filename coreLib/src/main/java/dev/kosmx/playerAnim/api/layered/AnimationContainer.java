@@ -17,6 +17,9 @@ public class AnimationContainer<T extends IAnimation> implements IAnimation {
         this.anim = anim;
     }
 
+    public AnimationContainer() {
+        this.anim = null;
+    }
 
     public void setAnim(T newAnim) {
         this.anim = newAnim;
