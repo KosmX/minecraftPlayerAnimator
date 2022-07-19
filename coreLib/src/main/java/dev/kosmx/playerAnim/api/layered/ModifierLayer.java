@@ -1,8 +1,11 @@
 package dev.kosmx.playerAnim.api.layered;
 
 import dev.kosmx.playerAnim.api.TransformType;
+import dev.kosmx.playerAnim.api.layered.modifier.AbstractFadeModifier;
 import dev.kosmx.playerAnim.api.layered.modifier.AbstractModifier;
 import dev.kosmx.playerAnim.core.util.Vec3f;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -21,7 +24,9 @@ public class ModifierLayer<T extends IAnimation> implements IAnimation {
 
     private final List<AbstractModifier> modifiers = new ArrayList<>();
     @Nullable
-    final T animation;
+    @Getter
+    @Setter
+    T animation;
 
 
     public ModifierLayer(@Nullable T animation, AbstractModifier... modifiers) {
@@ -52,12 +57,13 @@ public class ModifierLayer<T extends IAnimation> implements IAnimation {
         this.linkModifiers();
     }
 
-    public int size() {
-        return modifiers.size();
+    public void replaceAnimationWithFade(AbstractFadeModifier fadeModifier, @Nullable T newAnimation) {
+        fadeModifier.setBeginAnimation(this.getAnimation());
+        this.setAnimation(newAnimation);
     }
 
-    public @Nullable T getAnimation() {
-        return animation;
+    public int size() {
+        return modifiers.size();
     }
 
     protected void linkModifiers() {
