@@ -1,4 +1,4 @@
-package dev.kosmx.playerAnim.api.layered;
+package dev.kosmx.playerAnim.api.layered.modifier;
 
 import dev.kosmx.playerAnim.api.TransformType;
 import dev.kosmx.playerAnim.core.util.Vec3f;
@@ -9,7 +9,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MirrorModifier extends IModifier {
+public class MirrorModifier extends AbstractModifier {
 
     public static final Map<String, String> mirrorMap;
 

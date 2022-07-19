@@ -1,4 +1,4 @@
-package dev.kosmx.playerAnim.api.layered;
+package dev.kosmx.playerAnim.api.layered.modifier;
 
 import dev.kosmx.playerAnim.api.TransformType;
 import dev.kosmx.playerAnim.core.util.Vec3f;
@@ -8,7 +8,7 @@ import dev.kosmx.playerAnim.core.util.Vec3f;
  * speed = 2 means twice the speed, the animation will take half as long
  * <code>length = 1/speed</code>
  */
-public class SpeedModifier extends IModifier {
+public class SpeedModifier extends AbstractModifier {
     public float speed;
 
     private float delta = 0;

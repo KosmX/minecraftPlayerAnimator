@@ -1,6 +1,7 @@
 package dev.kosmx.playerAnim.api.layered;
 
 import dev.kosmx.playerAnim.api.TransformType;
+import dev.kosmx.playerAnim.api.layered.modifier.AbstractModifier;
 import dev.kosmx.playerAnim.core.util.Vec3f;
 
 import javax.annotation.Nullable;
@@ -9,14 +10,21 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+
+/**
+ * Layer to easily swap animations, add modifiers or do other sort of effects
+ * Modifiers <b>affect</b> each other. For example if you put a fade modifier after a speed modifier, it will be affected by the modifier.
+ *
+ * @param <T>
+ */
 public class ModifierLayer<T extends IAnimation> implements IAnimation {
 
-    private final List<IModifier> modifiers = new ArrayList<>();
+    private final List<AbstractModifier> modifiers = new ArrayList<>();
     @Nullable
     final T animation;
 
 
-    public ModifierLayer(@Nullable T animation, IModifier... modifiers) {
+    public ModifierLayer(@Nullable T animation, AbstractModifier... modifiers) {
         this.animation = animation;
         Collections.addAll(this.modifiers, modifiers);
     }
@@ -33,7 +41,8 @@ public class ModifierLayer<T extends IAnimation> implements IAnimation {
         } else if (animation != null) animation.tick();
     }
 
-    public void addModifier(IModifier modifier, int idx) {
+    public void addModifier(AbstractModifier modifier, int idx) {
+        modifier.setHost(this);
         modifiers.add(idx, modifier);
         this.linkModifiers();
     }
@@ -52,11 +61,11 @@ public class ModifierLayer<T extends IAnimation> implements IAnimation {
     }
 
     protected void linkModifiers() {
-        Iterator<IModifier> modifierIterator = modifiers.iterator();
+        Iterator<AbstractModifier> modifierIterator = modifiers.iterator();
         if (modifierIterator.hasNext()) {
-            IModifier tmp = modifierIterator.next();
+            AbstractModifier tmp = modifierIterator.next();
             while (modifierIterator.hasNext()) {
-                IModifier tmp2 = modifierIterator.next();
+                AbstractModifier tmp2 = modifierIterator.next();
                 tmp.setAnim(tmp2);
                 tmp = tmp2;
             }
@@ -84,6 +93,6 @@ public class ModifierLayer<T extends IAnimation> implements IAnimation {
     public void setupAnim(float tickDelta) {
         if (modifiers.size() > 0) {
             modifiers.get(0).setupAnim(tickDelta);
-        } else animation.setupAnim(tickDelta);
+        } else if (animation != null) animation.setupAnim(tickDelta);
     }
 }
