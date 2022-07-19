@@ -13,12 +13,21 @@ sourceSets {
         runtimeClasspath += main.runtimeClasspath
     }
     main {
-        runtimeClasspath += testmod.runtimeClasspath
+        //runtimeClasspath += testmod.runtimeClasspath
     }
 }
 
 loom {
     accessWidenerPath = project(":${project.module_name}:common").loom.accessWidenerPath
+    runs {
+        testmodClient {
+            client()
+            //ideConfigGenerated project.rootProject == project
+            ideConfigGenerated(true)
+            name = "Testmod Client"
+            source sourceSets.testmod
+        }
+    }
 }
 
 
@@ -32,16 +41,17 @@ configurations {
 
 dependencies {
     modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
-    //modApi "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_api_version}"  //Try to avoid FAPI
 
-    //modApi "dev.architectury:architectury-fabric:${rootProject.architectury_version}"
 
     common(project(path: ":${project.module_name}:common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":${project.module_name}:common", configuration: "transformProductionFabric")) { transitive false }
 
     common(shadowCommon(project(path: ":coreLib")) {transitive false}) {transitive false} //Why can I nest these?
 
+    //Testing libraries
     //modImplementation 'io.github.kosmx.bendy-lib:bendy-lib-fabric:2.1.0'
+
+    //runtimeOnly "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_api_version}"  //Try to avoid FAPI
 }
 
 processResources {

@@ -42,7 +42,7 @@ allprojects {
 
 ext.ENV = System.getenv()
 
-ext.keysExists = ENV.KOSMX_MAVEN_USER != null || project.getGradle().getStartParameter().isDryRun();
+ext.keysExists = ENV.KOSMX_MAVEN_USER != null || project.getGradle().getStartParameter().isDryRun()
 
 if(keysExists) {
     project.ext.keys = new Properties()
