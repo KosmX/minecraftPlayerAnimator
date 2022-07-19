@@ -24,7 +24,8 @@ public final class PlayerAnimationAccess {
     /**
      * If you don't want to create your own mixin, you can use this event to add animation to players<br>
      * <b>The event will fire for every player</b> and if the player reloads, it will fire again.<br>
-     *
+     * <hr>
+     * NOTE: When the event fires, <code>player.getAnimationStack()</code> will be <code>null</code>, you'll have to use the given stack.
      */
     public static final Event<AnimationRegister> REGISTER_ANIMATION_EVENT = new Event<>(AnimationRegister.class, listeners -> (player, animationStack) -> {
         for (AnimationRegister listener : listeners) {
