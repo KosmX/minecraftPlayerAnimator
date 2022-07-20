@@ -1,6 +1,14 @@
 package dev.kosmx.animatorTestmod;
 
+import dev.kosmx.playerAnim.api.layered.IAnimation;
+import dev.kosmx.playerAnim.api.layered.KeyframeAnimationPlayer;
+import dev.kosmx.playerAnim.api.layered.ModifierLayer;
+import dev.kosmx.playerAnim.api.layered.modifier.AbstractModifier;
+import dev.kosmx.playerAnim.api.layered.modifier.MirrorModifier;
+import dev.kosmx.playerAnim.api.layered.modifier.SpeedModifier;
+import dev.kosmx.playerAnim.minecraftApi.PlayerAnimationAccess;
 import net.fabricmc.api.ClientModInitializer;
+import net.minecraft.client.player.LocalPlayer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,9 +25,26 @@ import org.slf4j.LoggerFactory;
  */
 public class PlayerAnimTestmod implements ClientModInitializer {
     public static final Logger LOGGER = LoggerFactory.getLogger("testmod");
+    public static final ModifierLayer<IAnimation> testAnimation = new ModifierLayer<>();
+
     @Override
     public void onInitializeClient() {
         LOGGER.warn("Testmod is loading :D");
 
+        PlayerAnimationAccess.REGISTER_ANIMATION_EVENT.register((player, animationStack) -> {
+            if (player instanceof LocalPlayer) {
+                animationStack.addAnimLayer(42, testAnimation);
+            }
+        });
+
+        testAnimation.addModifierBefore(new SpeedModifier(0.5f));
+        testAnimation.addModifierBefore(new MirrorModifier(true));
+
+
+    }
+
+    public static void playTestAnimation() {
+
+        PlayerAnimTestmod.testAnimation.setAnimation(new KeyframeAnimationPlayer(AnimationRegistry.animations.get("two_handed_vertical_right_right")));
     }
 }

@@ -25,7 +25,6 @@ public class ModifierLayer<T extends IAnimation> implements IAnimation {
     private final List<AbstractModifier> modifiers = new ArrayList<>();
     @Nullable
     @Getter
-    @Setter
     T animation;
 
 
@@ -56,8 +55,22 @@ public class ModifierLayer<T extends IAnimation> implements IAnimation {
         this.linkModifiers();
     }
 
+    public void addModifierBefore(AbstractModifier modifier) {
+        this.addModifier(modifier, 0);
+    }
+
+    public void addModifierLast(AbstractModifier modifier) {
+        this.addModifier(modifier, modifiers.size());
+    }
+
     public void removeModifier(int idx) {
         modifiers.remove(idx);
+        this.linkModifiers();
+    }
+
+
+    public void setAnimation(@Nullable T animation) {
+        this.animation = animation;
         this.linkModifiers();
     }
 
@@ -79,6 +92,7 @@ public class ModifierLayer<T extends IAnimation> implements IAnimation {
                 tmp.setAnim(tmp2);
                 tmp = tmp2;
             }
+            tmp.setAnim(this.animation);
         }
     }
 

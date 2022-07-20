@@ -3,7 +3,8 @@
   "package": "dev.kosmx.animatorTestmod.mixin",
   "compatibilityLevel": "JAVA_16",
   "client": [
-    "ClientPlayerMixin"
+    "ClientPlayerMixin",
+    "MinecraftClientMixin"
   ],
   "mixins": [
   ],

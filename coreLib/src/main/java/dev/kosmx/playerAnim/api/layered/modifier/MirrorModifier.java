@@ -2,13 +2,17 @@ package dev.kosmx.playerAnim.api.layered.modifier;
 
 import dev.kosmx.playerAnim.api.TransformType;
 import dev.kosmx.playerAnim.core.util.Vec3f;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+@NoArgsConstructor
+@AllArgsConstructor
 public class MirrorModifier extends AbstractModifier {
 
     public static final Map<String, String> mirrorMap;

@@ -36,6 +36,7 @@ public class KeyframeAnimationPlayer implements IAnimation {
      * @param t begin playing from tick
      */
     public KeyframeAnimationPlayer(KeyframeAnimation emote, int t) {
+        if (emote == null) throw new IllegalArgumentException("Animation can not be null");
         this.data = emote;
 
         this.bodyParts = new HashMap<>(emote.getBodyParts().size());
@@ -47,6 +48,10 @@ public class KeyframeAnimationPlayer implements IAnimation {
         if(isInfinite() && t > data.returnToTick){
             currentTick = (t - data.returnToTick)%(data.endTick - data.returnToTick + 1) + data.returnToTick;
         }
+    }
+
+    public KeyframeAnimationPlayer(KeyframeAnimation animation) {
+        this(animation, 0);
     }
 
     @Override

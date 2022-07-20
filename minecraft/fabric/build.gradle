@@ -13,7 +13,7 @@ sourceSets {
         runtimeClasspath += main.runtimeClasspath
     }
     main {
-        //runtimeClasspath += testmod.runtimeClasspath
+        runtimeClasspath += testmod.runtimeClasspath
     }
 }
 
@@ -23,6 +23,7 @@ loom {
         testmodClient {
             client()
             //ideConfigGenerated project.rootProject == project
+            //vmArg "-Dmixin.debug.export=true"
             ideConfigGenerated(true)
             name = "Testmod Client"
             source sourceSets.testmod

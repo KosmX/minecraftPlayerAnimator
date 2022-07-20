@@ -39,6 +39,7 @@ public class SpeedModifier extends AbstractModifier {
 
     protected void step(float delta) {
         delta *= speed;
+        delta += shiftedDelta;
         while (delta > 1) {
             delta -= 1;
             super.tick();
