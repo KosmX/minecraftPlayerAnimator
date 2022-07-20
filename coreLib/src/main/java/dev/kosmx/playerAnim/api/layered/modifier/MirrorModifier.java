@@ -52,8 +52,10 @@ public class MirrorModifier extends AbstractModifier {
         HashMap<String, String> partMap = new HashMap<>();
         partMap.put("leftArm", "rightArm");
         partMap.put("leftLeg", "rightLeg");
+        partMap.put("leftItem", "rightItem");
         partMap.put("rightArm", "leftArm");
         partMap.put("rightLeg", "leftLeg");
+        partMap.put("rightItem", "leftItem");
         mirrorMap = Collections.unmodifiableMap(partMap);
     }
 }
