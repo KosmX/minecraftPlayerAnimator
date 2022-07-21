@@ -2,14 +2,14 @@
   "schemaVersion": 1,
   "id": "player-animator",
   "version": "${version}",
-  "name": "Example Mod",
-  "description": "This is an example description! Tell everyone what your mod is about!",
+  "name": "Player Animator",
+  "description": "A lightweight library to easily animate the player",
   "authors": [
-    "Me!"
+    "KosmX  "
   ],
   "contact": {
-    "homepage": "https://fabricmc.net/",
-    "sources": "https://github.com/FabricMC/fabric-example-mod"
+    "homepage": "kosmx.dev",
+    "sources": "https://github.com/KosmX/fabricPlayerAnimation"
   },
   "license": "Insert License Here",
   "environment": "*",
