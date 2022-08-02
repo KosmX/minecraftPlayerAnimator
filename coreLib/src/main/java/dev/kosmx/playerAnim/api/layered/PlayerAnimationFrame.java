@@ -10,7 +10,7 @@ import java.util.Map;
 /**
  * Mixin it into a player, add to its Animation stack,
  * and override its tick,
- *
+ * <p>
  * It is a representation of your pose on the frame.
  * Override {@link IAnimation#setupAnim(float)} and set the pose there.
  */
