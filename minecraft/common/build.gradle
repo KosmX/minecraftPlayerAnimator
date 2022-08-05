@@ -14,7 +14,7 @@ dependencies {
 
     //modApi "dev.architectury:architectury:${rootProject.architectury_version}"
 
-    modCompileOnly 'io.github.kosmx.bendy-lib:bendy-lib:2.1.0'
+    modCompileOnly "io.github.kosmx.bendy-lib:bendy-lib:${project.bendy_lib}"
 
     }
 
