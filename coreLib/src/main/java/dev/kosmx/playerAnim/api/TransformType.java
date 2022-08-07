@@ -10,7 +10,7 @@ public enum TransformType {
      */
     ROTATION,
     /**
-     * Bend the part, the vector should look like this: {bend planes rotation 0-2π, bend value, not defined}
+     * Bend the part, the vector should look like this: {bend planes rotation 0-2&pi;, bend value, not defined}
      */
-    BEND;
+    BEND
 }
