@@ -9,6 +9,7 @@ import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * Utility class to convert animation data to a binary format.
@@ -146,6 +147,9 @@ public final class AnimationBinary {
             valid = readPart(buf, animation.rightLeg, version, keyframeSize) && valid;
             valid = readPart(buf, animation.leftLeg, version, keyframeSize) && valid;
         }
+        long msb = buf.getLong();
+        long lsb = buf.getLong();
+        animation.uuid = new UUID(msb, lsb);
         animation.extraData.put("valid", valid);
 
         return animation.build();
@@ -203,7 +207,7 @@ public final class AnimationBinary {
 
     public static int calculateSize(KeyframeAnimation animation, int version) {
         //I will create less efficient loops but these will be more easily fixable
-        int size = 40;//The header makes xx bytes IIIIBIBBBLL
+        int size = 36;//The header makes xx bytes IIIBIBBBLL
         if (version < 2) {
             size += partSize(animation.getPart("head"), version);
             size += partSize(animation.getPart("body"), version);

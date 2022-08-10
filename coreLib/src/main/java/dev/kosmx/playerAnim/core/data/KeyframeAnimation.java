@@ -70,7 +70,7 @@ public final class KeyframeAnimation implements Supplier<UUID> {
         this.endTick = Math.max(beginTick + 1, endTick);
         this.stopTick = stopTick <= endTick ? endTick + 3 : stopTick;
         this.isInfinite = isInfinite;
-        if (returnToTick > endTick) throw new IllegalArgumentException("Trying to construct invalid animation");
+        if (isInfinite && (returnToTick < 0 || returnToTick > endTick)) throw new IllegalArgumentException("Trying to construct invalid animation");
         this.returnToTick = returnToTick;
         HashMap<String, StateCollection> bodyMap = new HashMap<>();
         for (Map.Entry<String, StateCollection> entry : bodyParts.entrySet()) {

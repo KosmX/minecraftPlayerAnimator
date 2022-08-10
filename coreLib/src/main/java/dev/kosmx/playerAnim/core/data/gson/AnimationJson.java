@@ -158,15 +158,8 @@ public class AnimationJson implements JsonDeserializer<List<KeyframeAnimation>>,
 
 
     /**
-     * To serialize emotes to Json.
-     * This code is not used in the mod, but I left it here for modders.
-     *
-     * If you want to serialize an emote without EmoteHolder
-     * do new EmoteHolder(emote, new LiteralText("name").formatted(Formatting.WHITE), new LiteralText("someString").formatted(Formatting.GRAY), new LiteralText("author").formatted(Formatting.GRAY), some random hash(int));
-     * (this code is from {@link QuarkReader#getEmote()})
-     *
-     * or use {@link AnimationJson#emoteSerializer(KeyframeAnimation)}
-     *
+     * Animation to emotecraft format JSON
+     * tries to serialize extraData as long as it is string/number/bool/json.     *
      *
      * @param emote source KeyframeAnimation
      * @param typeOfSrc idk

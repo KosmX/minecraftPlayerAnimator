@@ -7,6 +7,14 @@ import dev.kosmx.playerAnim.core.data.KeyframeAnimation;
 import java.io.*;
 import java.util.List;
 
+/**
+ * (De)Serialize {@link KeyframeAnimation}
+ * Can load emotecraft and basic gecko-lib animations
+ * always create emotecraft animation
+ * <p>
+ * Use {@link AnimationSerializing#deserializeAnimation(Reader)} to deserialize<br>
+ * or {@link AnimationSerializing#serializeAnimation(KeyframeAnimation)} to serialize.
+ */
 public class AnimationSerializing {
 
     /**
