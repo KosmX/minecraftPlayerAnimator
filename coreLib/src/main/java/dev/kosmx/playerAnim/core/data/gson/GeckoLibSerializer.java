@@ -43,8 +43,7 @@ public class GeckoLibSerializer {
 
             keyframeSerializer(builder, node.get("bones").getAsJsonObject());
             KeyframeAnimation emoteData = builder.build();
-            //EmoteHolder emoteHolder = new EmoteHolder(emoteData, name, EmoteInstance.instance.getDefaults().textFromString("").formatted(EmotesTextFormatting.YELLOW), EmoteInstance.instance.getDefaults().emptyTex(), node.hashCode());
-            //emoteHolder.isFromGeckoLib = true;
+
             emotes.add(emoteData);
         });
         return emotes;

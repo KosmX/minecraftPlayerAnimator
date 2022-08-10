@@ -9,7 +9,7 @@ public final class PlayerAnimationAccess {
 
     /**
      * Get the animation stack for a player entity on the client.
-     *
+     * <p>
      * Or you can use {@code ((IPlayer) player).getAnimationStack();}
      *
      * @param player The ClientPlayer object
