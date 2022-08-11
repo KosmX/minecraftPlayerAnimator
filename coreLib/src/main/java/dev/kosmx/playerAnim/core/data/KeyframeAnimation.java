@@ -94,7 +94,7 @@ public final class KeyframeAnimation implements Supplier<UUID> {
     }
 
     /**
-     * Some data from source are ignored
+     * ExtraData from source are ignored
      *
      * @param o other
      * @return are the object equals or the same
@@ -112,7 +112,7 @@ public final class KeyframeAnimation implements Supplier<UUID> {
         if (isInfinite != emoteData.isInfinite) return false;
         if (returnToTick != emoteData.returnToTick) return false;
         if (isEasingBefore != emoteData.isEasingBefore) return false;
-        if (!Objects.equals(this.extraData, emoteData.extraData)) return false;
+        //if (!Objects.equals(this.extraData, emoteData.extraData)) return false;
 
         return bodyParts.equals(emoteData.bodyParts);
     }

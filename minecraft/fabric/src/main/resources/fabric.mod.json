@@ -21,5 +21,10 @@
   ],
   "depends": {
     "minecraft": ">=1.16"
+  },
+  "custom": {
+    "modmenu": {
+      "badges": ["library"]
+    }
   }
 }

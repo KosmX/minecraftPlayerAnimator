@@ -156,6 +156,16 @@ public class PlayerModelMixin<T extends LivingEntity> extends HumanoidModel<T> {
         }
         else {
             emoteSupplier.set(null);
+            resetBend(this.body);
+            resetBend(this.leftArm);
+            resetBend(this.rightArm);
+            resetBend(this.leftLeg);
+            resetBend(this.rightLeg);
         }
+    }
+
+    @Unique
+    private static void resetBend(ModelPart part) {
+        IBendHelper.INSTANCE.bend(part, null);
     }
 }
