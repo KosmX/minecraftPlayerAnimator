@@ -7,8 +7,6 @@ import org.spongepowered.asm.mixin.Mixins;
 public class ForgeModInterface {
     public ForgeModInterface() {
         //Hello world!
-    }
-    static {
         if (Helper.isBendEnabled()) {
             //Use bend mixin(s) ONLY in bend mode
             Mixins.addConfiguration("playerAnimator-onlyBend.mixins.json");
