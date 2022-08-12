@@ -1,9 +1,13 @@
 package dev.kosmx.playerAnim.impl.forge;
 
-import net.minecraftforge.fml.ModList;
-
 public class HelperImpl {
     public static boolean isBendyLibPresent() {
-        return ModList.get().isLoaded("bendylib");
+        try {
+            Class.forName("io.github.kosmx.bendylib.IModelPart").getName();
+            System.out.println("[playerAnimator] bendy-lib found");
+            return true;
+        } catch(ClassNotFoundException e) {
+            return false;
+        }
     }
 }
