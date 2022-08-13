@@ -2,6 +2,9 @@ plugins {
     id "com.github.johnrengelman.shadow" version "7.1.2"
 }
 
+apply plugin: 'com.modrinth.minotaur'
+apply plugin: 'com.matthewprenger.cursegradle'
+
 architectury {
     platformSetupLoomIde()
     forge()
@@ -37,6 +40,8 @@ dependencies {
 
     //modImplementation 'io.github.kosmx.bendy-lib:bendy-lib-forge:2.1.0'
 }
+
+project.archivesBaseName = rootProject.archives_base_name + "-" + project.name
 
 processResources {
     inputs.property "version", project.version
@@ -102,7 +107,7 @@ publishing {
                 }
                 maven {
                     name = "GitHubPackages"
-                    url = "https://maven.pkg.github.com/kosmx/fabricPlayerAnimation"
+                    url = "https://maven.pkg.github.com/kosmx/minecraftPlayerAnimator"
                     credentials {
                         username = System.getenv("GITHUB_ACTOR")
                         password = System.getenv("GITHUB_TOKEN")
@@ -112,5 +117,62 @@ publishing {
                 mavenLocal()
             }
         }
+    }
+}
+
+
+if(keysExists) {
+    modrinth {
+        versionType = project.cfType
+
+        uploadFile = remapJar
+
+        token = project.keys.modrinth_token
+
+        projectId = "playeranimator"
+
+        versionNumber = "${project.mod_version}-forge"
+        versionName = "${project.mod_version}-forge"
+
+        gameVersions = ["1.18", "1.18.1", "1.18.2", "1.19", "1.19.1", "1.19.2"]
+        changelog = changes
+        loaders = ["forge"]
+        failSilently = false
+
+        dependencies {
+            optional.project "bendy-lib"
+        }
+    }
+
+    curseforge {
+        apiKey = project.keys.curseforge_key
+
+        project {
+            id = '658587'
+            changelogType = "markdown"
+            //changelog = '[See on Github](https://github.com/KosmX/emotes/commits/master)'
+            changelog = changes
+            releaseType = project.cfType
+            addGameVersion "1.18"
+            addGameVersion "1.18.1"
+            addGameVersion "1.18.2"
+            addGameVersion "1.19"
+            addGameVersion "1.19.1"
+            addGameVersion "1.19.2"
+            addGameVersion "Forge"
+
+
+            relations {
+                optionalDependency 'bendy-lib'
+            }
+
+            options {
+                forgeGradleIntegration = false
+                javaVersionAutoDetect = false // defaults to true
+            }
+
+
+            mainArtifact(remapJar)
+        }//*/
     }
 }

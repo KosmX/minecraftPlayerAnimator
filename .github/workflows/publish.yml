@@ -1,7 +1,17 @@
 
 name: Publish
 
-on: [workflow_dispatch]
+on:
+  workflow_dispatch:
+    inputs:
+      type:
+        description: 'alpha/beta/release'
+        required: false
+        default: 'alpha'
+      changelog:
+        description: 'changelog'
+        required: false
+        default: ''
 
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
@@ -14,6 +24,12 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Check for valid input
+        run: |
+          if ! ( [ "${{github.event.inputs.type}}" = "alpha" ] || [ "${{github.event.inputs.type}}" = "beta" ] || [ "${{github.event.inputs.type}}" = "release" ] )
+          then
+          return -1
+          fi
       - uses: actions/checkout@v3
       - uses: actions/setup-java@v3
         with:
@@ -27,3 +43,7 @@ jobs:
           KOSMX_MAVEN_USER: ${{ secrets.MAVEN_USER }}
           KOSMX_MAVEN_TOKEN: ${{ secrets.MAVEN_PASS }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+          CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
+          CHANGELOG: ${{github.event.inputs.changelog}}
+          RELEASE_TYPE: ${{github.event.inputs.type}}

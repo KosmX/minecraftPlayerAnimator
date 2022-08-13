@@ -21,3 +21,12 @@ subprojects {
         // mappings "net.fabricmc:yarn:1.19+build.2:v2"
     }
 }
+
+if (keysExists) {
+    task publishMod {
+        finalizedBy(":${project.name}:fabric:modrinth")
+        finalizedBy(":${project.name}:forge:modrinth")
+        finalizedBy(":${project.name}:fabric:curseforge")
+        finalizedBy(":${project.name}:forge:curseforge")
+    }
+}
