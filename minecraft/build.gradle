@@ -24,9 +24,9 @@ subprojects {
 
 if (keysExists) {
     task publishMod {
-        finalizedBy(":${project.module_name}:fabric:modrinth")
-        finalizedBy(":${project.module_name}:forge:modrinth")
-        finalizedBy(":${project.module_name}:fabric:curseforge")
-        finalizedBy(":${project.module_name}:forge:curseforge")
+        finalizedBy(":${project.name}:fabric:modrinth")
+        finalizedBy(":${project.name}:forge:modrinth")
+        finalizedBy(":${project.name}:fabric:curseforge")
+        finalizedBy(":${project.name}:forge:curseforge")
     }
 }
