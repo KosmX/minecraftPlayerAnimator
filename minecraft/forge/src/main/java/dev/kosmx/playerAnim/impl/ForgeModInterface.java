@@ -8,6 +8,7 @@ public class ForgeModInterface {
     public ForgeModInterface() {
         //Hello world!
     }
+
     static {
         if (Helper.isBendEnabled()) {
             //Use bend mixin(s) ONLY in bend mode

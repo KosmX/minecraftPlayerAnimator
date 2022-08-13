@@ -23,9 +23,9 @@ public abstract class MinecraftClientMixin {
     }
 
     @Inject(method = "startAttack", at = @At("HEAD"), cancellable = true)
-    private void ATTACK(CallbackInfoReturnable<Boolean> cir) {
+    private void ATTACK(CallbackInfo cir) {
         System.out.println("MinecraftClientMixin - startAttack");
         PlayerAnimTestmod.playTestAnimation();
-        cir.setReturnValue(true);
+        cir.cancel();
     }
 }

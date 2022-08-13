@@ -16,10 +16,16 @@ public class AnimationRegistry {
     public static void load(ResourceManager resourceManager) {
         var dataFolder = "animations";
 
-        //Somehow it is possible to dynamically load resources, but I couldn't make it work...
-        //so the most hacky way: base64 it
 
+        /*
+        try (InputStream reader = AnimationRegistry.class.getResourceAsStream("assets\\testmod\\animations\\two_handed_slash_horizontal_right.json")) {
+            KeyframeAnimation animation = AnimationSerializing.deserializeAnimation(reader).get(0);
+            animations.put("two_handed_slash_horizontal_right", animation);
 
+        } catch(IOException e) {
+            e.printStackTrace();
+        }
+         */
         var bytes = Base64.getDecoder().decode(SomeString.something);
         try (InputStream reader = new ByteArrayInputStream(bytes)) {
             KeyframeAnimation animation = AnimationSerializing.deserializeAnimation(reader).get(0);
