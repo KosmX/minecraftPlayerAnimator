@@ -46,3 +46,4 @@ jobs:
           MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
           CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
           CHANGELOG: ${{github.event.inputs.changelog}}
+          RELEASE_TYPE: ${{github.event.inputs.type}}
