@@ -191,6 +191,7 @@ if(keysExists) {
 
             afterEvaluate {
                 mainArtifact(remapJar)
+                uploadTask.dependsOn(remapJar)
             }
         }
     }
