@@ -14,16 +14,16 @@ import java.util.function.Supplier;
 
 /**
  * Used to store Emote data
- *
- * Animation data
- * Notable key points in <i>time</i>:
- * begin: probably the first keyframe, before this, the default model can move to starting pose
- * end: last animation keyframe
- * stop: animating ends, after end the character can go back to its default pose
- *
- * isInfinite:
+ * <p>
+ * Animation data <br>
+ * Notable key points in <i>time</i>: <br>
+ * begin: probably the first keyframe, before this, the default model can move to starting pose <br>
+ * end: last animation keyframe <br>
+ * stop: animating ends, after end the character can go back to its default pose <br>
+ * <p>
+ * isInfinite: <br>
  * if true, the animation will jump back to returnToTick after endTick <i>inclusive</i>
- *
+ * <p>
  * To play an animation use {@link KeyframeAnimationPlayer}
  *
  */
@@ -626,7 +626,7 @@ public final class KeyframeAnimation implements Supplier<UUID> {
             rightLeg = new StateCollection(-1.9f, 12, 0.1f, 0, 0, 0, validationThreshold, true);
             leftItem = new StateCollection(0, 0, 0, 0, 0, 0, validationThreshold, false);
             rightItem = new StateCollection(0, 0, 0, 0, 0, 0, validationThreshold, false);
-            torso = new StateCollection(-1.9f, 12, 0.1f, 0, 0, 0, validationThreshold, true);
+            torso = new StateCollection(0, 0, 0, 0, 0, 0, validationThreshold, true);
 
             bodyParts.put("head", head);
             bodyParts.put("body", body);
