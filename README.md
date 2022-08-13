@@ -43,7 +43,6 @@ To add an animation to the player, use
 ```java
 AnimationStack animationStack = PlayerAnimationAccess.getPlayerAnimLayer(clientPlayer);
 animationStack.addAnimLayer(...);
-...
 ```
 I advice using `AnimationContainer` and setting its animation. (this is null-tolerant)  
 
@@ -53,7 +52,34 @@ To play a keyframe animation from `emotecraft` or `geckolib` json, `dev.kosmx.pl
 To modify/tweak animations, look into `dev.kosmx.playerAnim.api.layered` package, you might implement your own `IAnimation` or extend/modify an existing class.  
 `ModifierLayer` will let you add modifiers but that is effectively an `AnimationContainer` layer.
 
+# Model
+The player model is made of 6 body parts:  
+- head  
+- torso  
+- right arm  
+- left arm  
+- right leg  
+- left leg
+
+And I added an extra: __body__:  
+This is a bone for the whole player, transforming it will transform every part.  
+*To move everything up by 2, you only need to move the `body` up.*  
+
+> Most Blockbench player models use the name `body` for the part, I call `torso`. In that case, rename it to `torso` and that will fix the model for the library.  
+
+Part names can be `snake_case` or `camelCase`:  
+`right_arm` or `rightArm`, both will work.  
+
+Supported transformations:  
+offset, rotation
+
+And bend if bendy-lib is loaded.    
+Bend will `bend` the part in the middle, check the `Blender` model to see how.  
+
+The library supports all easings from [easings.net](https://easings.net/#) and constant and linear.  
+No easing parameters are supported. (everything was copied from easings.net)  
+
 ## Notes
-> GeckoLib is not guaranteed to work, but you can try!  
-> molang is not supported  
+> GeckoLib is not guaranteed to work, but you can try! (It will work most of the time)  
+> [molang](https://docs.microsoft.com/minecraft/creator/reference/content/molangreference/) is not supported  
 
