@@ -54,6 +54,6 @@ To modify/tweak animations, look into `dev.kosmx.playerAnim.api.layered` package
 `ModifierLayer` will let you add modifiers but that is effectively an `AnimationContainer` layer.
 
 ## Notes
-> GeckoLib is not guaranteed to work, try it
-> molang is not supported
+> GeckoLib is not guaranteed to work, but you can try!  
+> molang is not supported  
 
