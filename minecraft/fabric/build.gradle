@@ -2,6 +2,9 @@ plugins {
     id "com.github.johnrengelman.shadow" version "7.1.2"
 }
 
+apply plugin: 'com.modrinth.minotaur'
+apply plugin: 'com.matthewprenger.cursegradle'
+
 architectury {
     platformSetupLoomIde()
     fabric()
@@ -54,6 +57,8 @@ dependencies {
 
     //runtimeOnly "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_api_version}"  //Try to avoid FAPI
 }
+
+project.archivesBaseName = rootProject.archives_base_name + "-" + project.name
 
 processResources {
     inputs.property "version", project.version
@@ -127,6 +132,65 @@ publishing {
                 }
             } else {
                 mavenLocal()
+            }
+        }
+    }
+}
+
+
+if(keysExists) {
+    modrinth {
+        versionType = project.cfType
+
+        uploadFile = remapJar
+
+        token = project.keys.modrinth_token
+
+        projectId = "playeranimator"
+
+        versionNumber = "${project.mod_version}-fabric"
+        versionName = "${project.mod_version}-fabric"
+
+        gameVersions = ["1.18", "1.18.1", "1.18.2", "1.19", "1.19.1", "1.19.2"]
+        changelog = changes
+        loaders = ["fabric", "quilt"]
+        failSilently = false
+
+        dependencies {
+            optional.project "bendy-lib"
+        }
+    }
+
+    curseforge {
+        apiKey = project.keys.curseforge_key
+
+        project {
+            id = '658587' //https://www.curseforge.com/minecraft/mc-mods/playeranimator
+            changelogType = "markdown"
+            //changelog = '[See on Github](https://github.com/KosmX/emotes/commits/master)'
+            changelog = changes
+            releaseType = project.cfType
+            addGameVersion "1.18"
+            addGameVersion "1.18.1"
+            addGameVersion "1.18.2"
+            addGameVersion "1.19"
+            addGameVersion "1.19.1"
+            addGameVersion "1.19.2"
+            addGameVersion "Fabric"
+            addGameVersion "Quilt"
+
+
+            relations {
+                optionalDependency 'bendy-lib'
+            }
+
+            options {
+                forgeGradleIntegration = false
+                javaVersionAutoDetect = false // defaults to true
+            }
+
+            afterEvaluate {
+                mainArtifact(remapJar)
             }
         }
     }
