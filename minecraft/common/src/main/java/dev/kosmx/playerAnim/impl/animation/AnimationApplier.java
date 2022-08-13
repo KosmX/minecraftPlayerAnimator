@@ -4,6 +4,7 @@ package dev.kosmx.playerAnim.impl.animation;
 import dev.kosmx.playerAnim.api.TransformType;
 import dev.kosmx.playerAnim.api.layered.IAnimation;
 import dev.kosmx.playerAnim.core.impl.AnimationProcessor;
+import dev.kosmx.playerAnim.core.util.Pair;
 import dev.kosmx.playerAnim.core.util.Vec3f;
 import net.minecraft.client.model.geom.ModelPart;
 
