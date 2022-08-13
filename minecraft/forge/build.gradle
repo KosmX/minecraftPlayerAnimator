@@ -171,10 +171,8 @@ if(keysExists) {
                 javaVersionAutoDetect = false // defaults to true
             }
 
-            afterEvaluate {
-                mainArtifact(remapJar)
-                uploadTask.dependsOn(remapJar)
-            }
+
+            mainArtifact(remapJar)
         }//*/
     }
 }
