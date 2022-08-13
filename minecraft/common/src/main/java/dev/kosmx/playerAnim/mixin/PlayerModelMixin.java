@@ -1,6 +1,7 @@
 package dev.kosmx.playerAnim.mixin;
 
 import dev.kosmx.playerAnim.core.impl.AnimationProcessor;
+import dev.kosmx.playerAnim.core.util.Pair;
 import dev.kosmx.playerAnim.core.util.SetableSupplier;
 import dev.kosmx.playerAnim.impl.IAnimatedPlayer;
 import dev.kosmx.playerAnim.impl.IMutableModel;
@@ -142,7 +143,9 @@ public class PlayerModelMixin<T extends LivingEntity> extends HumanoidModel<T> {
             emote.updatePart("torso", this.body);
 
 
-            thisWithMixin.getTorso().bend(emote.getBend("torso"));
+            Pair<Float, Float> torsoBend = emote.getBend("torso");
+            Pair<Float, Float> bodyBend = emote.getBend("body");
+            thisWithMixin.getTorso().bend(new Pair<>(torsoBend.getLeft() + bodyBend.getLeft(), torsoBend.getRight() + bodyBend.getRight()));
             thisWithMixin.getLeftArm().bend(emote.getBend("leftArm"));
             thisWithMixin.getLeftLeg().bend(emote.getBend("leftLeg"));
             thisWithMixin.getRightArm().bend(emote.getBend("rightArm"));

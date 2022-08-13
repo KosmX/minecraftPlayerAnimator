@@ -151,7 +151,7 @@ if(keysExists) {
         versionNumber = "${project.mod_version}-fabric"
         versionName = "${project.mod_version}-fabric"
 
-        gameVersions = ["1.18", "1.18.1", "1.18.2", "1.19", "1.19.1", "1.19.2"]
+        gameVersions = ["1.16.4", "1.16.5"]
         changelog = changes
         loaders = ["fabric", "quilt"]
         failSilently = false
@@ -170,14 +170,9 @@ if(keysExists) {
             //changelog = '[See on Github](https://github.com/KosmX/emotes/commits/master)'
             changelog = changes
             releaseType = project.cfType
-            addGameVersion "1.18"
-            addGameVersion "1.18.1"
-            addGameVersion "1.18.2"
-            addGameVersion "1.19"
-            addGameVersion "1.19.1"
-            addGameVersion "1.19.2"
+            addGameVersion "1.16.4"
+            addGameVersion "1.16.5"
             addGameVersion "Fabric"
-            addGameVersion "Quilt"
 
 
             relations {

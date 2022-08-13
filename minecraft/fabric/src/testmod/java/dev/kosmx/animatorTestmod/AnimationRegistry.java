@@ -14,7 +14,7 @@ public class AnimationRegistry {
     public static final Map<String, KeyframeAnimation> animations = new HashMap<>();
 
     public static void load(ResourceManager resourceManager) {
-        var dataFolder = "animations";
+        String  dataFolder = "animations";
 
 
         /*
@@ -26,7 +26,7 @@ public class AnimationRegistry {
             e.printStackTrace();
         }
          */
-        var bytes = Base64.getDecoder().decode(SomeString.something);
+        byte[] bytes = Base64.getDecoder().decode(SomeString.something);
         try (InputStream reader = new ByteArrayInputStream(bytes)) {
             KeyframeAnimation animation = AnimationSerializing.deserializeAnimation(reader).get(0);
             animations.put("two_handed_vertical_right_right", animation);
