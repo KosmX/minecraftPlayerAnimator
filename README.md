@@ -28,8 +28,7 @@ dependencies {
 ```
 If you use [architectury](https://docs.architectury.dev/docs/forge_loom/) setup you can implement `player-animation-lib` package in *common*.  
 
-ForgeGradle
-use the same maven,
+ForgeGradle  
 ```groovy
 repositories {
     (...)
