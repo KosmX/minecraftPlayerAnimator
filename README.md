@@ -31,11 +31,19 @@ If you use [architectury](https://docs.architectury.dev/docs/forge_loom/) setup 
 ForgeGradle
 use the same maven,
 ```groovy
+repositories {
+    (...)
+    maven {
+        name "KosmX's maven"
+        url 'https://maven.kosmx.dev/'
+    }
+}
+
 dependencies {
     (...)
     
     //If you don't want to include the library in your jar, remove the include word
-    implementation fg.deobf("dev.kosmx.player-anim:player-animation-lib-fabric:${project.player_anim}")
+    implementation fg.deobf("dev.kosmx.player-anim:player-animation-lib-forge:${project.player_anim}")
     
     //Bendy-lib also has a Forge version:
     //runtimeOnly fg.deobf("io.github.kosmx.bendy-lib:bendy-lib-forge:${project.bendylib_version}")
