@@ -29,12 +29,16 @@ public class GeckoLibSerializer {
             KeyframeAnimation.AnimationBuilder builder = new KeyframeAnimation.AnimationBuilder(AnimationFormat.JSON_MC_ANIM);
             String name = stringJsonElementEntry.getKey();
             JsonObject node = stringJsonElementEntry.getValue().getAsJsonObject();
+            if (!node.has("animation_length")) return;
             builder.endTick = (int) Math.ceil(node.get("animation_length").getAsFloat() * 20);
             if(node.has("loop")){
                 builder.isLooped = node.get("loop").getAsJsonPrimitive().isBoolean() && node.get("loop").getAsBoolean();
                 if(!builder.isLooped && node.get("loop").getAsJsonPrimitive().isString() && node.get("loop").getAsString().equals("hold_on_last_frame")){
                     builder.isLooped = true;
                     builder.returnTick = builder.endTick;
+                }
+                else {
+                    builder.endTick--;
                 }
             }
             builder.fullyEnableParts();
@@ -59,17 +63,17 @@ public class GeckoLibSerializer {
         if(node.has("rotation")){
             JsonElement jsonRotation = node.get("rotation");
             if(jsonRotation.isJsonArray()){
-                readCollection(getRots(stateCollection), 0, Ease.LINEAR, jsonRotation.getAsJsonArray(), emoteData);
+                readCollection(getRots(stateCollection), 0, Ease.LINEAR, jsonRotation.getAsJsonArray(), emoteData, false);
             }
             else {
                 jsonRotation.getAsJsonObject().entrySet().forEach(entry -> {
                     if(entry.getKey().equals("vector")){
-                        readCollection(getRots(stateCollection), 0, Ease.LINEAR, entry.getValue().getAsJsonArray(), emoteData);
+                        readCollection(getRots(stateCollection), 0, Ease.LINEAR, entry.getValue().getAsJsonArray(), emoteData, false);
                     }
                     else {
                         int tick = (int) (Float.parseFloat(entry.getKey()) * 20);
                         if (entry.getValue().isJsonArray()) {
-                            readCollection(getRots(stateCollection), tick, Ease.CONSTANT, entry.getValue().getAsJsonArray(), emoteData);
+                            readCollection(getRots(stateCollection), tick, Ease.CONSTANT, entry.getValue().getAsJsonArray(), emoteData, false);
                         }
                         else {
                             Ease ease = Ease.LINEAR;
@@ -80,11 +84,11 @@ public class GeckoLibSerializer {
                             }
                             if (currentNode.has("easing")) ease = Easing.easeFromString(currentNode.get("easing").getAsString());
                             if (currentNode.has("pre"))
-                                readCollection(getRots(stateCollection), tick, ease, currentNode.get("pre").getAsJsonArray(), emoteData);
+                                readCollection(getRots(stateCollection), tick, ease, currentNode.get("pre").getAsJsonArray(), emoteData, false);
                             if (currentNode.has("vector"))
-                                readCollection(getRots(stateCollection), tick, ease, currentNode.get("vector").getAsJsonArray(), emoteData);
+                                readCollection(getRots(stateCollection), tick, ease, currentNode.get("vector").getAsJsonArray(), emoteData, false);
                             if (currentNode.has("post"))
-                                readCollection(getRots(stateCollection), tick, ease, currentNode.get("post").getAsJsonArray(), emoteData);
+                                readCollection(getRots(stateCollection), tick, ease, currentNode.get("post").getAsJsonArray(), emoteData, false);
                         }
                     }
                 });
@@ -93,16 +97,16 @@ public class GeckoLibSerializer {
         if(node.has("position")){
             JsonElement jsonPosition = node.get("position");
             if(jsonPosition.isJsonArray()){
-                readCollection(getOffs(stateCollection), 0, Ease.LINEAR, jsonPosition.getAsJsonArray(), emoteData);
+                readCollection(getOffs(stateCollection), 0, Ease.LINEAR, jsonPosition.getAsJsonArray(), emoteData, true);
             }
             else {
                 jsonPosition.getAsJsonObject().entrySet().forEach(entry -> {
                     if(entry.getKey().equals("vector")){
-                        readCollection(getOffs(stateCollection), 0, Ease.LINEAR, entry.getValue().getAsJsonArray(), emoteData);
+                        readCollection(getOffs(stateCollection), 0, Ease.LINEAR, entry.getValue().getAsJsonArray(), emoteData, true);
                     }else {
                         int tick = (int) (Float.parseFloat(entry.getKey()) * 20);
                         if (entry.getValue().isJsonArray()) {
-                            readCollection(getOffs(stateCollection), tick, Ease.LINEAR, entry.getValue().getAsJsonArray(), emoteData);
+                            readCollection(getOffs(stateCollection), tick, Ease.LINEAR, entry.getValue().getAsJsonArray(), emoteData, true);
                         }
                         else {
                             Ease ease = Ease.LINEAR;
@@ -113,11 +117,11 @@ public class GeckoLibSerializer {
                             }
                             if (currentNode.has("easing")) ease = Easing.easeFromString(currentNode.get("easing").getAsString());
                             if (currentNode.has("pre"))
-                                readCollection(getOffs(stateCollection), tick, ease, currentNode.get("pre").getAsJsonArray(), emoteData);
+                                readCollection(getOffs(stateCollection), tick, ease, currentNode.get("pre").getAsJsonArray(), emoteData, true);
                             if (currentNode.has("vector"))
-                                readCollection(getOffs(stateCollection), tick, ease, currentNode.get("vector").getAsJsonArray(), emoteData);
+                                readCollection(getOffs(stateCollection), tick, ease, currentNode.get("vector").getAsJsonArray(), emoteData, true);
                             if (currentNode.has("post"))
-                                readCollection(getOffs(stateCollection), tick, ease, currentNode.get("post").getAsJsonArray(), emoteData);
+                                readCollection(getOffs(stateCollection), tick, ease, currentNode.get("post").getAsJsonArray(), emoteData, true);
                         }
                     }
                 });
@@ -125,12 +129,23 @@ public class GeckoLibSerializer {
         }
     }
 
-    private static void readCollection(KeyframeAnimation.StateCollection.State[] a, int tick, Ease ease, JsonArray array, KeyframeAnimation.AnimationBuilder emoteData){
+    private static void readCollection(KeyframeAnimation.StateCollection.State[] a, int tick, Ease ease, JsonArray array, KeyframeAnimation.AnimationBuilder emoteData, boolean isPos){
         if(a.length != 3)throw new ArrayStoreException("wrong array length");
         for(int i = 0; i < 3; i++){
             float value = array.get(i).getAsFloat();
-            if(a[0] == emoteData.body.x) value = value / 16f;
-            else if(a[0] == emoteData.body.pitch) value = -value;
+            if (isPos) {
+                if (a[0] == emoteData.body.x) {
+                    value = value / 16f;
+                    if (i == 0) value = -value;
+                }
+                else if (i == 1) {
+                    value = -value;
+                }
+            } else {
+                if (a[0] == emoteData.body.pitch && i != 2) {
+                    value = -value;
+                }
+            }
             value += a[i].defaultValue;
             a[i].addKeyFrame(tick, value, ease, 0, true);
         }
