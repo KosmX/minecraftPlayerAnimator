@@ -5,6 +5,7 @@ import com.mojang.math.Vector3f;
 import dev.kosmx.playerAnim.api.TransformType;
 import dev.kosmx.playerAnim.core.util.Vec3f;
 import dev.kosmx.playerAnim.impl.IAnimatedPlayer;
+import dev.kosmx.playerAnim.impl.animation.AnimationApplier;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import org.spongepowered.asm.mixin.Mixin;
@@ -16,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class PlayerRendererMixin {
     @Inject(method = "setupRotations(Lnet/minecraft/client/player/AbstractClientPlayer;Lcom/mojang/blaze3d/vertex/PoseStack;FFF)V", at = @At("RETURN"))
     private void applyBodyTransforms(AbstractClientPlayer abstractClientPlayerEntity, PoseStack matrixStack, float f, float bodyYaw, float tickDelta, CallbackInfo ci){
-        var animationPlayer = ((IAnimatedPlayer) abstractClientPlayerEntity).getAnimation();
+        AnimationApplier animationPlayer = ((IAnimatedPlayer) abstractClientPlayerEntity).getAnimation();
         animationPlayer.setTickDelta(tickDelta);
         if(animationPlayer.isActive()){
 

@@ -1,7 +1,7 @@
 {
   "required": true,
   "package": "dev.kosmx.playerAnim.mixin",
-  "compatibilityLevel": "JAVA_16",
+  "compatibilityLevel": "JAVA_8",
   "client": [
     "ArmorFeatureRendererMixin",
     "BipedEntityModelMixin",
