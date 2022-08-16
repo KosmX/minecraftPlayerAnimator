@@ -6,7 +6,7 @@ public abstract class AnimUtils {
 
     /**
      * Get the animation stack for a player entity on the client.
-     *
+     * <p>
      * Or you can use {@code ((IPlayer) player).getAnimationStack();}
      *
      * @param player The ClientPlayer object
@@ -17,4 +17,10 @@ public abstract class AnimUtils {
             return ((IPlayer) player).getAnimationStack();
         } else throw new IllegalArgumentException(player + " is not a player or library mixins failed");
     }
+
+    /**
+     * Disable first person animation see-through.
+     * Has no effect if using mod like FirstPersonModel
+     */
+    public static boolean disableFirstPersonAnim = true;
 }
