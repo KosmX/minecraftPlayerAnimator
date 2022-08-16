@@ -208,6 +208,16 @@ public class KeyframeAnimationPlayer implements IAnimation {
             this.keyframes = keyframes;
         }
 
+        /**
+         * Find a keyframe before the current tick
+         * If none is given: depending on current tick, returns with none/default
+         * If given: returns with before:
+         * creates a virtual frame at endTick if not looped
+         *
+         * @param pos          current tick pos, possible candidate
+         * @param currentState none state
+         * @return Keyframe
+         */
         private KeyframeAnimation.KeyFrame findBefore(int pos, float currentState) {
             if (pos == -1) {
                 return (currentTick < data.beginTick) ?
@@ -223,6 +233,15 @@ public class KeyframeAnimationPlayer implements IAnimation {
             return frame;
         }
 
+        /**
+         * Return with keyframe after current
+         * If given, return
+         * If infinity and no following, returns with one, AFTER the end
+         * if needed, creates a virtual at the end or other
+         * @param pos          pos
+         * @param currentState none state
+         * @return Keyframe
+         */
         private KeyframeAnimation.KeyFrame findAfter(int pos, float currentState) {
             if (this.keyframes.length() > pos + 1) {
                 return this.keyframes.getKeyFrames().get(pos + 1);
@@ -259,8 +278,8 @@ public class KeyframeAnimationPlayer implements IAnimation {
                     keyBefore = findBefore(keyframes.findAtTick(data.endTick), currentValue);
                 }
                 KeyframeAnimation.KeyFrame keyAfter = findAfter(pos, currentValue);
-                if (data.isInfinite && keyAfter.tick > data.endTick) {
-                    keyAfter = findAfter(keyframes.findAtTick(data.returnToTick), currentValue);
+                if (data.isInfinite && keyAfter.tick > data.endTick) { //If we found nothing, try finding something from the beginning
+                    keyAfter = findAfter(keyframes.findAtTick(data.returnToTick - 1), currentValue);
                 }
                 return getValueFromKeyframes(keyBefore, keyAfter);
             }
