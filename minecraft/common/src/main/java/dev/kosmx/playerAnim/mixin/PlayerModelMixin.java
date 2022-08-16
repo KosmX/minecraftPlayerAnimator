@@ -4,6 +4,7 @@ import dev.kosmx.playerAnim.core.impl.AnimationProcessor;
 import dev.kosmx.playerAnim.core.util.SetableSupplier;
 import dev.kosmx.playerAnim.impl.IAnimatedPlayer;
 import dev.kosmx.playerAnim.impl.IMutableModel;
+import dev.kosmx.playerAnim.impl.IPlayerModel;
 import dev.kosmx.playerAnim.impl.IUpperPartHelper;
 import dev.kosmx.playerAnim.impl.animation.AnimationApplier;
 import dev.kosmx.playerAnim.impl.animation.IBendHelper;
@@ -26,7 +27,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.function.Function;
 
 @Mixin(value = PlayerModel.class, priority = 2000)//Apply after NotEnoughAnimation's inject
-public class PlayerModelMixin<T extends LivingEntity> extends HumanoidModel<T> {
+public class PlayerModelMixin<T extends LivingEntity> extends HumanoidModel<T> implements IPlayerModel {
     @Shadow
     @Final
     public ModelPart jacket;
@@ -40,8 +41,9 @@ public class PlayerModelMixin<T extends LivingEntity> extends HumanoidModel<T> {
     @Shadow @Final public ModelPart leftPants;
     @Unique
     private final SetableSupplier<AnimationProcessor> emoteSupplier = new SetableSupplier<>();
-    //private BendHelper mutatedTorso;
-    //private MutableModelPart head :D ... it were be funny XD
+
+    @Unique
+    private boolean firstPersonNext = false;
 
     public PlayerModelMixin(ModelPart modelPart, Function<ResourceLocation, RenderType> function) {
         super(modelPart, function);
@@ -100,7 +102,7 @@ public class PlayerModelMixin<T extends LivingEntity> extends HumanoidModel<T> {
 
     @Inject(method = "setupAnim(Lnet/minecraft/world/entity/LivingEntity;FFFFF)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/model/geom/ModelPart;copyFrom(Lnet/minecraft/client/model/geom/ModelPart;)V", ordinal = 0))
     private void setEmote(T livingEntity, float f, float g, float h, float i, float j, CallbackInfo ci){
-        if(livingEntity instanceof AbstractClientPlayer && ((IAnimatedPlayer)livingEntity).getAnimation().isActive()){
+        if(!firstPersonNext && livingEntity instanceof AbstractClientPlayer && ((IAnimatedPlayer)livingEntity).getAnimation().isActive()){
             AnimationApplier emote = ((IAnimatedPlayer) livingEntity).getAnimation();
             emoteSupplier.set(emote);
 
@@ -116,6 +118,7 @@ public class PlayerModelMixin<T extends LivingEntity> extends HumanoidModel<T> {
 
         }
         else {
+            firstPersonNext = false;
             emoteSupplier.set(null);
             resetBend(this.body);
             resetBend(this.leftArm);
@@ -128,5 +131,13 @@ public class PlayerModelMixin<T extends LivingEntity> extends HumanoidModel<T> {
     @Unique
     private static void resetBend(ModelPart part) {
         IBendHelper.INSTANCE.bend(part, null);
+    }
+
+    /**
+     * @author KosmX - Player Animator library
+     */
+    @Override
+    public void playerAnimator_prepForFirstPersonRender() {
+        firstPersonNext = true;
     }
 }
