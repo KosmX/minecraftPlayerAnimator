@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import dev.kosmx.playerAnim.core.data.KeyframeAnimation;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 /**
@@ -37,7 +38,7 @@ public class AnimationSerializing {
      * @return List of animations
      */
     public static List<KeyframeAnimation> deserializeAnimation(InputStream stream) throws IOException {
-        try (InputStreamReader reader = new InputStreamReader(stream)) {
+        try (InputStreamReader reader = new InputStreamReader(stream, StandardCharsets.UTF_8)) {
             return deserializeAnimation(reader);
         }
     }
@@ -67,6 +68,7 @@ public class AnimationSerializing {
 
     static {
         GsonBuilder builder = new GsonBuilder();
+        builder.setPrettyPrinting();
         AnimationJson animationJson = new AnimationJson();
         builder.registerTypeAdapter(AnimationJson.getListedTypeToken(), animationJson);
         builder.registerTypeAdapter(KeyframeAnimation.class, animationJson);

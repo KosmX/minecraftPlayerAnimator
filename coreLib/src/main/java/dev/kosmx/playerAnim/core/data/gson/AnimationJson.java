@@ -4,7 +4,6 @@ import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 import dev.kosmx.playerAnim.core.data.AnimationFormat;
 import dev.kosmx.playerAnim.core.data.KeyframeAnimation;
-import dev.kosmx.playerAnim.core.data.quarktool.QuarkReader;
 import dev.kosmx.playerAnim.core.util.Easing;
 
 import java.lang.reflect.Type;
@@ -193,7 +192,7 @@ public class AnimationJson implements JsonDeserializer<List<KeyframeAnimation>>,
     /**
      * serialize an emote to json
      * It won't be the same json file (not impossible) but multiple jsons can mean the same emote...
-     *
+     * <p>
      * Oh, and it's public and static, so you can call it from anywhere.
      *
      * @param emote Emote to serialize
@@ -215,7 +214,7 @@ public class AnimationJson implements JsonDeserializer<List<KeyframeAnimation>>,
 
     public static JsonArray moveSerializer(KeyframeAnimation emote){
         JsonArray node = new JsonArray();
-        emote.getBodyParts().forEach((s, stateCollection) -> bodyPartDeserializer(node, stateCollection));
+        emote.getBodyParts().forEach((s, stateCollection) -> bodyPartSerializer(node, stateCollection, s));
         return node;
     }
 
@@ -224,27 +223,27 @@ public class AnimationJson implements JsonDeserializer<List<KeyframeAnimation>>,
      * these are really depend on the upper method, and I don't think anyone will use these.
      */
     @SuppressWarnings("ConstantConditions")
-    private static void bodyPartDeserializer(JsonArray node, KeyframeAnimation.StateCollection bodyPart){
-        partDeserialize(node, bodyPart.x);
-        partDeserialize(node, bodyPart.y);
-        partDeserialize(node, bodyPart.z);
-        partDeserialize(node, bodyPart.pitch);
-        partDeserialize(node, bodyPart.yaw);
-        partDeserialize(node, bodyPart.roll);
+    private static void bodyPartSerializer(JsonArray node, KeyframeAnimation.StateCollection bodyPart, String partName){
+        partSerialize(node, bodyPart.x, partName);
+        partSerialize(node, bodyPart.y, partName);
+        partSerialize(node, bodyPart.z, partName);
+        partSerialize(node, bodyPart.pitch, partName);
+        partSerialize(node, bodyPart.yaw, partName);
+        partSerialize(node, bodyPart.roll, partName);
         if(bodyPart.isBendable) {
-            partDeserialize(node, bodyPart.bend);
-            partDeserialize(node, bodyPart.bendDirection);
+            partSerialize(node, bodyPart.bend, partName);
+            partSerialize(node, bodyPart.bendDirection, partName);
         }
     }
 
-    private static void partDeserialize(JsonArray array, KeyframeAnimation.StateCollection.State part){
+    private static void partSerialize(JsonArray array, KeyframeAnimation.StateCollection.State part, String partName){
         for(KeyframeAnimation.KeyFrame keyFrame : part.getKeyFrames()){
             JsonObject node = new JsonObject();
             node.addProperty("tick", keyFrame.tick);
             node.addProperty("easing", keyFrame.ease.toString());
             JsonObject jsonMove = new JsonObject();
             jsonMove.addProperty(part.name, keyFrame.value);
-            node.add(part.name, jsonMove);
+            node.add(partName, jsonMove);
             array.add(node);
         }
     }

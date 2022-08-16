@@ -4,6 +4,7 @@ PlayerAnimator is a minecraft library to animate the **player** while trying to 
 If you want to add new entities, use [Geckolib](https://geckolib.com/#mods)  
 
 # Include in your dev environment
+Fabric loom (or architectury loom)
 ```groovy
 repositories {
     (...)
@@ -21,13 +22,34 @@ dependencies {
     include modImplementation("dev.kosmx.player-anim:player-animation-lib-fabric:${project.player_anim}")
     
     //You might want bendy-lib. playerAnimator will wrap it.
-    //include modImplementation("io.github.kosmx.bendy-lib:bendy-lib-fabric:${project.bendylib_version}")
+    //include runtimeOnly("io.github.kosmx.bendy-lib:bendy-lib-fabric:${project.bendylib_version}")
 }
 
 ```
 If you use [architectury](https://docs.architectury.dev/docs/forge_loom/) setup you can implement `player-animation-lib` package in *common*.  
 
-Or you can implement `player-animation-lib-forge` on Forge. (but I don't know how to do that in ForgeGradle)
+ForgeGradle  
+```groovy
+repositories {
+    (...)
+    maven {
+        name "KosmX's maven"
+        url 'https://maven.kosmx.dev/'
+    }
+}
+
+dependencies {
+    (...)
+    
+    //If you don't want to include the library in your jar, remove the include word
+    implementation fg.deobf("dev.kosmx.player-anim:player-animation-lib-forge:${project.player_anim}")
+    
+    //Bendy-lib also has a Forge version:
+    //runtimeOnly fg.deobf("io.github.kosmx.bendy-lib:bendy-lib-forge:${project.bendylib_version}")
+    
+    //Forge JarJar only works on MC 1.19. Do not use JarJar on older version!
+}
+```
 
 **For more advanced things, you might use `anim-core` package**.  
 It is a minecraft-independent module, containing the animation format and the layers but not the playing mixins...  
