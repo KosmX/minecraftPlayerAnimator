@@ -19,16 +19,9 @@ public class AnimationApplier extends AnimationProcessor {
         part.y = pos.getY();
         part.z = pos.getZ();
         Vec3f rot = this.get3DTransform(partName, TransformType.ROTATION, new Vec3f(part.xRot, part.yRot, part.zRot));
-        part.setRotation(rot.getX(), rot.getY(), rot.getZ());
-        if (!partName.equals("head")) {
-            if (partName.equals("torso")) {
-                Pair<Float, Float> torsoBend = getBend(partName);
-                Pair<Float, Float> bodyBend = getBend("body");
-                IBendHelper.INSTANCE.bend(part, new Pair<>(torsoBend.getLeft() + bodyBend.getLeft(), torsoBend.getRight() + bodyBend.getRight()));
-            } else {
-                IBendHelper.INSTANCE.bend(part, getBend(partName));
-            }
-        }
+        part.xRot = rot.getX();
+        part.yRot = rot.getY();
+        part.zRot = rot.getZ();
     }
 
 }

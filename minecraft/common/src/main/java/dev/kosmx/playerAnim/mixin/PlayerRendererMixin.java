@@ -9,6 +9,7 @@ import dev.kosmx.playerAnim.impl.IAnimatedPlayer;
 import dev.kosmx.playerAnim.impl.IPlayerModel;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.model.geom.ModelPart;
+import dev.kosmx.playerAnim.impl.animation.AnimationApplier;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -27,7 +28,7 @@ public abstract class PlayerRendererMixin extends LivingEntityRenderer<AbstractC
 
     @Inject(method = "setupRotations(Lnet/minecraft/client/player/AbstractClientPlayer;Lcom/mojang/blaze3d/vertex/PoseStack;FFF)V", at = @At("RETURN"))
     private void applyBodyTransforms(AbstractClientPlayer abstractClientPlayerEntity, PoseStack matrixStack, float f, float bodyYaw, float tickDelta, CallbackInfo ci){
-        var animationPlayer = ((IAnimatedPlayer) abstractClientPlayerEntity).getAnimation();
+        AnimationApplier animationPlayer = ((IAnimatedPlayer) abstractClientPlayerEntity).getAnimation();
         animationPlayer.setTickDelta(tickDelta);
         if(animationPlayer.isActive()){
 
