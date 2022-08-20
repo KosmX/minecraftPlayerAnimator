@@ -3,9 +3,9 @@ package dev.kosmx.playerAnim.api.layered;
 import dev.kosmx.playerAnim.api.TransformType;
 import dev.kosmx.playerAnim.api.layered.modifier.AbstractFadeModifier;
 import dev.kosmx.playerAnim.api.layered.modifier.AbstractModifier;
+import dev.kosmx.playerAnim.core.util.Ease;
 import dev.kosmx.playerAnim.core.util.Vec3f;
 import lombok.Getter;
-import lombok.Setter;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -74,8 +74,27 @@ public class ModifierLayer<T extends IAnimation> implements IAnimation {
         this.linkModifiers();
     }
 
+    /**
+     * Fade out from current animation into new animation.
+     * Does not fade if there is currently no active animation
+     * @param fadeModifier Fade modifier, use {@link AbstractFadeModifier#standardFadeIn(int, Ease)} for simple fade.
+     * @param newAnimation New animation, can be null to fade into default state.
+     */
     public void replaceAnimationWithFade(AbstractFadeModifier fadeModifier, @Nullable T newAnimation) {
-        fadeModifier.setBeginAnimation(this.getAnimation());
+        replaceAnimationWithFade(fadeModifier, newAnimation, false);
+    }
+
+    /**
+     * Fade out from current to a new animation
+     * @param fadeModifier    Fade modifier, use {@link AbstractFadeModifier#standardFadeIn(int, Ease)} for simple fade.
+     * @param newAnimation    New animation, can be null to fade into default state.
+     * @param fadeFromNothing Do fade even if we go from nothing. (for KeyframeAnimation, it can be false by default)
+     */
+    public void replaceAnimationWithFade(AbstractFadeModifier fadeModifier, @Nullable T newAnimation, boolean fadeFromNothing) {
+        if (fadeFromNothing || getAnimation() != null && getAnimation().isActive()) {
+            fadeModifier.setBeginAnimation(this.getAnimation());
+            addModifierLast(fadeModifier);
+        }
         this.setAnimation(newAnimation);
     }
 

@@ -66,13 +66,17 @@ To add an animation to the player, use
 AnimationStack animationStack = PlayerAnimationAccess.getPlayerAnimLayer(clientPlayer);
 animationStack.addAnimLayer(...);
 ```
-I advice using `AnimationContainer` and setting its animation. (this is null-tolerant)  
+I advice using `ModifierLayer` and setting its animation. (this is null-tolerant)
+`ModifierLayer` is an `AnimationContainer` but with modifiers and fade-in/out.
 
 To play a keyframe animation from `emotecraft` or `geckolib` json, `dev.kosmx.playerAnim.core.data.gson.AnimationJson` will help you load it.  
 `new KeyframeAnimationPlayer(animation)` will play it for you.
 
 To modify/tweak animations, look into `dev.kosmx.playerAnim.api.layered` package, you might implement your own `IAnimation` or extend/modify an existing class.  
-`ModifierLayer` will let you add modifiers but that is effectively an `AnimationContainer` layer.
+`ModifierLayer` will let you add modifiers. It is effectively an `AnimationContainer` layer.  
+
+You might find some usage in the [fabric testmod](https://github.com/KosmX/minecraftPlayerAnimator/blob/dev/minecraft/fabric/src/testmod/java/dev/kosmx/animatorTestmod/PlayerAnimTestmod.java)  
+The forge usage is similar. For most fabric users, you can use [linkie](https://linkie.shedaniel.me/mappings) to translate mojmap to Yarn.  
 
 # Model
 The player model is made of 6 body parts:  
