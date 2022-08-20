@@ -148,8 +148,8 @@ if(keysExists) {
 
         projectId = "playeranimator"
 
-        versionNumber = "${project.mod_version}-fabric"
-        versionName = "${project.mod_version}-fabric"
+        versionNumber = "${rootProject.mod_version}-fabric"
+        versionName = "${rootProject.mod_version}-fabric"
 
         gameVersions = ["1.16.4", "1.16.5"]
         changelog = changes

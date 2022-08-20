@@ -131,8 +131,8 @@ if(keysExists) {
 
         projectId = "playeranimator"
 
-        versionNumber = "${project.mod_version}-forge"
-        versionName = "${project.mod_version}-forge"
+        versionNumber = "${rootProject.mod_version}-forge"
+        versionName = "${rootProject.mod_version}-forge"
 
         gameVersions = ["1.16.4", "1.16.5"]
         changelog = changes
