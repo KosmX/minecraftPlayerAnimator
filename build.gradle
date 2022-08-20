@@ -11,6 +11,8 @@ architectury {
     minecraft = rootProject.minecraft_version
 }
 
+project.mod_version = mod_version + "+1.16.5"
+
 allprojects {
     apply plugin: "java"
     apply plugin: "architectury-plugin"
