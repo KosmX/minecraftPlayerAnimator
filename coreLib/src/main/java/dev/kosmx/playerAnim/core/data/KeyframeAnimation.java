@@ -293,15 +293,15 @@ public final class KeyframeAnimation implements Supplier<UUID> {
 
         public void fullyEnablePart(boolean always) {
             if (always || x.isEnabled || y.isEnabled || z.isEnabled || pitch.isEnabled || yaw.isEnabled || roll.isEnabled || (isBendable && (bend.isEnabled || bendDirection.isEnabled))) {
-                x.isEnabled = true;
-                y.isEnabled = true;
-                z.isEnabled = true;
-                pitch.isEnabled = true;
-                yaw.isEnabled = true;
-                roll.isEnabled = true;
+                x.setEnabled(true);
+                y.setEnabled(true);
+                z.setEnabled(true);
+                pitch.setEnabled(true);
+                yaw.setEnabled(true);
+                roll.setEnabled(true);
                 if (isBendable) {
-                    bend.isEnabled = true;
-                    bendDirection.isEnabled = true;
+                    bend.setEnabled(true);
+                    bendDirection.setEnabled(true);
                 }
             }
         }
@@ -357,7 +357,7 @@ public final class KeyframeAnimation implements Supplier<UUID> {
                 this.keyFrames.addAll(state.keyFrames); //KeyFrames are immutable, copying them is safe
                 this.name = state.name;
                 this.isAngle = state.isAngle;
-                this.isEnabled = state.isEnabled;
+                this.setEnabled(state.isEnabled);
             }
 
             @Override
@@ -406,6 +406,7 @@ public final class KeyframeAnimation implements Supplier<UUID> {
                 int result = (defaultValue != 0.0f ? Float.floatToIntBits(defaultValue) : 0);
                 result = 31 * result + keyFrames.hashCode();
                 result = 31 * result + (isAngle ? 1 : 0);
+                result = 31 * result + (isEnabled ? 1 : 0);
                 return result;
             }
 
@@ -479,7 +480,7 @@ public final class KeyframeAnimation implements Supplier<UUID> {
              * @return is valid keyframe
              */
             private boolean addKeyFrame(KeyFrame keyFrame) {
-                this.isEnabled = true;
+                this.setEnabled(true);
                 int i = findAtTick(keyFrame.tick) + 1;
                 this.keyFrames.add(i, keyFrame);
                 return this.isAngle || !(Math.abs(this.defaultValue - keyFrame.value) > this.threshold);

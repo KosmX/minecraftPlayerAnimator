@@ -23,7 +23,9 @@ public class AnimationRegistry {
         var bytes = Base64.getDecoder().decode(SomeString.something);
         try (InputStream reader = new ByteArrayInputStream(bytes)) {
             KeyframeAnimation animation = AnimationSerializing.deserializeAnimation(reader).get(0);
-            animations.put("two_handed_vertical_right_right", animation);
+            var modified = animation.mutableCopy();
+            modified.getOrCreatePart("torso").fullyEnablePart(true); //crouching workaround
+            animations.put("two_handed_vertical_right_right", modified.build());
 
         } catch(IOException e) {
             e.printStackTrace();
