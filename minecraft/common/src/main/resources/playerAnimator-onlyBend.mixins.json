@@ -1,5 +1,6 @@
 {
   "required": true,
+  "minVersion": "0.8",
   "package": "dev.kosmx.playerAnim.mixin",
   "compatibilityLevel": "JAVA_16",
   "client": [
