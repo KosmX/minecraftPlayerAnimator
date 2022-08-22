@@ -109,3 +109,6 @@ No easing parameters are supported. (everything was copied from easings.net)
 > GeckoLib is not guaranteed to work, but you can try! (It will work most of the time)  
 > [molang](https://docs.microsoft.com/minecraft/creator/reference/content/molangreference/) is not supported  
 
+
+## If you have questions, feel free to ask on Discord:  
+https://discord.com/invite/x22jkxRpsD
