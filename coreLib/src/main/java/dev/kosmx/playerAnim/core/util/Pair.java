@@ -49,4 +49,12 @@ public class Pair<L, R> {
         hash = hash * 31 + (right == null ? 0 : right.hashCode());
         return hash;
     }
+
+    @Override
+    public String toString() {
+        return "Pair{" +
+                "left=" + left +
+                ", right=" + right +
+                '}';
+    }
 }
