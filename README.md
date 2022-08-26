@@ -30,6 +30,26 @@ If you use [architectury](https://docs.architectury.dev/docs/forge_loom/) setup 
 
 ForgeGradle  
 ```groovy
+
+minecraft {
+    (...)
+    runs {
+        client {
+            (...)
+           
+            //You have to set mixin propert if you want to run playerAnimator in development environment.
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
+        }
+        server {
+            (...)
+            //Add this to the server too.
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
+        }
+    }
+}
+
 repositories {
     (...)
     maven {
