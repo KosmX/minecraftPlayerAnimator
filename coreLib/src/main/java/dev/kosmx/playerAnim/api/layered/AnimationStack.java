@@ -64,10 +64,10 @@ public class AnimationStack implements IAnimation {
     public void addAnimLayer(int priority, IAnimation layer) {
         int search = 0;
         //Insert the layer into the correct slot
-        while (layers.size() > search && layers.get(search).getLeft() < search) {
+        while (layers.size() > search && layers.get(search).getLeft() < priority) {
             search++;
         }
-        layers.add(new Pair<>(priority, layer));
+        layers.add(search, new Pair<>(priority, layer));
     }
 
     /**

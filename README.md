@@ -1,7 +1,14 @@
 # PlayerAnimator
 
 PlayerAnimator is a minecraft library to animate the **player** while trying to break as few mods as possible.    
-If you want to add new entities, use [Geckolib](https://geckolib.com/#mods)  
+If you want to add new entities, use [Geckolib](https://geckolib.com/#mods)
+
+If you want to trigger simple animations from the server, you might want to use [Emotecraft's server-side API](https://github.com/KosmX/emotes/tree/dev/emotesAPI/src/main/java/io/github/kosmx/emotes/api/events/server).
+
+## Example mods
+[Fabric example](https://github.com/KosmX/fabricPlayerAnimatorExample)  
+[Forge example](https://github.com/KosmX/forgePlayerAnimatorExample)  
+
 
 # Include in your dev environment
 Fabric loom (or architectury loom)
@@ -30,6 +37,26 @@ If you use [architectury](https://docs.architectury.dev/docs/forge_loom/) setup 
 
 ForgeGradle  
 ```groovy
+
+minecraft {
+    (...)
+    runs {
+        client {
+            (...)
+           
+            //You have to set mixin propert if you want to run playerAnimator in development environment.
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
+        }
+        server {
+            (...)
+            //Add this to the server too.
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
+        }
+    }
+}
+
 repositories {
     (...)
     maven {
