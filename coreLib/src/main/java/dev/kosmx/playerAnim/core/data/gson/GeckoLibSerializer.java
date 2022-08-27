@@ -76,19 +76,7 @@ public class GeckoLibSerializer {
                             readCollection(getRots(stateCollection), tick, Ease.CONSTANT, entry.getValue().getAsJsonArray(), emoteData, false);
                         }
                         else {
-                            Ease ease = Ease.LINEAR;
-                            JsonObject currentNode = entry.getValue().getAsJsonObject();
-                            if (currentNode.has("lerp_mode")) {
-                                String lerp = currentNode.get("lerp_mode").getAsString();
-                                ease = lerp.equals("catmullrom") ? Ease.INOUTSINE : Easing.easeFromString(lerp); //IDK what am I doing
-                            }
-                            if (currentNode.has("easing")) ease = Easing.easeFromString(currentNode.get("easing").getAsString());
-                            if (currentNode.has("pre"))
-                                readCollection(getRots(stateCollection), tick, ease, currentNode.get("pre").getAsJsonArray(), emoteData, false);
-                            if (currentNode.has("vector"))
-                                readCollection(getRots(stateCollection), tick, ease, currentNode.get("vector").getAsJsonArray(), emoteData, false);
-                            if (currentNode.has("post"))
-                                readCollection(getRots(stateCollection), tick, ease, currentNode.get("post").getAsJsonArray(), emoteData, false);
+                            readDataAtTick(entry.getValue().getAsJsonObject(), stateCollection, tick, emoteData, false);
                         }
                     }
                 });
@@ -109,24 +97,33 @@ public class GeckoLibSerializer {
                             readCollection(getOffs(stateCollection), tick, Ease.LINEAR, entry.getValue().getAsJsonArray(), emoteData, true);
                         }
                         else {
-                            Ease ease = Ease.LINEAR;
-                            JsonObject currentNode = entry.getValue().getAsJsonObject();
-                            if (currentNode.has("lerp_mode")) {
-                                String lerp = currentNode.get("lerp_mode").getAsString();
-                                ease = lerp.equals("catmullrom") ? Ease.INOUTSINE : Easing.easeFromString(lerp); //IDK what am I doing
-                            }
-                            if (currentNode.has("easing")) ease = Easing.easeFromString(currentNode.get("easing").getAsString());
-                            if (currentNode.has("pre"))
-                                readCollection(getOffs(stateCollection), tick, ease, currentNode.get("pre").getAsJsonArray(), emoteData, true);
-                            if (currentNode.has("vector"))
-                                readCollection(getOffs(stateCollection), tick, ease, currentNode.get("vector").getAsJsonArray(), emoteData, true);
-                            if (currentNode.has("post"))
-                                readCollection(getOffs(stateCollection), tick, ease, currentNode.get("post").getAsJsonArray(), emoteData, true);
+                            readDataAtTick(entry.getValue().getAsJsonObject(), stateCollection, tick, emoteData, true);
                         }
                     }
                 });
             }
         }
+    }
+
+    private static void readDataAtTick(JsonObject currentNode, KeyframeAnimation.StateCollection stateCollection, int tick, KeyframeAnimation.AnimationBuilder emoteData, boolean isPos) {
+        Ease ease = Ease.LINEAR;
+        if (currentNode.has("lerp_mode")) {
+            String lerp = currentNode.get("lerp_mode").getAsString();
+            ease = lerp.equals("catmullrom") ? Ease.INOUTSINE : Easing.easeFromString(lerp); //IDK what am I doing
+        }
+        KeyframeAnimation.StateCollection.State[] targetVec = isPos ? getOffs(stateCollection) : getRots(stateCollection);
+        if (currentNode.has("easing")) ease = Easing.easeFromString(currentNode.get("easing").getAsString());
+        if (currentNode.has("pre"))
+            readCollection(targetVec, tick, ease, getVector(currentNode.get("pre")), emoteData, isPos);
+        if (currentNode.has("vector"))
+            readCollection(targetVec, tick, ease, currentNode.get("vector").getAsJsonArray(), emoteData, isPos);
+        if (currentNode.has("post"))
+            readCollection(targetVec, tick, ease, getVector(currentNode.get("post")), emoteData, isPos);
+    }
+
+    public static JsonArray getVector(JsonElement element) {
+        if (element.isJsonArray()) return element.getAsJsonArray();
+        else return ((JsonObject)element).get("vector").getAsJsonArray();
     }
 
     private static void readCollection(KeyframeAnimation.StateCollection.State[] a, int tick, Ease ease, JsonArray array, KeyframeAnimation.AnimationBuilder emoteData, boolean isPos){
