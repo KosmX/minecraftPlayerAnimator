@@ -169,7 +169,12 @@ public class AnimationJson implements JsonDeserializer<List<KeyframeAnimation>>,
     @Override
     public JsonElement serialize(KeyframeAnimation emote, Type typeOfSrc, JsonSerializationContext context) {
         JsonObject node = new JsonObject();
-        node.addProperty("version", emote.isEasingBefore ? 2 : 1); //to make compatible emotes.
+        KeyframeAnimation.StateCollection torso = emote.getPart("torso");
+        if (torso != null && torso.isEnabled()) {
+            node.addProperty("version", 3); //to make compatible emotes.
+        } else {
+            node.addProperty("version", emote.isEasingBefore ? 2 : 1); //to make compatible emotes.
+        }
         emote.extraData.forEach((s, o) -> {
             if (o instanceof String) {
                 node.add(s, asJson((String)o));
