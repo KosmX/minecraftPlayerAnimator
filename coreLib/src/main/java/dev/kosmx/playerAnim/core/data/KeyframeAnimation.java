@@ -306,6 +306,17 @@ public final class KeyframeAnimation implements Supplier<UUID> {
             }
         }
 
+        public boolean isEnabled() {
+            return x.isEnabled()
+                            || y.isEnabled()
+                            || z.isEnabled()
+                            || pitch.isEnabled()
+                            || yaw.isEnabled()
+                            || roll.isEnabled()
+                            || bend != null && bend.isEnabled()
+                            || bendDirection != null && bend.isEnabled();
+        }
+
         public void verifyAndLock(int maxLength) {
             x.lockAndVerify(maxLength);
             y.lockAndVerify(maxLength);
