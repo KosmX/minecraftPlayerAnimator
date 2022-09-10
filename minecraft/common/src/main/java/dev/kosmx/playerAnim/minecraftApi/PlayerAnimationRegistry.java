@@ -11,6 +11,23 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ * Load resources from <code>assets/{modid}/player_animation</code>
+ * <br>
+ * The animation identifier:
+ * <table border="1">
+ *   <tr>
+ *     <td> namespace </td> <td> Mod namespace </td>
+ *   </tr>
+ *   <tr>
+ *     <td> path </td> <td> Animation name, not the filename </td>
+ *   </tr>
+ * </table>
+ * <br>
+ * Use {@link PlayerAnimationRegistry#getAnimation(ResourceLocation)} to fetch an animation
+ * <br><br>
+ * Extra animations can be added by ResourcePack(s) or other mods
+ */
 public final class PlayerAnimationRegistry {
 
     private static final HashMap<ResourceLocation, KeyframeAnimation> animations = new HashMap<>();
