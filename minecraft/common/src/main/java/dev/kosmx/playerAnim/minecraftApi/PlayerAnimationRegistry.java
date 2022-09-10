@@ -49,7 +49,7 @@ public final class PlayerAnimationRegistry {
      * Helper function to convert animation name to string
      */
     public static String serializeTextToString(String arg) {
-        var component = Component.Serializer.fromJson(arg);
+        Component component = Component.Serializer.fromJson(arg);
         if (component != null) {
             return component.getString();
         } else {
