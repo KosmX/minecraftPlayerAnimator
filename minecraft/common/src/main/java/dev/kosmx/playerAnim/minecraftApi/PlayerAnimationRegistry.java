@@ -8,6 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 public final class PlayerAnimationRegistry {
@@ -34,11 +35,41 @@ public final class PlayerAnimationRegistry {
         return Optional.ofNullable(getAnimation(identifier));
     }
 
+    /**
+     * @return an unmodifiable map of all the animations
+     */
+    public static Map<ResourceLocation, KeyframeAnimation> getAnimations() {
+        return Map.copyOf(animations);
+    }
+
+    /**
+     * Returns the animations of a specific mod/namespace
+     * @param modid namespace (assets/modid)
+     * @return map of path and animations
+     */
+    public static Map<String, KeyframeAnimation> getModAnimations(String modid) {
+        HashMap<String, KeyframeAnimation> map = new HashMap<>();
+        for (Map.Entry<ResourceLocation, KeyframeAnimation> entry: animations.entrySet()) {
+            if (entry.getKey().getNamespace().equals(modid)) {
+                map.put(entry.getKey().getPath(), entry.getValue());
+            }
+        }
+        return map;
+    }
+
+    /**
+     * Clear animation registry, INTERNAL, only happens before resource loading
+     */
     @ApiStatus.Internal
     public static void clearAnimation() {
         animations.clear();
     }
 
+    /**
+     * add animation to the registry, used by resource loader.
+     * @param location  animation identifier
+     * @param animation animation
+     */
     @ApiStatus.Internal
     public static void addAnimation(@NotNull ResourceLocation location, @NotNull KeyframeAnimation animation) {
         animations.put(location, animation);
