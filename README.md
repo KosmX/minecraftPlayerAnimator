@@ -138,8 +138,12 @@ Be careful, the model has to match the player or the animation won't work as it 
 
 In Emotecraft repo, there are some [tools](https://github.com/KosmX/emotes/tree/dev/blender) for animation.  
 (You don't need emotecraft to use those tools)  
-> The blockbench model **doesn't** support items, I don't know how to add an easily replaceable item...  
+> The blockbench model **doesn't** support items, I don't know how to add an easily replaceable item...    
 
+***
+
+To load an animation, put the file(s) into `assets/modid/player_animation/`  
+Then you can get the animation with `dev.kosmx.playerAnim.minecraftApi.PlayerAnimationRegistry#getAnimation()`
 
 ## Notes
 > GeckoLib is not guaranteed to work, but you can try! (It will work most of the time)  

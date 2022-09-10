@@ -1,6 +1,6 @@
 package dev.kosmx.playerAnim.core.data.opennbs.format;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 
 public class Layer {

@@ -6,7 +6,7 @@ import dev.kosmx.playerAnim.core.data.opennbs.NBS;
 import dev.kosmx.playerAnim.core.util.Ease;
 import lombok.Getter;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import javax.annotation.concurrent.Immutable;
 import java.nio.ByteBuffer;
 import java.util.*;

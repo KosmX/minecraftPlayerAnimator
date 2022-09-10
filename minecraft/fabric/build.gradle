@@ -56,6 +56,7 @@ dependencies {
     //modImplementation 'io.github.kosmx.bendy-lib:bendy-lib-fabric:2.1.0'
 
     //runtimeOnly "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_api_version}"  //Try to avoid FAPI
+    modImplementation fabricApi.module("fabric-resource-loader-v0", project.fabric_api_version)
 }
 
 project.archivesBaseName = rootProject.archives_base_name + "-" + project.name
@@ -151,7 +152,7 @@ if(keysExists) {
         versionNumber = "${project.mod_version}-fabric"
         versionName = "${project.mod_version}-fabric"
 
-        gameVersions = ["1.18", "1.18.1", "1.18.2", "1.19", "1.19.1", "1.19.2"]
+        gameVersions = ["1.19", "1.19.1", "1.19.2"]
         changelog = changes
         loaders = ["fabric", "quilt"]
         failSilently = false
@@ -170,9 +171,6 @@ if(keysExists) {
             //changelog = '[See on Github](https://github.com/KosmX/emotes/commits/master)'
             changelog = changes
             releaseType = project.cfType
-            addGameVersion "1.18"
-            addGameVersion "1.18.1"
-            addGameVersion "1.18.2"
             addGameVersion "1.19"
             addGameVersion "1.19.1"
             addGameVersion "1.19.2"

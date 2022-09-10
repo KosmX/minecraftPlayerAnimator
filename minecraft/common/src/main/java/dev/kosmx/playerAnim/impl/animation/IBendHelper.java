@@ -7,7 +7,7 @@ import dev.kosmx.playerAnim.impl.Helper;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.core.Direction;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public interface IBendHelper {
 

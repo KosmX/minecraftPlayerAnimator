@@ -8,8 +8,10 @@ import dev.kosmx.playerAnim.api.layered.modifier.MirrorModifier;
 import dev.kosmx.playerAnim.api.layered.modifier.SpeedModifier;
 import dev.kosmx.playerAnim.core.util.Ease;
 import dev.kosmx.playerAnim.minecraftApi.PlayerAnimationAccess;
+import dev.kosmx.playerAnim.minecraftApi.PlayerAnimationRegistry;
 import net.fabricmc.api.ClientModInitializer;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.resources.ResourceLocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,7 +60,7 @@ public class PlayerAnimTestmod implements ClientModInitializer {
         } else {
             //Fade from current animation to a new one.
             //Will not fade if there is no animation currently.
-            PlayerAnimTestmod.testAnimation.replaceAnimationWithFade(AbstractFadeModifier.functionalFadeIn(20, (modelName, type, value) -> value), new KeyframeAnimationPlayer(AnimationRegistry.animations.get("two_handed_vertical_right_right")));
+            PlayerAnimTestmod.testAnimation.replaceAnimationWithFade(AbstractFadeModifier.functionalFadeIn(20, (modelName, type, value) -> value), new KeyframeAnimationPlayer(PlayerAnimationRegistry.getAnimation(new ResourceLocation("testmod", "two_handed_slash_vertical_right"))));
         }
 
 

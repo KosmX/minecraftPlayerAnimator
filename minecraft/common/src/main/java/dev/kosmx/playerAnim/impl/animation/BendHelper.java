@@ -6,7 +6,7 @@ import io.github.kosmx.bendylib.impl.BendableCuboid;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.core.Direction;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public class BendHelper implements IBendHelper {
 
