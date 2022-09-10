@@ -1,5 +1,6 @@
 package dev.kosmx.playerAnim.impl.client;
 
+import dev.kosmx.playerAnim.core.data.KeyframeAnimation;
 import dev.kosmx.playerAnim.core.data.gson.AnimationSerializing;
 import dev.kosmx.playerAnim.minecraftApi.PlayerAnimationRegistry;
 import net.fabricmc.api.ClientModInitializer;
@@ -11,6 +12,7 @@ import net.minecraft.server.packs.resources.ResourceManager;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+import java.io.InputStream;
 
 public class FabricClientInitializer implements ClientModInitializer {
 
@@ -25,11 +27,11 @@ public class FabricClientInitializer implements ClientModInitializer {
             @Override
             public void onResourceManagerReload(@NotNull ResourceManager manager) {
                 PlayerAnimationRegistry.clearAnimation();
-                for (var resource: manager.listResources("player_animation", location -> location.endsWith(".json"))) {
-                    try (var input = manager.getResource(resource).getInputStream()) {
+                for (ResourceLocation resource: manager.listResources("player_animation", location -> location.endsWith(".json"))) {
+                    try (InputStream input = manager.getResource(resource).getInputStream()) {
 
                         //Deserialize the animation json. GeckoLib animation json can contain multiple animations.
-                        for (var animation : AnimationSerializing.deserializeAnimation(input)) {
+                        for (KeyframeAnimation animation : AnimationSerializing.deserializeAnimation(input)) {
 
                             //Save the animation for later use.
                             PlayerAnimationRegistry.addAnimation(new ResourceLocation(resource.getNamespace(), PlayerAnimationRegistry.serializeTextToString((String) animation.extraData.get("name"))), animation);
