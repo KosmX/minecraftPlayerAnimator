@@ -2,7 +2,7 @@ package dev.kosmx.playerAnim.core.data.opennbs;
 
 import dev.kosmx.playerAnim.core.data.opennbs.format.Layer;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.function.Consumer;
 

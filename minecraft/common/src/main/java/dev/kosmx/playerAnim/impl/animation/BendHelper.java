@@ -11,8 +11,8 @@ import io.github.kosmx.bendylib.impl.BendableCuboid;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.core.Direction;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 public class BendHelper extends MutableModelPart implements IBendHelper {
 
@@ -83,7 +83,7 @@ public class BendHelper extends MutableModelPart implements IBendHelper {
     }
 
 
-    public void copyBend(@Nonnull IBendHelper mutableModelPart){
+    public void copyBend(@NotNull IBendHelper mutableModelPart){
         if (mutableModelPart instanceof BendHelper) {
             BendHelper modelPart = (BendHelper) mutableModelPart;
             this.bend(modelPart.axis, modelPart.angl);

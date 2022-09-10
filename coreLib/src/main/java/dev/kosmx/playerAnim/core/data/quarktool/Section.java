@@ -3,7 +3,7 @@ package dev.kosmx.playerAnim.core.data.quarktool;
 import dev.kosmx.playerAnim.core.util.Ease;
 import dev.kosmx.playerAnim.core.util.Easing;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,67 +24,75 @@ public class Section implements Playable {
             if(text.get(this.line).size() == 0 || text.get(this.line).get(0).charAt(0) == '#') continue;
             String id = text.get(this.line).get(0);
             List<String> block = text.get(this.line);
-            if(id.equals("end")) return;
-            else if(id.equals("section")){
-                Section section = new Section(animData, this.line, text);
-                Playable moveOp = section.getMoveOperator();
-                if(moveOp == null){
-                    this.elements.add(section);
-                }else{
-                    this.elements.add(moveOp);
-                }
-                this.line = section.getLine();
-            }else if(id.equals("move")){
-                try{
-
-                    int pos = block.size() - 3;
-                    if(block.size() < 4) throw new QuarkParsingError();
-                    Ease ease;
-                    if(block.size() == 5){
-                        ease = Easing.easeFromString(block.get(4));
-                    }else if(block.size() == 8 || block.size() == 7 && block.get(5).equals("pause")){
-                        ease = Easing.easeFromString(block.get(4));
-                    }else ease = Ease.INOUTQUAD;
-                    Move move = new Move(animData.getPFromStr(block.get(1)), Float.parseFloat(block.get(3)), (int) (Integer.parseInt(block.get(2)) * 0.02), ease);
-                    switch(block.get(pos)){
-                        case "repeat":
-                            elements.add(new Repeat(move, (int) (Integer.parseInt(block.get(pos + 2)) * 0.02), Integer.parseInt(block.get(pos + 1))));
-                            break;
-                        case "yoyo":
-                            elements.add(new Yoyo(move, (int) (Integer.parseInt(block.get(pos + 2)) * 0.02), Integer.parseInt(block.get(pos + 1))));
-                            break;
-                        case "pause":
-                            elements.add(new Pauseable(move, (int) (Integer.parseInt(block.get(pos + 1)) * 0.02)));
-                            break;
-                        default:
-                            elements.add(move);
-                            break;
+            switch (id) {
+                case "end":
+                    return;
+                case "section":
+                    Section section = new Section(animData, this.line, text);
+                    Playable moveOp = section.getMoveOperator();
+                    if (moveOp == null) {
+                        this.elements.add(section);
+                    } else {
+                        this.elements.add(moveOp);
                     }
-                }catch(NumberFormatException e){
-                    throw new QuarkParsingError("While trying to add move, error has happened: " + e.getMessage(), this.line);
-                }
-            }else if(id.equals("repeat")){
-                try{
-                    this.setMoveOperator(new Repeat(this, (int) (Integer.parseInt(block.get(2)) * 0.02), Integer.parseInt(block.get(1))));
-                }catch(NumberFormatException e){
-                    throw new QuarkParsingError("While trying to add repeat, error has happened: " + e.getMessage(), this.line);
-                }
-            }else if(id.equals("yoyo")){
-                try{
-                    this.setMoveOperator(new Yoyo(this, (int) (Integer.parseInt(block.get(2)) * 0.02), Integer.parseInt(block.get(1))));
-                }catch(NumberFormatException e){
-                    throw new QuarkParsingError("While trying to add yoyo, error has happened: " + e.getMessage(), this.line);
-                }
-            }else if(id.equals("pause")){
-                try{
-                    elements.add(new Pause((int) (Integer.parseInt(block.get(1)) * 0.02)));
-                }catch(NumberFormatException e){
-                    throw new QuarkParsingError("While trying to add yoyo, error has happened: " + e.getMessage(), this.line);
-                }
-            }else if(id.equals("reset")){
+                    this.line = section.getLine();
+                    break;
+                case "move":
+                    try {
 
-            }else{
-                throw new QuarkParsingError();
+                        int pos = block.size() - 3;
+                        if (block.size() < 4) throw new QuarkParsingError();
+                        Ease ease;
+                        if (block.size() == 5) {
+                            ease = Easing.easeFromString(block.get(4));
+                        } else if (block.size() == 8 || block.size() == 7 && block.get(5).equals("pause")) {
+                            ease = Easing.easeFromString(block.get(4));
+                        } else ease = Ease.INOUTQUAD;
+                        Move move = new Move(animData.getPFromStr(block.get(1)), Float.parseFloat(block.get(3)), (int) (Integer.parseInt(block.get(2)) * 0.02), ease);
+                        switch (block.get(pos)) {
+                            case "repeat":
+                                elements.add(new Repeat(move, (int) (Integer.parseInt(block.get(pos + 2)) * 0.02), Integer.parseInt(block.get(pos + 1))));
+                                break;
+                            case "yoyo":
+                                elements.add(new Yoyo(move, (int) (Integer.parseInt(block.get(pos + 2)) * 0.02), Integer.parseInt(block.get(pos + 1))));
+                                break;
+                            case "pause":
+                                elements.add(new Pauseable(move, (int) (Integer.parseInt(block.get(pos + 1)) * 0.02)));
+                                break;
+                            default:
+                                elements.add(move);
+                                break;
+                        }
+                    } catch(NumberFormatException e) {
+                        throw new QuarkParsingError("While trying to add move, error has happened: " + e.getMessage(), this.line);
+                    }
+                    break;
+                case "repeat":
+                    try {
+                        this.setMoveOperator(new Repeat(this, (int) (Integer.parseInt(block.get(2)) * 0.02), Integer.parseInt(block.get(1))));
+                    } catch(NumberFormatException e) {
+                        throw new QuarkParsingError("While trying to add repeat, error has happened: " + e.getMessage(), this.line);
+                    }
+                    break;
+                case "yoyo":
+                    try {
+                        this.setMoveOperator(new Yoyo(this, (int) (Integer.parseInt(block.get(2)) * 0.02), Integer.parseInt(block.get(1))));
+                    } catch(NumberFormatException e) {
+                        throw new QuarkParsingError("While trying to add yoyo, error has happened: " + e.getMessage(), this.line);
+                    }
+                    break;
+                case "pause":
+                    try {
+                        elements.add(new Pause((int) (Integer.parseInt(block.get(1)) * 0.02)));
+                    } catch(NumberFormatException e) {
+                        throw new QuarkParsingError("While trying to add yoyo, error has happened: " + e.getMessage(), this.line);
+                    }
+                    break;
+                case "reset":
+
+                    break;
+                default:
+                    throw new QuarkParsingError();
             }
         }
     }

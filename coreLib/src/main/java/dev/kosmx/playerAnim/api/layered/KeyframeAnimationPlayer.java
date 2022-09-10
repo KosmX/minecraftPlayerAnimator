@@ -4,7 +4,7 @@ import dev.kosmx.playerAnim.api.TransformType;
 import dev.kosmx.playerAnim.core.data.KeyframeAnimation;
 import dev.kosmx.playerAnim.core.util.*;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,9 +24,6 @@ public class KeyframeAnimationPlayer implements IAnimation {
 
     protected float tickDelta;
 
-    /**
-     * Will be removed when I give up the 1.16- support
-     */
     public final HashMap<String, BodyPart> bodyParts;
     public int perspective = 0;
 
@@ -34,20 +31,32 @@ public class KeyframeAnimationPlayer implements IAnimation {
      *
      * @param emote emote to play
      * @param t begin playing from tick
+     * @param mutable if true, the part data will be copied as a construction step.
+     *                The copied version can be changed while playing the animation but the copy takes time.
      */
-    public KeyframeAnimationPlayer(KeyframeAnimation emote, int t) {
+    public KeyframeAnimationPlayer(KeyframeAnimation emote, int t, boolean mutable) {
         if (emote == null) throw new IllegalArgumentException("Animation can not be null");
         this.data = emote;
 
         this.bodyParts = new HashMap<>(emote.getBodyParts().size());
         for(Map.Entry<String, KeyframeAnimation.StateCollection> part:emote.getBodyParts().entrySet()){
-            this.bodyParts.put(part.getKey(), new BodyPart(part.getValue()));
+            this.bodyParts.put(part.getKey(), new BodyPart(mutable ? part.getValue().copy() : part.getValue()));
         }
 
         this.currentTick = t;
         if(isInfinite() && t > data.returnToTick){
             currentTick = (t - data.returnToTick)%(data.endTick - data.returnToTick + 1) + data.returnToTick;
         }
+    }
+
+
+    /**
+     *
+     * @param emote emote to play
+     * @param t begin playing from tick
+     */
+    public KeyframeAnimationPlayer(KeyframeAnimation emote, int t) {
+        this(emote, t, false);
     }
 
     public KeyframeAnimationPlayer(KeyframeAnimation animation) {

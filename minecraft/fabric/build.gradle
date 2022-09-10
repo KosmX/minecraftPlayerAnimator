@@ -56,6 +56,7 @@ dependencies {
     //modImplementation "io.github.kosmx.bendy-lib:bendy-lib-fabric:${project.bendy_lib}"
 
     //runtimeOnly "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_api_version}"  //Try to avoid FAPI
+    modImplementation fabricApi.module("fabric-resource-loader-v0", project.fabric_api_version)
 }
 
 project.archivesBaseName = rootProject.archives_base_name + "-" + project.name

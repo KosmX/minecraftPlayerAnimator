@@ -7,7 +7,7 @@ import dev.kosmx.playerAnim.core.util.Easing;
 import dev.kosmx.playerAnim.core.util.Vec3f;
 import lombok.Setter;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Use with ModifierLayer.

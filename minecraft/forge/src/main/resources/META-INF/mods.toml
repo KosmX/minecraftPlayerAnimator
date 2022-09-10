@@ -16,6 +16,6 @@ Look for FabricMC (or QuiltMC) builds...
 [[dependencies.playeranimator]]
 modId = "minecraft"
 mandatory = true
-versionRange = "[1.16,)"
+versionRange = "[1.18,)"
 ordering = "NONE"
 side = "BOTH"
