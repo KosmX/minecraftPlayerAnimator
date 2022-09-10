@@ -25,14 +25,14 @@ public class FabricClientInitializer implements ClientModInitializer {
             @Override
             public void onResourceManagerReload(@NotNull ResourceManager manager) {
                 PlayerAnimationRegistry.clearAnimation();
-                for (var resource: manager.listResources("player_animation", location -> location.getPath().endsWith(".json")).entrySet()) {
-                    try (var input = resource.getValue().open()) {
+                for (var resource: manager.listResources("player_animation", location -> location.endsWith(".json"))) {
+                    try (var input = manager.getResource(resource).getInputStream()) {
 
                         //Deserialize the animation json. GeckoLib animation json can contain multiple animations.
                         for (var animation : AnimationSerializing.deserializeAnimation(input)) {
 
                             //Save the animation for later use.
-                            PlayerAnimationRegistry.addAnimation(new ResourceLocation(resource.getKey().getNamespace(), PlayerAnimationRegistry.serializeTextToString((String) animation.extraData.get("name"))), animation);
+                            PlayerAnimationRegistry.addAnimation(new ResourceLocation(resource.getNamespace(), PlayerAnimationRegistry.serializeTextToString((String) animation.extraData.get("name"))), animation);
                         }
                     } catch(IOException e) {
                         throw new RuntimeException(e);//Somehow handle invalid animations
