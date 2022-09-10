@@ -39,7 +39,7 @@ public final class PlayerAnimationRegistry {
      * @return an unmodifiable map of all the animations
      */
     public static Map<ResourceLocation, KeyframeAnimation> getAnimations() {
-        return Map.copyOf(animations);
+        return (Map<ResourceLocation, KeyframeAnimation>) animations.clone();
     }
 
     /**
