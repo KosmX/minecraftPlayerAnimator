@@ -1,16 +1,41 @@
 package dev.kosmx.playerAnim.minecraftApi;
 
 import dev.kosmx.playerAnim.core.data.KeyframeAnimation;
+import dev.kosmx.playerAnim.core.data.gson.AnimationSerializing;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.ResourceManager;
+import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ * Load resources from <code>assets/{modid}/player_animation</code>
+ * <br>
+ * The animation identifier:
+ * <table border="1">
+ *   <tr>
+ *     <td> namespace </td> <td> Mod namespace </td>
+ *   </tr>
+ *   <tr>
+ *     <td> path </td> <td> Animation name, not the filename </td>
+ *   </tr>
+ * </table>
+ * <br>
+ * Use {@link PlayerAnimationRegistry#getAnimation(ResourceLocation)} to fetch an animation
+ * <br><br>
+ * Extra animations can be added by ResourcePack(s) or other mods
+ */
 public final class PlayerAnimationRegistry {
 
     private static final HashMap<ResourceLocation, KeyframeAnimation> animations = new HashMap<>();
@@ -58,21 +83,31 @@ public final class PlayerAnimationRegistry {
     }
 
     /**
-     * Clear animation registry, INTERNAL, only happens before resource loading
+     * Load animations using ResourceManager
+     * Internal use only!
      */
     @ApiStatus.Internal
-    public static void clearAnimation() {
+    public static void resourceLoaderCallback(@NotNull ResourceManager manager, Logger logger) {
         animations.clear();
-    }
+        for (ResourceLocation resource: manager.listResources("player_animation", location -> location.endsWith(".json"))) {
+            try (InputStream input = manager.getResource(resource).getInputStream()) {
 
-    /**
-     * add animation to the registry, used by resource loader.
-     * @param location  animation identifier
-     * @param animation animation
-     */
-    @ApiStatus.Internal
-    public static void addAnimation(@NotNull ResourceLocation location, @NotNull KeyframeAnimation animation) {
-        animations.put(location, animation);
+                //Deserialize the animation json. GeckoLib animation json can contain multiple animations.
+                for (KeyframeAnimation animation : AnimationSerializing.deserializeAnimation(input)) {
+
+                    //Save the animation for later use.
+                    animations.put(new ResourceLocation(resource.getNamespace(), PlayerAnimationRegistry.serializeTextToString((String) animation.extraData.get("name")).toLowerCase(Locale.ROOT)), animation);
+                }
+            } catch(IOException e) {
+                logger.error("Error while loading payer animation: " + resource);
+                logger.error(e.getMessage());
+                StringWriter sw = new StringWriter();
+                PrintWriter pw = new PrintWriter(sw);
+                e.printStackTrace(pw);
+                String sStackTrace = sw.toString(); // stack trace as a string
+                logger.error(sStackTrace);
+            }
+        }
     }
 
 
@@ -80,11 +115,12 @@ public final class PlayerAnimationRegistry {
      * Helper function to convert animation name to string
      */
     public static String serializeTextToString(String arg) {
-        Component component = Component.Serializer.fromJson(arg);
-        if (component != null) {
-            return component.getString();
-        } else {
-            return arg.replace("\"", "");
-        }
+        try {
+            Component component = Component.Serializer.fromJson(arg);
+            if (component != null) {
+                return component.getString();
+            }
+        } catch(Exception ignored) { }
+        return arg.replace("\"", "");
     }
 }
