@@ -3,6 +3,7 @@ package dev.kosmx.playerAnim.core.data.gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 import dev.kosmx.playerAnim.core.data.AnimationFormat;
 import dev.kosmx.playerAnim.core.data.KeyframeAnimation;
 import dev.kosmx.playerAnim.core.util.Ease;
@@ -29,26 +30,34 @@ public class GeckoLibSerializer {
             KeyframeAnimation.AnimationBuilder builder = new KeyframeAnimation.AnimationBuilder(AnimationFormat.JSON_MC_ANIM);
             String name = stringJsonElementEntry.getKey();
             JsonObject node = stringJsonElementEntry.getValue().getAsJsonObject();
-            if (!node.has("animation_length")) return;
-            builder.endTick = (int) Math.ceil(node.get("animation_length").getAsFloat() * 20);
-            if(node.has("loop")){
-                builder.isLooped = node.get("loop").getAsJsonPrimitive().isBoolean() && node.get("loop").getAsBoolean();
-                if(!builder.isLooped && node.get("loop").getAsJsonPrimitive().isString() && node.get("loop").getAsString().equals("hold_on_last_frame")){
-                    builder.isLooped = true;
-                    builder.returnTick = builder.endTick;
-                }
-                else {
-                    builder.endTick--;
-                }
-            }
-            builder.fullyEnableParts();
-            builder.optimizeEmote();
             builder.name = name;
+            if (node.has("animation_length")){
+                builder.endTick = (int) Math.ceil(node.get("animation_length").getAsFloat() * 20);
+                if (node.has("loop")) {
+                    builder.isLooped = node.get("loop").getAsJsonPrimitive().isBoolean() && node.get("loop").getAsBoolean();
+                    if (!builder.isLooped && node.get("loop").getAsJsonPrimitive().isString() && node.get("loop").getAsString().equals("hold_on_last_frame")) {
+                        builder.isLooped = true;
+                        builder.returnTick = builder.endTick;
+                    } else {
+                        builder.endTick--;
+                    }
+                }
+                builder.fullyEnableParts();
+                builder.optimizeEmote();
 
-            keyframeSerializer(builder, node.get("bones").getAsJsonObject());
-            KeyframeAnimation emoteData = builder.build();
+                keyframeSerializer(builder, node.get("bones").getAsJsonObject());
 
-            emotes.add(emoteData);
+            } else if (node.has("loop") && node.get("loop").getAsBoolean()) {
+                builder.endTick = builder.stopTick = 1;
+                builder.isLooped = true;
+                builder.returnTick = 0;
+
+                keyframeSerializer(builder, node.get("bones").getAsJsonObject());
+            } else {
+                throw new JsonParseException("Could not recognise GeckoLib animation: " + name);
+            }
+
+            emotes.add(builder.build());
         });
         return emotes;
     }
