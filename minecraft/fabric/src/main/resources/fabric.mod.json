@@ -21,7 +21,7 @@
     "playerAnimator-common.mixins.json"
   ],
   "depends": {
-    "minecraft": ">=1.19",
+    "minecraft": ">=1.16",
     "fabric-resource-loader-v0": "*"
   },
   "custom": {

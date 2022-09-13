@@ -12,8 +12,8 @@ import dev.kosmx.playerAnim.minecraftApi.PlayerAnimationRegistry;
 import net.fabricmc.api.ClientModInitializer;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.resources.ResourceLocation;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Random;
 
@@ -28,7 +28,7 @@ import java.util.Random;
  *
  */
 public class PlayerAnimTestmod implements ClientModInitializer {
-    public static final Logger LOGGER = LoggerFactory.getLogger("testmod");
+    public static final Logger LOGGER = LogManager.getLogger("testmod");
     public static final ModifierLayer<IAnimation> testAnimation = new ModifierLayer<>(); //Create an animation container for the main player
     //You can create a map for every player or just mixin the data into the playerEntity.
 
