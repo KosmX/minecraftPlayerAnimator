@@ -5,12 +5,13 @@ import dev.kosmx.playerAnim.core.data.gson.AnimationSerializing;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
+import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.slf4j.Logger;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.HashMap;
@@ -88,7 +89,7 @@ public final class PlayerAnimationRegistry {
     @ApiStatus.Internal
     public static void resourceLoaderCallback(@NotNull ResourceManager manager, Logger logger) {
         animations.clear();
-        for (ResourceLocation resource: manager.listResources("player_animation", location -> location.getPath().endsWith(".json"))) {
+        for (ResourceLocation resource: manager.listResources("player_animation", location -> location.endsWith(".json"))) {
             try (InputStream input = manager.getResource(resource).getInputStream()) {
 
                 //Deserialize the animation json. GeckoLib animation json can contain multiple animations.

@@ -7,12 +7,12 @@ import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.ResourceManager;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class FabricClientInitializer implements ClientModInitializer {
-    public static final Logger LOGGER = LoggerFactory.getLogger("player-animator");
+    public static final Logger LOGGER = LogManager.getLogger("player-animator");
 
     @Override
     public void onInitializeClient() {
