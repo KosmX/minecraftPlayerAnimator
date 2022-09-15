@@ -5,6 +5,14 @@ If you want to add new entities, use [Geckolib](https://geckolib.com/#mods)
 
 If you want to trigger simple animations from the server, you might want to use [Emotecraft's server-side API](https://github.com/KosmX/emotes/tree/dev/emotesAPI/src/main/java/io/github/kosmx/emotes/api/events/server).
 
+## Official projects
+**GitHub project** https://github.com/KosmX/minecraftPlayerAnimator  
+**Modrinth** https://modrinth.com/mod/playeranimator  
+**CurseForge** https://www.curseforge.com/minecraft/mc-mods/playeranimator  
+**KosmX's Maven (for API use)** https://maven.kosmx.dev/dev/kosmx/player-anim/  
+> Avoid downloading the library from other sources!  
+
+
 ## Example mods
 [Fabric example](https://github.com/KosmX/fabricPlayerAnimatorExample)  
 [Forge example](https://github.com/KosmX/forgePlayerAnimatorExample)  
@@ -146,8 +154,13 @@ To load an animation, put the file(s) into `assets/modid/player_animation/`
 Then you can get the animation with `dev.kosmx.playerAnim.minecraftApi.PlayerAnimationRegistry#getAnimation()`
 
 ## Notes
-> GeckoLib is not guaranteed to work, but you can try! (It will work most of the time)  
-> [molang](https://docs.microsoft.com/minecraft/creator/reference/content/molangreference/) is not supported  
+GeckoLib is not guaranteed to work, but you can try! (It will work most of the time)  
+[molang](https://docs.microsoft.com/minecraft/creator/reference/content/molangreference/) is not supported  
+***
+Do **not** shadow the library in your mod, this library can not be loaded multiple times safely. (even from different packages)  
+> The license would allow it, but it would break many things.  
+You may use `include`(fabric any version) or JarJar(forge 1.19.1+).
+
 
 
 ## If you have questions, feel free to ask on Discord:  
