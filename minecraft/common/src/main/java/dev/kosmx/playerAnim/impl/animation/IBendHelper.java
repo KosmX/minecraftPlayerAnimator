@@ -7,8 +7,10 @@ import dev.kosmx.playerAnim.impl.Helper;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.core.Direction;
 
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
+@ApiStatus.Internal
 public interface IBendHelper {
 
     IBendHelper INSTANCE = Helper.isBendEnabled() ? new BendHelper() : new DummyBendable();

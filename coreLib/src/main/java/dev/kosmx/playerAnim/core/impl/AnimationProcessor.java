@@ -5,11 +5,13 @@ import dev.kosmx.playerAnim.api.TransformType;
 import dev.kosmx.playerAnim.api.layered.IAnimation;
 import dev.kosmx.playerAnim.core.util.Pair;
 import dev.kosmx.playerAnim.core.util.Vec3f;
+import org.jetbrains.annotations.ApiStatus;
 
 /**
  * Tool to easily play animation to the player.
  * internal, do not use
  */
+@ApiStatus.Internal
 public class AnimationProcessor {
     private final IAnimation animation;
     private float tickDelta = 0f;
