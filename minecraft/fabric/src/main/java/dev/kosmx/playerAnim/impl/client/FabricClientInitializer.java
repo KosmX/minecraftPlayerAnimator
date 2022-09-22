@@ -1,9 +1,12 @@
 package dev.kosmx.playerAnim.impl.client;
 
+import dev.kosmx.playerAnim.impl.Helper;
+import dev.kosmx.playerAnim.impl.compat.skinLayers.SkinLayersTransformer;
 import dev.kosmx.playerAnim.minecraftApi.PlayerAnimationRegistry;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -16,6 +19,11 @@ public class FabricClientInitializer implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
+
+        if (Helper.isBendEnabled() && FabricLoader.getInstance().isModLoaded("skinlayers")) {
+            SkinLayersTransformer.init();
+        }
+
         ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(new SimpleSynchronousResourceReloadListener() {
             @Override
             public ResourceLocation getFabricId() {
