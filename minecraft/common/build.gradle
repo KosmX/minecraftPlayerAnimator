@@ -15,7 +15,7 @@ dependencies {
     //modApi "dev.architectury:architectury:${rootProject.architectury_version}"
 
     modCompileOnly "io.github.kosmx.bendy-lib:bendy-lib:${project.bendy_lib}"
-    modImplementation files("../3dskinlayers-fabric-1.5.1-mc1.19.1.jar")
+    modImplementation("maven.modrinth:3dskinlayers:1.5.2-fabric-1.19")
 
     }
 

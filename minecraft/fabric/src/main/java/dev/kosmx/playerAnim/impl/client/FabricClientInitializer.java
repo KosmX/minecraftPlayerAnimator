@@ -21,7 +21,11 @@ public class FabricClientInitializer implements ClientModInitializer {
     public void onInitializeClient() {
 
         if (Helper.isBendEnabled() && FabricLoader.getInstance().isModLoaded("skinlayers")) {
-            SkinLayersTransformer.init();
+            try {
+                SkinLayersTransformer.init();
+            } catch(Error e) {
+                LOGGER.error("Failed to initialize 3D Skin Layers module: " + e.getMessage());
+            }
         }
 
         ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(new SimpleSynchronousResourceReloadListener() {

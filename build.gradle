@@ -28,7 +28,13 @@ allprojects {
             name 'KosmX\'s maven'
             url 'https://maven.kosmx.dev/'
         }
-        mavenLocal()
+        maven {
+            name = "Modrinth"
+            url = "https://api.modrinth.com/maven"
+            content {
+                includeGroup "maven.modrinth"
+            }
+        }
     }
 
     dependencies {
