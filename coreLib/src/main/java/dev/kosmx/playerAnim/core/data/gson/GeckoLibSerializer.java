@@ -43,9 +43,9 @@ public class GeckoLibSerializer {
                     }
                 }
                 builder.fullyEnableParts();
-                builder.optimizeEmote();
 
                 keyframeSerializer(builder, node.get("bones").getAsJsonObject());
+                builder.optimizeEmote();
 
             } else if (node.has("loop") && node.get("loop").getAsBoolean()) {
                 builder.endTick = builder.stopTick = 1;
@@ -54,7 +54,25 @@ public class GeckoLibSerializer {
 
                 keyframeSerializer(builder, node.get("bones").getAsJsonObject());
             } else {
-                throw new JsonParseException("Could not recognise GeckoLib animation: " + name);
+                try {
+                    builder.fullyEnableParts();
+
+                    keyframeSerializer(builder, node.get("bones").getAsJsonObject());
+
+                    int last = 0;
+                    last = Math.max(last, lastKeyPos(builder.body));
+                    last = Math.max(last, lastKeyPos(builder.head));
+                    last = Math.max(last, lastKeyPos(builder.leftArm));
+                    last = Math.max(last, lastKeyPos(builder.rightArm));
+                    last = Math.max(last, lastKeyPos(builder.leftLeg));
+                    last = Math.max(last, lastKeyPos(builder.rightLeg));
+                    last = Math.max(last, lastKeyPos(builder.torso));
+                    builder.endTick = last + 1;
+
+                    builder.optimizeEmote();
+                } catch(Throwable t) {
+                    throw new JsonParseException("Could not recognise GeckoLib animation: " + name + "\n" + t.getMessage());
+                }
             }
 
             emotes.add(builder.build());
@@ -193,5 +211,25 @@ public class GeckoLibSerializer {
     private static KeyframeAnimation.StateCollection.State[] getOffs(KeyframeAnimation.StateCollection stateCollection){
         return new KeyframeAnimation.StateCollection.State[] {stateCollection.x, stateCollection.y, stateCollection.z};
     }
+
+
+    // ----------- Things shouldn't be used except for patching ------------------
+    private static int lastKeyPos(KeyframeAnimation.StateCollection part) {
+        int last = 0;
+        last = Math.max(last, lastKeyPos(part.x));
+        last = Math.max(last, lastKeyPos(part.y));
+        last = Math.max(last, lastKeyPos(part.z));
+        last = Math.max(last, lastKeyPos(part.pitch));
+        last = Math.max(last, lastKeyPos(part.yaw));
+        last = Math.max(last, lastKeyPos(part.roll));
+        if (part.bend != null) last = Math.max(last, lastKeyPos(part.bend));
+        if (part.bendDirection != null) last = Math.max(last, lastKeyPos(part.bendDirection));
+        return last;
+    }
+    private static int lastKeyPos(KeyframeAnimation.StateCollection.State part) {
+        if (part.getKeyFrames().isEmpty()) return 0;
+        return part.getKeyFrames().get(part.getKeyFrames().size() - 1).tick;
+    }
+
 
 }
