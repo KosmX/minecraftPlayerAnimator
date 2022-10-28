@@ -37,7 +37,7 @@ dependencies {
     include modImplementation("dev.kosmx.player-anim:player-animation-lib-fabric:${project.player_anim}")
     
     //You might want bendy-lib. playerAnimator will wrap it.
-    //include runtimeOnly("io.github.kosmx.bendy-lib:bendy-lib-fabric:${project.bendylib_version}")
+    //include modRuntimeOnly("io.github.kosmx.bendy-lib:bendy-lib-fabric:${project.bendylib_version}")
 }
 
 ```
