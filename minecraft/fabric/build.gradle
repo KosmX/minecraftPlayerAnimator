@@ -57,6 +57,8 @@ dependencies {
 
     //runtimeOnly "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_api_version}"  //Try to avoid FAPI
     modImplementation fabricApi.module("fabric-resource-loader-v0", project.fabric_api_version)
+
+    //modRuntimeOnly "maven.modrinth:3dskinlayers:1.5.2-fabric-1.19"
 }
 
 project.archivesBaseName = rootProject.archives_base_name + "-" + project.name
@@ -78,7 +80,7 @@ shadowJar {
 
 remapJar {
     injectAccessWidener = true
-    input.set shadowJar.archiveFile
+    inputFile.set shadowJar.archiveFile
     dependsOn shadowJar
     classifier null
 }

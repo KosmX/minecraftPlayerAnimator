@@ -10,10 +10,12 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.ResourceManager;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@ApiStatus.Internal
 public class FabricClientInitializer implements ClientModInitializer {
     public static final Logger LOGGER = LoggerFactory.getLogger("player-animator");
 
