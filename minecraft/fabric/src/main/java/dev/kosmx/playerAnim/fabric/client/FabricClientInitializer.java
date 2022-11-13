@@ -1,4 +1,4 @@
-package dev.kosmx.playerAnim.impl.client;
+package dev.kosmx.playerAnim.fabric.client;
 
 import dev.kosmx.playerAnim.impl.Helper;
 import dev.kosmx.playerAnim.impl.compat.skinLayers.SkinLayersTransformer;

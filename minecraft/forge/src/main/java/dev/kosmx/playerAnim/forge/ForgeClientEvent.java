@@ -1,6 +1,5 @@
-package dev.kosmx.playerAnim.impl.forge;
+package dev.kosmx.playerAnim.forge;
 
-import dev.kosmx.playerAnim.impl.ForgeModInterface;
 import dev.kosmx.playerAnim.impl.Helper;
 import dev.kosmx.playerAnim.impl.compat.skinLayers.SkinLayersTransformer;
 import dev.kosmx.playerAnim.minecraftApi.PlayerAnimationRegistry;

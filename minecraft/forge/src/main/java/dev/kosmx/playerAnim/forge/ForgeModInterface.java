@@ -1,4 +1,4 @@
-package dev.kosmx.playerAnim.impl;
+package dev.kosmx.playerAnim.forge;
 
 import net.minecraftforge.fml.common.Mod;
 import org.slf4j.Logger;
