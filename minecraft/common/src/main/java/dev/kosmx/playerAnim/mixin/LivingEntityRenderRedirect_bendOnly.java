@@ -39,7 +39,7 @@ import java.util.List;
 @Mixin(LivingEntityRenderer.class)
 public abstract class LivingEntityRenderRedirect_bendOnly<T extends Entity, M extends EntityModel<T>> extends EntityRenderer<T> implements RenderLayerParent<T, M> {
 
-    protected LivingEntityRenderRedirect(EntityRenderDispatcher entityRenderDispatcher) {
+    protected LivingEntityRenderRedirect_bendOnly(EntityRenderDispatcher entityRenderDispatcher) {
         super(entityRenderDispatcher);
     }
 
