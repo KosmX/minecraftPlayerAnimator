@@ -7,7 +7,9 @@ import dev.kosmx.playerAnim.core.impl.AnimationProcessor;
 import dev.kosmx.playerAnim.core.util.Pair;
 import dev.kosmx.playerAnim.core.util.Vec3f;
 import net.minecraft.client.model.geom.ModelPart;
+import org.jetbrains.annotations.ApiStatus;
 
+@ApiStatus.Internal
 public class AnimationApplier extends AnimationProcessor {
     public AnimationApplier(IAnimation animation) {
         super(animation);

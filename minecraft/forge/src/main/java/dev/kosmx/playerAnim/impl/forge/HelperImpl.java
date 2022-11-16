@@ -1,12 +1,16 @@
 package dev.kosmx.playerAnim.impl.forge;
 
+import org.spongepowered.asm.service.MixinService;
+
+import java.io.IOException;
+
 public class HelperImpl {
     public static boolean isBendyLibPresent() {
         try {
-            Class.forName("io.github.kosmx.bendylib.IModelPart").getName();
+            MixinService.getService().getBytecodeProvider().getClassNode("io.github.kosmx.bendylib.IModelPart");
             System.out.println("[playerAnimator] bendy-lib found");
             return true;
-        } catch(ClassNotFoundException e) {
+        } catch(ClassNotFoundException | IOException e) {
             return false;
         }
     }

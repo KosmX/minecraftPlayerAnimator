@@ -27,7 +27,7 @@ import java.util.List;
 /**
  * Compatibility issue: can not redirect {@link RenderLayer#render(PoseStack, MultiBufferSource, int, Entity, float, float, float, float, float, float)}
  * I have to modify the matrixStack and do not forget to POP it!
- *
+ * <p>
  * I can inject into the enhanced for
  * {@link List#iterator()}      //initial push to keep in sync
  * {@link Iterator#hasNext()}   //to pop the matrix stack
@@ -37,9 +37,9 @@ import java.util.List;
  * @param <M>
  */
 @Mixin(LivingEntityRenderer.class)
-public abstract class LivingEntityRenderRedirect<T extends Entity, M extends EntityModel<T>> extends EntityRenderer<T> implements RenderLayerParent<T, M> {
+public abstract class LivingEntityRenderRedirect_bendOnly<T extends Entity, M extends EntityModel<T>> extends EntityRenderer<T> implements RenderLayerParent<T, M> {
 
-    protected LivingEntityRenderRedirect(EntityRenderDispatcher entityRenderDispatcher) {
+    protected LivingEntityRenderRedirect_bendOnly(EntityRenderDispatcher entityRenderDispatcher) {
         super(entityRenderDispatcher);
     }
 

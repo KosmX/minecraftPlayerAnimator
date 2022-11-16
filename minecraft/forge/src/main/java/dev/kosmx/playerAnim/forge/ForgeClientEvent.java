@@ -1,6 +1,5 @@
-package dev.kosmx.playerAnim.impl.forge;
+package dev.kosmx.playerAnim.forge;
 
-import dev.kosmx.playerAnim.impl.ForgeModInterface;
 import dev.kosmx.playerAnim.minecraftApi.PlayerAnimationRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.server.packs.resources.ReloadableResourceManager;

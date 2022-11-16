@@ -2,6 +2,8 @@ package dev.kosmx.playerAnim.minecraftApi;
 
 import dev.kosmx.playerAnim.core.data.KeyframeAnimation;
 import dev.kosmx.playerAnim.core.data.gson.AnimationSerializing;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -36,6 +38,7 @@ import java.util.Optional;
  * <br><br>
  * Extra animations can be added by ResourcePack(s) or other mods
  */
+@Environment(EnvType.CLIENT)
 public final class PlayerAnimationRegistry {
 
     private static final HashMap<ResourceLocation, KeyframeAnimation> animations = new HashMap<>();

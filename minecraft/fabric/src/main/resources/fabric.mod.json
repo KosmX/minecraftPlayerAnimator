@@ -14,8 +14,7 @@
   "license": "Insert License Here",
   "environment": "*",
   "entrypoints": {
-    "preLaunch": ["dev.kosmx.playerAnim.impl.fabric.PreLaunchEntry"],
-    "client": ["dev.kosmx.playerAnim.impl.client.FabricClientInitializer"]
+    "client": ["dev.kosmx.playerAnim.fabric.client.FabricClientInitializer"]
   },
   "mixins": [
     "playerAnimator-common.mixins.json"

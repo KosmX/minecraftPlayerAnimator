@@ -1,0 +1,19 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"animation.model.rodHand": {
+			"loop": true,
+			"bones": {
+				"right_arm": {
+					"rotation": {
+						"vector": [-70, 0, 0]
+					},
+					"position": {
+						"vector": [0, -2, -1]
+					}
+				}
+			}
+		}
+	},
+	"geckolib_format_version": 2
+}

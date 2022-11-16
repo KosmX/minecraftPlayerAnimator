@@ -11,9 +11,11 @@ import io.github.kosmx.bendylib.impl.BendableCuboid;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.core.Direction;
 
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
 
+@ApiStatus.Internal
 public class BendHelper extends MutableModelPart implements IBendHelper {
 
     @Nullable
