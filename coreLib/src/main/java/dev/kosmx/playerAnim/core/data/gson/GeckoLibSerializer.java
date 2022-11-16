@@ -21,7 +21,11 @@ import java.util.Map;
  */
 public class GeckoLibSerializer {
     public static List<KeyframeAnimation> serialize(JsonObject node){
-        return readAnimations(node.get("animations").getAsJsonObject());
+        try {
+            return readAnimations(node.get("animations").getAsJsonObject());
+        } catch(NumberFormatException e) {
+            throw new JsonParseException(e);
+        }
     }
 
     private static List<KeyframeAnimation> readAnimations(JsonObject jsonEmotes){
@@ -79,7 +83,7 @@ public class GeckoLibSerializer {
                     if(entry.getKey().equals("vector")){
                         readCollection(getRots(stateCollection), 0, Ease.LINEAR, entry.getValue().getAsJsonArray(), emoteData, false);
                     }
-                    else {
+                    else if (!entry.getKey().equals("easing")) {
                         int tick = (int) (Float.parseFloat(entry.getKey()) * 20);
                         if (entry.getValue().isJsonArray()) {
                             readCollection(getRots(stateCollection), tick, Ease.CONSTANT, entry.getValue().getAsJsonArray(), emoteData, false);
@@ -100,7 +104,7 @@ public class GeckoLibSerializer {
                 jsonPosition.getAsJsonObject().entrySet().forEach(entry -> {
                     if(entry.getKey().equals("vector")){
                         readCollection(getOffs(stateCollection), 0, Ease.LINEAR, entry.getValue().getAsJsonArray(), emoteData, true);
-                    }else {
+                    }else if (!entry.getKey().equals("easing")) {
                         int tick = (int) (Float.parseFloat(entry.getKey()) * 20);
                         if (entry.getValue().isJsonArray()) {
                             readCollection(getOffs(stateCollection), tick, Ease.LINEAR, entry.getValue().getAsJsonArray(), emoteData, true);

@@ -38,7 +38,12 @@ dependencies {
 
     common(shadowCommon(project(path: ":coreLib")) {transitive false}) {transitive false} //Why can I nest these?
 
-    //modImplementation 'io.github.kosmx.bendy-lib:bendy-lib-forge:2.1.0'
+    //Testing libraries
+    /*
+    modLocalRuntime "io.github.kosmx.bendy-lib:bendy-lib-forge:${project.bendy_lib}"
+    modLocalRuntime "maven.modrinth:3dskinlayers:1.5.2-forge-1.19"
+    modLocalRuntime "maven.modrinth:emotecraft:2.2.6-SNAPSHOT-build.44-MC1.19.2-forge"
+    //*/
 }
 
 project.archivesBaseName = rootProject.archives_base_name + "-" + project.name
@@ -60,7 +65,7 @@ shadowJar {
 }
 
 remapJar {
-    input.set shadowJar.archiveFile
+    inputFile.set shadowJar.archiveFile
     dependsOn shadowJar
     classifier null
 }

@@ -3,8 +3,11 @@ package dev.kosmx.playerAnim.minecraftApi;
 import dev.kosmx.playerAnim.api.IPlayer;
 import dev.kosmx.playerAnim.api.layered.AnimationStack;
 import dev.kosmx.playerAnim.core.impl.event.Event;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.player.AbstractClientPlayer;
 
+@Environment(EnvType.CLIENT)
 public final class PlayerAnimationAccess {
 
     /**
