@@ -120,7 +120,7 @@ public final class PlayerAnimationAccess {
          * @return      animation or <code>null</code> if not exists
          * @apiNote     This function does <bold>not</bold> register the animation, just store it.
          */
-        @Nullable IAnimation get(@NotNull ResourceLocation id) {
+        @Nullable public IAnimation get(@NotNull ResourceLocation id) {
             return player.playerAnimator_getAnimation(id);
         }
 
@@ -131,7 +131,7 @@ public final class PlayerAnimationAccess {
          * @param animation animation to store in the player, <code>null</code> to clear stored animation
          * @return          The previously stored animation.
          */
-        @Nullable IAnimation set(@NotNull ResourceLocation id, @Nullable IAnimation animation) {
+        @Nullable public IAnimation set(@NotNull ResourceLocation id, @Nullable IAnimation animation) {
             return player.playerAnimator_setAnimation(id, animation);
         }
     }
