@@ -15,7 +15,7 @@ public class SkinLayersTransformer {
 
         LayerFeatureTransformerAPI.setLayerTransformer((player, matrixStack, modelPart) -> {
             if (((IUpperPartHelper)modelPart).isUpperPart()) {
-                IBendHelper.rotateMatrixStack(matrixStack, ((IAnimatedPlayer) player).getAnimation().getBend("body"));
+                IBendHelper.rotateMatrixStack(matrixStack, ((IAnimatedPlayer) player).playerAnimator_getAnimation().getBend("body"));
             }
         });
     }
