@@ -5,6 +5,7 @@ import dev.kosmx.playerAnim.api.layered.IAnimation;
 import dev.kosmx.playerAnim.impl.IAnimatedPlayer;
 import dev.kosmx.playerAnim.impl.animation.AnimationApplier;
 import dev.kosmx.playerAnim.minecraftApi.PlayerAnimationAccess;
+import dev.kosmx.playerAnim.minecraftApi.PlayerAnimationFactory;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
@@ -24,12 +25,12 @@ public abstract class PlayerEntityMixin implements IAnimatedPlayer {
 
     //Unique params might be renamed
     @Unique
+    private final Map<ResourceLocation, IAnimation> modAnimationData = new HashMap<>();
+    @Unique
     private final AnimationStack animationStack = createAnimationStack();
     @Unique
     private final AnimationApplier animationApplier = new AnimationApplier(animationStack);
 
-    @Unique
-    private final Map<ResourceLocation, IAnimation> modAnimationData = new HashMap<>();
 
 
     @SuppressWarnings("ConstantConditions")
@@ -37,7 +38,7 @@ public abstract class PlayerEntityMixin implements IAnimatedPlayer {
     private AnimationStack createAnimationStack() {
         AnimationStack stack = new AnimationStack();
         if (AbstractClientPlayer.class.isInstance(this)) {
-            PlayerAnimationAccess.ANIMATION_DATA_FACTORY.invoker().invoke((AbstractClientPlayer)(Object) this);
+            PlayerAnimationFactory.ANIMATION_DATA_FACTORY.prepareAnimations((AbstractClientPlayer)(Object) this, stack, modAnimationData);
             PlayerAnimationAccess.REGISTER_ANIMATION_EVENT.invoker().registerAnimation((AbstractClientPlayer)(Object) this, stack);
         }
         return stack;

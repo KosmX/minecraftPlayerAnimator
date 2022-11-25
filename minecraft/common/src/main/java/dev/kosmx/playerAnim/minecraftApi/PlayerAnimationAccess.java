@@ -47,32 +47,13 @@ public final class PlayerAnimationAccess {
      * If you don't want to create your own mixin, you can use this event to add animation to players<br>
      * <b>The event will fire for every player</b> and if the player reloads, it will fire again.<br>
      * <hr>
-     * NOTE: When the event fires, <code>player.getAnimationStack()</code> will be <code>null</code>, you'll have to use the given stack.
+     * NOTE: When the event fires, {@link IPlayer#getAnimationStack()} will be <code>null</code>, you'll have to use the given stack.
      */
     public static final Event<AnimationRegister> REGISTER_ANIMATION_EVENT = new Event<>(AnimationRegister.class, listeners -> (player, animationStack) -> {
         for (AnimationRegister listener : listeners) {
             listener.registerAnimation(player, animationStack);
         }
     });
-
-    /**
-     * Animation factory, the factory will be invoked whenever a client-player is constructed.
-     * The returned animation will be automatically registered and added to playerAssociated data.
-     * <p>
-     * <code>REGISTER_ANIMATION_EVENT</code> is invoked <bold>after</bold> factories are done.
-     */
-    public static final Event<AnimationDataFactory> ANIMATION_DATA_FACTORY = new Event<>(AnimationDataFactory.class, factories -> ((player) -> {
-        for (AnimationDataFactory factory : factories) {
-            @Nullable RegisteredAnimationData data = factory.invoke(player);
-            if (data != null) {
-                getPlayerAnimLayer(player).addAnimLayer(data.priority, data.animation);
-                if (data.id != null) {
-                    getPlayerAssociatedData(player).set(data.id, data.animation);
-                }
-            }
-        }
-        return null;
-    }));
 
     @FunctionalInterface
     public interface AnimationRegister {
@@ -84,27 +65,6 @@ public final class PlayerAnimationAccess {
          */
         void registerAnimation(@NotNull AbstractClientPlayer player, @NotNull AnimationStack animationStack);
     }
-
-    @FunctionalInterface
-    public interface AnimationDataFactory {
-
-        /**
-         * Player object is in construction, it will be invoked when you can register animation
-         * It will be invoked for every player only ONCE (it isn't a tick function)
-         * @param player         Client player object, can be the main player or other player
-         * @return data and associated properties. See {@code RegisteredAnimationData}. return <code>null</code> to skip the step
-         */
-        RegisteredAnimationData invoke(@NotNull AbstractClientPlayer player);
-    }
-
-    /**
-     * event return type when registering an animation
-     * @param id        animation id, or null if you don't want to store in player associated data
-     * @param animation animation, optionally {@code ModifierLayer}
-     * @param priority  registration priority
-     * @apiNote This event will be fired when a playerEntity is constructed on client-side
-     */
-    public record RegisteredAnimationData(ResourceLocation id, @NotNull IAnimation animation, int priority) {}
 
     public static class PlayerAssociatedAnimationData {
         @NotNull
