@@ -293,16 +293,20 @@ public final class KeyframeAnimation implements Supplier<UUID> {
 
         public void fullyEnablePart(boolean always) {
             if (always || x.isEnabled || y.isEnabled || z.isEnabled || pitch.isEnabled || yaw.isEnabled || roll.isEnabled || (isBendable && (bend.isEnabled || bendDirection.isEnabled))) {
-                x.setEnabled(true);
-                y.setEnabled(true);
-                z.setEnabled(true);
-                pitch.setEnabled(true);
-                yaw.setEnabled(true);
-                roll.setEnabled(true);
-                if (isBendable) {
-                    bend.setEnabled(true);
-                    bendDirection.setEnabled(true);
-                }
+                this.setEnabled(true);
+            }
+        }
+
+        public void setEnabled(boolean enabled) {
+            x.setEnabled(enabled);
+            y.setEnabled(enabled);
+            z.setEnabled(enabled);
+            pitch.setEnabled(enabled);
+            yaw.setEnabled(enabled);
+            roll.setEnabled(enabled);
+            if (isBendable) {
+                bend.setEnabled(enabled);
+                bendDirection.setEnabled(enabled);
             }
         }
 

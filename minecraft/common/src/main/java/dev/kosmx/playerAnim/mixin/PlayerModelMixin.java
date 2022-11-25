@@ -133,8 +133,8 @@ public class PlayerModelMixin<T extends LivingEntity> extends HumanoidModel<T> i
 
     @Inject(method = "setupAnim(Lnet/minecraft/world/entity/LivingEntity;FFFFF)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/model/geom/ModelPart;copyFrom(Lnet/minecraft/client/model/geom/ModelPart;)V", ordinal = 0))
     private void setEmote(T livingEntity, float f, float g, float h, float i, float j, CallbackInfo ci){
-        if(!firstPersonNext && livingEntity instanceof AbstractClientPlayer && ((IAnimatedPlayer)livingEntity).getAnimation().isActive()){
-            AnimationApplier emote = ((IAnimatedPlayer) livingEntity).getAnimation();
+        if(!firstPersonNext && livingEntity instanceof AbstractClientPlayer && ((IAnimatedPlayer)livingEntity).playerAnimator_getAnimation().isActive()){
+            AnimationApplier emote = ((IAnimatedPlayer) livingEntity).playerAnimator_getAnimation();
             emoteSupplier.set(emote);
 
             emote.updatePart("head", this.head);

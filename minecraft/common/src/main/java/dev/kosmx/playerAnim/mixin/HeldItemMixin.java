@@ -26,8 +26,8 @@ public class HeldItemMixin {
     private void renderMixin(LivingEntity livingEntity, ItemStack stack, ItemTransforms.TransformType transformationMode, HumanoidArm arm, PoseStack matrices, MultiBufferSource vertexConsumers, int light, CallbackInfo ci){
         if(Helper.isBendEnabled() && livingEntity instanceof IAnimatedPlayer){
             IAnimatedPlayer player = (IAnimatedPlayer) livingEntity;
-            if(player.getAnimation().isActive()){
-                AnimationProcessor anim = player.getAnimation();
+            if(player.playerAnimator_getAnimation().isActive()){
+                AnimationProcessor anim = player.playerAnimator_getAnimation();
 
                 Vec3f data = anim.get3DTransform(arm == HumanoidArm.LEFT ? "leftArm" : "rightArm", TransformType.BEND, new Vec3f(0f, 0f, 0f));
 
@@ -50,8 +50,8 @@ public class HeldItemMixin {
     private void changeItemLocation(LivingEntity livingEntity, ItemStack itemStack, ItemTransforms.TransformType transformType, HumanoidArm arm, PoseStack matrices, MultiBufferSource multiBufferSource, int i, CallbackInfo ci) {
         if(livingEntity instanceof IAnimatedPlayer) {
             IAnimatedPlayer player = (IAnimatedPlayer) livingEntity;
-            if (player.getAnimation().isActive()) {
-                AnimationProcessor anim = player.getAnimation();
+            if (player.playerAnimator_getAnimation().isActive()) {
+                AnimationProcessor anim = player.playerAnimator_getAnimation();
 
                 Vec3f rot = anim.get3DTransform(arm == HumanoidArm.LEFT ? "leftItem" : "rightItem", TransformType.ROTATION, Vec3f.ZERO);
                 Vec3f pos = anim.get3DTransform(arm == HumanoidArm.LEFT ? "leftItem" : "rightItem", TransformType.POSITION, Vec3f.ZERO).scale(1/16f);
