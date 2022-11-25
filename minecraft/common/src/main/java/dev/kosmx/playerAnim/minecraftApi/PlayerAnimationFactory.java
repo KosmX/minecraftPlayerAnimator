@@ -15,7 +15,7 @@ import java.util.function.Function;
  * Animation factory, the factory will be invoked whenever a client-player is constructed.
  * The returned animation will be automatically registered and added to playerAssociated data.
  * <p>
- * {@link PlayerAnimationAccess#REGISTER_ANIMATION_EVENT} is invoked <bold>after</bold> factories are done.
+ * {@link PlayerAnimationAccess#REGISTER_ANIMATION_EVENT} is invoked <strong>after</strong> factories are done.
  */
 public interface PlayerAnimationFactory {
 

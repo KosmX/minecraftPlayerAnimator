@@ -31,7 +31,7 @@ public interface IAnimatedPlayer extends IPlayer {
      * Get an animation associated with the player
      * @param id    Animation identifier, please start with your modid to avoid collision
      * @return      animation or <code>null</code> if not exists
-     * @apiNote     This function does <bold>not</bold> register the animation, just store it.
+     * @apiNote     This function does <strong>not</strong> register the animation, just store it.
      */
     @Nullable
     IAnimation playerAnimator_getAnimation(@NotNull ResourceLocation id);

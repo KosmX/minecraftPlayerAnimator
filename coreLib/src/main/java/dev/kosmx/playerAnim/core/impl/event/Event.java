@@ -19,7 +19,7 @@ public class Event<T> {
      * Do EVENT.invoker()./invoke(Objects...)/;
      * Only when firing the event.
      * @return the invoker
-     * @apiNote This shall <bold>only</bold> be used by the API
+     * This shall <strong>only</strong> be used by the API
      */
     public final T invoker(){
         return _invoker.invoker(listeners);
