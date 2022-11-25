@@ -53,13 +53,7 @@ dependencies {
     common(shadowCommon(project(path: ":coreLib")) {transitive false}) {transitive false} //Why can I nest these?
 
     //Testing libraries
-    //*
-    modLocalRuntime "io.github.kosmx.bendy-lib:bendy-lib-fabric:${project.bendy_lib}"
-    modLocalRuntime "maven.modrinth:3dskinlayers:1.5.2-fabric-1.19"
-    modLocalRuntime "maven.modrinth:emotecraft:2.2.6-SNAPSHOT-build.44-MC1.19.2-fabric"
-    modLocalRuntime "maven.modrinth:modmenu:4.0.4"
-    modLocalRuntime "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_api_version}"
-    //*/
+    //modImplementation "io.github.kosmx.bendy-lib:bendy-lib-fabric:${project.bendy_lib}"
 
     modImplementation fabricApi.module("fabric-resource-loader-v0", project.fabric_api_version)
 
@@ -158,7 +152,7 @@ if(keysExists) {
         versionNumber = "${rootProject.mod_version}-fabric"
         versionName = "${rootProject.mod_version}-fabric"
 
-        gameVersions = ["1.19", "1.19.1", "1.19.2"]
+        gameVersions = ["1.16.4", "1.16.5"]
         changelog = changes
         loaders = ["fabric", "quilt"]
         failSilently = false
@@ -177,11 +171,9 @@ if(keysExists) {
             //changelog = '[See on Github](https://github.com/KosmX/emotes/commits/master)'
             changelog = changes
             releaseType = project.cfType
-            addGameVersion "1.19"
-            addGameVersion "1.19.1"
-            addGameVersion "1.19.2"
+            addGameVersion "1.16.4"
+            addGameVersion "1.16.5"
             addGameVersion "Fabric"
-            addGameVersion "Quilt"
 
 
             relations {

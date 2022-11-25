@@ -39,7 +39,27 @@ public interface PlayerAnimationFactory {
         }
 
         @ApiStatus.Internal
-        private record DataHolder(@Nullable ResourceLocation id, int priority, @NotNull IAnimation animation) {}
+        private final static class DataHolder {
+            @Nullable final ResourceLocation id;
+            final int priority;
+            @NotNull final IAnimation animation;
+
+            private DataHolder(@Nullable ResourceLocation id, int priority, @NotNull IAnimation animation) {
+                this.id = id;
+                this.priority = priority;
+                this.animation = animation;
+            }
+
+            @Nullable public ResourceLocation id() {
+                return id;
+            }
+            public int priority() {
+                return priority;
+            }
+            @NotNull public IAnimation animation() {
+                return animation;
+            }
+        }
 
         @ApiStatus.Internal
         public void prepareAnimations(AbstractClientPlayer player, AnimationStack playerStack, Map<ResourceLocation, IAnimation> animationMap) {

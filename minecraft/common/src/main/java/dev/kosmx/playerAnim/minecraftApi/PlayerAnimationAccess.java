@@ -38,7 +38,8 @@ public final class PlayerAnimationAccess {
      * @implNote data is stored in the player object (using mixins), using it is more efficient than any objectMap as objectMap solution does not know when to delete the data.
      */
     public static PlayerAssociatedAnimationData getPlayerAssociatedData(@NotNull AbstractClientPlayer player) {
-        if (player instanceof IAnimatedPlayer animatedPlayer) {
+        if (player instanceof IAnimatedPlayer) {
+            IAnimatedPlayer animatedPlayer = (IAnimatedPlayer) player;
             return new PlayerAssociatedAnimationData(animatedPlayer);
         } else throw new IllegalArgumentException(player + " is not a player or library mixins failed");
     }

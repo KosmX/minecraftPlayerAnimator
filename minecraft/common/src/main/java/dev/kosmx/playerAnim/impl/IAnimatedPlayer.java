@@ -19,7 +19,7 @@ public interface IAnimatedPlayer extends IPlayer {
      * @deprecated potential name conflict on mixin interface
      * use {@code IAnimatedPlayer#playerAnimator_getAnimation}
      */
-    @Deprecated(forRemoval = true)
+    @Deprecated
     default AnimationApplier getAnimation() {
         return playerAnimator_getAnimation();
     }

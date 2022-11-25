@@ -1,5 +1,5 @@
 modLoader = "javafml"
-loaderVersion = "[37.1.1,)"
+loaderVersion = "[35.1.0,)"
 #issueTrackerURL = ""
 license = "Insert License Here"
 
@@ -16,6 +16,6 @@ Look for FabricMC (or QuiltMC) builds...
 [[dependencies.playeranimator]]
 modId = "minecraft"
 mandatory = true
-versionRange = "[1.19,)"
+versionRange = "[1.16,)"
 ordering = "NONE"
 side = "BOTH"
