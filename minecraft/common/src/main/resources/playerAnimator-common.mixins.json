@@ -2,7 +2,7 @@
   "required": true,
   "minVersion": "0.8",
   "package": "dev.kosmx.playerAnim.mixin",
-  "compatibilityLevel": "JAVA_16",
+  "compatibilityLevel": "JAVA_8",
   "plugin": "dev.kosmx.playerAnim.impl.mixin.MixinConfig",
   "client": [
     "ArmorFeatureRendererMixin",

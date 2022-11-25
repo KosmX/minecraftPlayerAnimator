@@ -1,13 +1,13 @@
 package dev.kosmx.playerAnim.forge;
 
 import net.minecraftforge.fml.common.Mod;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 @Mod("playeranimator")
 public class ForgeModInterface {
 
-    public static final Logger LOGGER = LoggerFactory.getLogger("player-animator");
+    public static final Logger LOGGER = LogManager.getLogger("player-animator");
 
     public ForgeModInterface() {
     }
