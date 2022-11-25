@@ -25,8 +25,8 @@ public class HeldItemMixin {
     @Inject(method = "renderArmWithItem", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;mulPose(Lcom/mojang/math/Quaternion;)V", ordinal = 0))
     private void renderMixin(LivingEntity livingEntity, ItemStack stack, ItemTransforms.TransformType transformationMode, HumanoidArm arm, PoseStack matrices, MultiBufferSource vertexConsumers, int light, CallbackInfo ci){
         if(Helper.isBendEnabled() && livingEntity instanceof IAnimatedPlayer player){
-            if(player.getAnimation().isActive()){
-                AnimationProcessor anim = player.getAnimation();
+            if(player.playerAnimator_getAnimation().isActive()){
+                AnimationProcessor anim = player.playerAnimator_getAnimation();
 
                 Vec3f data = anim.get3DTransform(arm == HumanoidArm.LEFT ? "leftArm" : "rightArm", TransformType.BEND, new Vec3f(0f, 0f, 0f));
 
@@ -48,8 +48,8 @@ public class HeldItemMixin {
     @Inject(method = "renderArmWithItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/ItemInHandRenderer;renderItem(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/client/renderer/block/model/ItemTransforms$TransformType;ZLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V"))
     private void changeItemLocation(LivingEntity livingEntity, ItemStack itemStack, ItemTransforms.TransformType transformType, HumanoidArm arm, PoseStack matrices, MultiBufferSource multiBufferSource, int i, CallbackInfo ci) {
         if(livingEntity instanceof IAnimatedPlayer player) {
-            if (player.getAnimation().isActive()) {
-                AnimationProcessor anim = player.getAnimation();
+            if (player.playerAnimator_getAnimation().isActive()) {
+                AnimationProcessor anim = player.playerAnimator_getAnimation();
 
                 Vec3f rot = anim.get3DTransform(arm == HumanoidArm.LEFT ? "leftItem" : "rightItem", TransformType.ROTATION, Vec3f.ZERO);
                 Vec3f pos = anim.get3DTransform(arm == HumanoidArm.LEFT ? "leftItem" : "rightItem", TransformType.POSITION, Vec3f.ZERO).scale(1/16f);
