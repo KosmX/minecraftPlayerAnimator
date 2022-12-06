@@ -3,10 +3,8 @@ package dev.kosmx.playerAnim.api.layered.modifier;
 import dev.kosmx.playerAnim.api.TransformType;
 import dev.kosmx.playerAnim.api.layered.IAnimation;
 import dev.kosmx.playerAnim.core.util.Ease;
-import dev.kosmx.playerAnim.core.util.Easing;
 import dev.kosmx.playerAnim.core.util.Vec3f;
 import lombok.Setter;
-
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -89,7 +87,7 @@ public abstract class AbstractFadeModifier extends AbstractModifier {
         return new AbstractFadeModifier(length) {
             @Override
             protected float getAlpha(String modelName, TransformType type, float progress) {
-                return Easing.easingFromEnum(ease, progress);
+                return ease.invoke(progress);
             }
         };
     }

@@ -311,7 +311,7 @@ public class KeyframeAnimationPlayer implements IAnimation {
             }
             if (tickBefore == tickAfter) return before.value;
             float f = (currentTick + tickDelta - (float) tickBefore) / (tickAfter - tickBefore);
-            return MathHelper.lerp(Easing.easingFromEnum(data.isEasingBefore ? after.ease : before.ease, f), before.value, after.value);
+            return MathHelper.lerp((data.isEasingBefore ? after.ease : before.ease).invoke(f), before.value, after.value);
         }
 
     }
