@@ -3,7 +3,7 @@ name: API bug report
 about: Issue about the API (not the buildscript)
 title: "[API]"
 labels: bug
-assignees: ''
+assignees: KosmX
 
 ---
 
