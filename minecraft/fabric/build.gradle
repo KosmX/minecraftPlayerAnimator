@@ -57,7 +57,7 @@ dependencies {
     modLocalRuntime "io.github.kosmx.bendy-lib:bendy-lib-fabric:${project.bendy_lib}"
     modLocalRuntime "maven.modrinth:3dskinlayers:1.5.2-fabric-1.19"
     modLocalRuntime "maven.modrinth:emotecraft:2.2.6-SNAPSHOT-build.44-MC1.19.2-fabric"
-    modLocalRuntime "maven.modrinth:modmenu:4.0.4"
+    modLocalRuntime "maven.modrinth:modmenu:4.1.2"
     modLocalRuntime "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_api_version}"
     //*/
 
