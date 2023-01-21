@@ -11,7 +11,7 @@
     "homepage": "kosmx.dev",
     "sources": "https://github.com/KosmX/fabricPlayerAnimation"
   },
-  "license": "Insert License Here",
+  "license": "MIT",
   "environment": "*",
   "entrypoints": {
     "client": ["dev.kosmx.playerAnim.fabric.client.FabricClientInitializer"]
