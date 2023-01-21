@@ -1,7 +1,7 @@
 modLoader = "javafml"
 loaderVersion = "[37.1.1,)"
 #issueTrackerURL = ""
-license = "Insert License Here"
+license = "MIT"
 
 [[mods]]
 modId = "playeranimator"
