@@ -91,17 +91,17 @@ public final class PlayerAnimationRegistry {
     @ApiStatus.Internal
     public static void resourceLoaderCallback(@NotNull ResourceManager manager, Logger logger) {
         animations.clear();
-        for (var resource: manager.listResources("player_animation", location -> location.getPath().endsWith(".json")).entrySet()) {
-            try (var input = resource.getValue().open()) {
+        for (var resource: manager.listResources("player_animation", location -> location.endsWith(".json"))) {
+            try (var input = manager.getResource(resource).getInputStream()) {
 
                 //Deserialize the animation json. GeckoLib animation json can contain multiple animations.
                 for (var animation : AnimationSerializing.deserializeAnimation(input)) {
 
                     //Save the animation for later use.
-                    animations.put(new ResourceLocation(resource.getKey().getNamespace(), PlayerAnimationRegistry.serializeTextToString((String) animation.extraData.get("name")).toLowerCase(Locale.ROOT)), animation);
+                    animations.put(new ResourceLocation(resource.getNamespace(), PlayerAnimationRegistry.serializeTextToString((String) animation.extraData.get("name")).toLowerCase(Locale.ROOT)), animation);
                 }
             } catch(IOException e) {
-                logger.error("Error while loading payer animation: " + resource.getKey());
+                logger.error("Error while loading payer animation: " + resource);
                 logger.error(e.getMessage());
                 StringWriter sw = new StringWriter();
                 PrintWriter pw = new PrintWriter(sw);
