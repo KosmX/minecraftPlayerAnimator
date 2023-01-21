@@ -1,86 +1,22 @@
 package dev.kosmx.playerAnim.core.util;
 
 
+import org.jetbrains.annotations.Nullable;
+
 public class Easing {
 
-    /*
+    /**
      * Easing functions from easings.net
      * All function have a string codename
      * EasingFromString
-     *
+     * <p>
      * All function needs an input between 0 and 1
      * except
+     * @deprecated Just use {@link Ease#invoke(float)}
      */
-    public static float easingFromEnum(Ease type, float f){
-        switch(type){
-            case INOUTSINE:
-                return inOutSine(f);
-            case INSINE:
-                return inSine(f);
-            case OUTSINE:
-                return outSine(f);
-            case INCUBIC:
-                return inCubic(f);
-            case OUTCUBIC:
-                return outCubic(f);
-            case LINEAR:
-                return f;
-            case INOUTCUBIC:
-                return inOutCubic(f);
-            case INQUAD:
-                return inQuad(f);
-            case INQUART:
-                return inQuart(f);
-            case OUTQUAD:
-                return outQuad(f);
-            case OUTQUART:
-                return outQuart(f);
-            case INOUTQUAD:
-                return inOutQuad(f);
-            case INOUTQUART:
-                return inOutQuart(f);
-            case INBACK:
-                return inBack(f);
-            case INCIRC:
-                return inCirc(f);
-            case INEXPO:
-                return inExpo(f);
-            case INQUINT:
-                return inQuint(f);
-            case OUTBACK:
-                return outBack(f);
-            case OUTCIRC:
-                return outCirc(f);
-            case OUTEXPO:
-                return outExpo(f);
-            case INBOUNCE:
-                return inBounce(f);
-            case OUTQUINT:
-                return outQuint(f);
-            case INELASTIC:
-                return inElastic(f);
-            case INOUTBACK:
-                return inOutBack(f);
-            case INOUTCIRC:
-                return inOutCirc(f);
-            case INOUTEXPO:
-                return inOutExpo(f);
-            case OUTBOUNCE:
-                return outBounce(f);
-            case INOUTQUINT:
-                return inOutQuint(f);
-            case OUTELASTIC:
-                return outElastic(f);
-            case INOUTBOUNCE:
-                return inOutBounce(f);
-            case INOUTELASTIC:
-                return inOutElastic(f);
-            case CONSTANT:
-                return 0;
-            default:
-                //CommonData.logger.warn("easing function unknown: " + type);
-                return f;
-        }
+    @Deprecated
+    public static float easingFromEnum(@Nullable Ease type, float f) {
+        return type != null ? type.invoke(f) : f;
     }
 
     /**
@@ -90,11 +26,11 @@ public class Easing {
     public static Ease easeFromString(String string){
         try{
             if(string.equals("step"))return Ease.CONSTANT;
-            if(string.substring(0, 4).toUpperCase().equals("EASE")){
+            if(string.substring(0, 4).equalsIgnoreCase("EASE")){
                 string = string.substring(4);
             }
             return Ease.valueOf(string.toUpperCase());
-        }catch(Exception exception){
+        } catch(Exception exception){
             //Main.log(Level.ERROR, "Ease name unknown: \"" + string + "\" using linear", true);
             //Main.log(Level.WARN, exception.toString());
             return Ease.LINEAR;
@@ -195,7 +131,6 @@ public class Easing {
     }
 
     public static float inBack(float x){
-
         return c3 * x * x * x - c1 * x * x;
     }
 
