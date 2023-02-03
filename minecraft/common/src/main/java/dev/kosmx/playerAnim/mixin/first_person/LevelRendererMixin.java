@@ -40,8 +40,8 @@ public abstract class LevelRendererMixin {
         }
 
         Optional<FirstPersonAnimation> currentAnimation = Optional.empty();
-        if (entity instanceof IAnimatedFirstPerson animator) {
-             currentAnimation = animator.getActiveFirstPersonAnimation(tickDelta);
+        if (entity instanceof IAnimatedFirstPerson animated) {
+             currentAnimation = animated.getActiveFirstPersonAnimation(tickDelta);
         }
 
         Camera camera = Minecraft.getInstance().gameRenderer.getMainCamera();

@@ -95,6 +95,9 @@ public class AnimationStack implements IAnimation {
     public FirstPersonAnimation getActiveFirstPersonAnimation(float tickDelta) {
         for (Pair<Integer, IAnimation> layer : layers) {
             IAnimation animation = layer.getRight();
+            if (animation instanceof ModifierLayer) {
+                animation = ((ModifierLayer)animation).getAnimation();
+            }
             if(animation instanceof IFirstPersonPlayback) {
                 IFirstPersonPlayback firstPersonAnimation = (IFirstPersonPlayback)animation;
                 if (firstPersonAnimation.isActiveInFirstPerson(tickDelta)) {
