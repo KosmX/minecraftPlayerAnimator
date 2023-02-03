@@ -1,9 +1,11 @@
 package dev.kosmx.playerAnim.mixin;
 
+import dev.kosmx.playerAnim.api.first_person.FirstPersonAnimation;
 import dev.kosmx.playerAnim.api.layered.AnimationStack;
 import dev.kosmx.playerAnim.api.layered.IAnimation;
 import dev.kosmx.playerAnim.impl.IAnimatedPlayer;
 import dev.kosmx.playerAnim.impl.animation.AnimationApplier;
+import dev.kosmx.playerAnim.impl.animation.first_person.IAnimatedFirstPerson;
 import dev.kosmx.playerAnim.minecraftApi.PlayerAnimationAccess;
 import dev.kosmx.playerAnim.minecraftApi.PlayerAnimationFactory;
 import net.minecraft.client.player.AbstractClientPlayer;
@@ -19,9 +21,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @Mixin(Player.class)
-public abstract class PlayerEntityMixin implements IAnimatedPlayer {
+public abstract class PlayerEntityMixin implements IAnimatedPlayer, IAnimatedFirstPerson {
 
     //Unique params might be renamed
     @Unique
@@ -74,5 +77,10 @@ public abstract class PlayerEntityMixin implements IAnimatedPlayer {
         if (AbstractClientPlayer.class.isInstance(this)) {
             animationStack.tick();
         }
+    }
+
+    @Override
+    public Optional<FirstPersonAnimation> getActiveFirstPersonAnimation(float tickDelta) {
+        return Optional.ofNullable(animationStack.getActiveFirstPersonAnimation(tickDelta));
     }
 }

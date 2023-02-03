@@ -9,11 +9,16 @@
     "BipedEntityModelMixin",
     "FeatureRendererMixin",
     "HeldItemMixin",
+    "LivingEntityRenderRedirect_bendOnly",
     "ModelPartMixin",
     "PlayerEntityMixin",
     "PlayerModelMixin",
     "PlayerRendererMixin",
-    "LivingEntityRenderRedirect_bendOnly"
+    "first_person.EntityRenderDispatcherMixin",
+    "first_person.ItemInHandRendererMixin",
+    "first_person.LevelRendererMixin",
+    "first_person.LivingEntityRendererMixin",
+    "first_person.PlayerEntityRendererMixin"
   ],
   "mixins": [
   ],

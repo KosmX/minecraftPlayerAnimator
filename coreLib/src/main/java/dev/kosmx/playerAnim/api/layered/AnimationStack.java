@@ -1,8 +1,11 @@
 package dev.kosmx.playerAnim.api.layered;
 
 import dev.kosmx.playerAnim.api.TransformType;
+import dev.kosmx.playerAnim.api.first_person.FirstPersonAnimation;
+import dev.kosmx.playerAnim.api.first_person.IFirstPersonPlayback;
 import dev.kosmx.playerAnim.core.util.Pair;
 import dev.kosmx.playerAnim.core.util.Vec3f;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -88,4 +91,21 @@ public class AnimationStack implements IAnimation {
         return layers.removeIf(integerIAnimationPair -> integerIAnimationPair.getLeft() == layerLevel);
     }
 
+    @Nullable
+    public FirstPersonAnimation getActiveFirstPersonAnimation(float tickDelta) {
+        for (Pair<Integer, IAnimation> layer : layers) {
+            IAnimation animation = layer.getRight();
+            if(animation instanceof IFirstPersonPlayback) {
+                IFirstPersonPlayback firstPersonAnimation = (IFirstPersonPlayback)animation;
+                if (firstPersonAnimation.isActiveInFirstPerson(tickDelta)) {
+                    FirstPersonAnimation.Configuration configuration = firstPersonAnimation.getFirstPersonPlaybackConfig();
+                    if (configuration == null) {
+                        configuration = FirstPersonAnimation.Configuration.defaults();
+                    }
+                    return new FirstPersonAnimation(animation, configuration);
+                }
+            }
+        }
+        return null;
+    }
 }

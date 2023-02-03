@@ -1,6 +1,9 @@
 package dev.kosmx.playerAnim.api.layered;
 
 import dev.kosmx.playerAnim.api.TransformType;
+import dev.kosmx.playerAnim.api.first_person.FirstPersonAnimation;
+import dev.kosmx.playerAnim.api.first_person.FirstPersonPlaybackMode;
+import dev.kosmx.playerAnim.api.first_person.IFirstPersonPlayback;
 import dev.kosmx.playerAnim.core.data.KeyframeAnimation;
 import dev.kosmx.playerAnim.core.util.*;
 
@@ -13,7 +16,7 @@ import java.util.Map;
  * It does not mean, you can not use it, It means Emotecraft uses this too!
  */
 @SuppressWarnings({"unused", "ConstantConditions"})
-public class KeyframeAnimationPlayer implements IAnimation {
+public class KeyframeAnimationPlayer implements IAnimation, IFirstPersonPlayback {
 
 
 
@@ -326,5 +329,34 @@ public class KeyframeAnimationPlayer implements IAnimation {
         public float getValueAtCurrentTick(float currentValue) {
             return MathHelper.clampToRadian(super.getValueAtCurrentTick(MathHelper.clampToRadian(currentValue)));
         }
+    }
+
+    // First person animation
+
+    private FirstPersonPlaybackMode firstPersonMode = FirstPersonPlaybackMode.NONE;
+    @Nullable private FirstPersonAnimation.Configuration firstPersonConfig = null;
+    public void playInFirstPersonAsCombat(FirstPersonAnimation.Configuration firstPersonConfig) {
+        this.firstPersonMode = FirstPersonPlaybackMode.COMBAT;
+        this.firstPersonConfig = firstPersonConfig;
+    }
+
+    public @Nullable FirstPersonAnimation.Configuration getFirstPersonPlaybackConfig() {
+        return firstPersonConfig;
+    }
+
+    public boolean isWindingDown(float tickDelta) {
+        int windDownStart = getData().endTick + ((getData().stopTick - getData().endTick) / 4);
+        return ((getTick() + tickDelta) > (windDownStart + 0.5F)); // + 0.5 for smoother transition
+    }
+
+    public boolean isActiveInFirstPerson(float tickDelta) {
+        boolean isActive = false;
+        switch (firstPersonMode) {
+            case NONE:
+                break;
+            case COMBAT:
+                isActive = isActive() && !isWindingDown(tickDelta);
+        }
+        return isActive;
     }
 }
