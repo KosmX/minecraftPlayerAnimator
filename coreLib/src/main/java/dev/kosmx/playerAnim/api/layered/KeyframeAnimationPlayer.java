@@ -344,18 +344,14 @@ public class KeyframeAnimationPlayer implements IAnimation, IFirstPersonPlayback
         return firstPersonConfig;
     }
 
-    public boolean isWindingDown(float tickDelta) {
-        int windDownStart = getData().endTick + ((getData().stopTick - getData().endTick) / 4);
-        return ((getTick() + tickDelta) > (windDownStart + 0.5F)); // + 0.5 for smoother transition
-    }
-
     public boolean isActiveInFirstPerson(float tickDelta) {
         boolean isActive = false;
         switch (firstPersonMode) {
             case NONE:
                 break;
             case COMBAT:
-                isActive = isActive() && !isWindingDown(tickDelta);
+                isActive = isActive();
+                break;
         }
         return isActive;
     }
