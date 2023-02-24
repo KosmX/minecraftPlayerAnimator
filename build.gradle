@@ -60,7 +60,7 @@ ext.ENV = System.getenv()
 ext.cfType = ENV.RELEASE_TYPE ? ENV.RELEASE_TYPE : "alpha"
 ext.changes = ENV.CHANGELOG ? ENV.CHANGELOG.replaceAll("\\\\n", "\n") : ""
 ext.ENV = System.getenv()
-ext.upload = ENV.UPLOAD_TO_PORTAL ? ENV.UPLOAD_TO_PORTAL == "true" : false
+boolean upload = ENV.UPLOAD_TO_PORTAL ? ENV.UPLOAD_TO_PORTAL == "true" : false
 
 ext.keysExists = ENV.KOSMX_MAVEN_USER != null || project.getGradle().getStartParameter().isDryRun()
 
@@ -82,7 +82,7 @@ if(keysExists) {
     }
 
     publish {
-        if (ext.upload) {
+        if (upload) {
             finalizedBy(':minecraft:publishMod')
         }
     }
