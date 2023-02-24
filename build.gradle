@@ -47,7 +47,7 @@ allprojects {
 
     tasks.withType(JavaCompile) {
         options.encoding = "UTF-8"
-        options.release = 16
+        options.release = 17
     }
 
     java {
@@ -60,6 +60,7 @@ ext.ENV = System.getenv()
 ext.cfType = ENV.RELEASE_TYPE ? ENV.RELEASE_TYPE : "alpha"
 ext.changes = ENV.CHANGELOG ? ENV.CHANGELOG.replaceAll("\\\\n", "\n") : ""
 ext.ENV = System.getenv()
+ext.upload = ENV.UPLOAD_TO_PORTAL ? ENV.UPLOAD_TO_PORTAL == "true" : false
 
 ext.keysExists = ENV.KOSMX_MAVEN_USER != null || project.getGradle().getStartParameter().isDryRun()
 
@@ -81,6 +82,8 @@ if(keysExists) {
     }
 
     publish {
-        finalizedBy(':minecraft:publishMod')
+        if (ext.upload) {
+            finalizedBy(':minecraft:publishMod')
+        }
     }
 }
