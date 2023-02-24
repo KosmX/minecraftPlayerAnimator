@@ -47,8 +47,13 @@ jobs:
           java-version: '17'
 
       # Runs a single command using the runners shell
+      - name: validate gradle wrapper
+        uses: gradle/wrapper-validation-action@v1
+      - name: make gradle wrapper executable
+        if: ${{ runner.os != 'Windows' }}
+        run: chmod +x ./gradlew
       - name: Publish package
-        run: gradle publish --no-daemon
+        run: ./gradlew publish --no-daemon
         env:
           KOSMX_MAVEN_USER: ${{ secrets.MAVEN_USER }}
           KOSMX_MAVEN_TOKEN: ${{ secrets.MAVEN_PASS }}
