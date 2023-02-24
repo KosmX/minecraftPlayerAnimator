@@ -5,8 +5,9 @@ on:
   workflow_dispatch:
     inputs:
       type:
-        description: 'alpha/beta/release'
+        description: 'release type'
         required: false
+        type: choice
         options:
           - alpha
           - beta
@@ -17,6 +18,7 @@ on:
         default: ''
       upload:
         required: true
+        type: choice
         options:
           - true
           - false
