@@ -46,7 +46,7 @@ import java.util.function.Function;
  * }
  * </pre>
  */
-public final class AdjustmentModifier extends AbstractModifier {
+public class AdjustmentModifier extends AbstractModifier {
     public static final class PartModifier {
         private final Vec3f rotation;
         private final Vec3f offset;
@@ -91,13 +91,13 @@ public final class AdjustmentModifier extends AbstractModifier {
 
     public boolean enabled = true;
 
-    private Function<String, Optional<PartModifier>> source;
+    protected Function<String, Optional<PartModifier>> source;
 
     public AdjustmentModifier(Function<String, Optional<PartModifier>> source) {
         this.source = source;
     }
 
-    private float getFadeIn(float delta) {
+    protected float getFadeIn(float delta) {
         float fadeIn = 1;
         IAnimation animation = this.getAnim();
         if(animation instanceof KeyframeAnimationPlayer) {
@@ -121,7 +121,7 @@ public final class AdjustmentModifier extends AbstractModifier {
         }
     }
 
-    private int instructedFadeout = 0;
+    protected int instructedFadeout = 0;
     private int remainingFadeout = 0;
 
     public void fadeOut(int fadeOut) {
@@ -129,12 +129,12 @@ public final class AdjustmentModifier extends AbstractModifier {
         remainingFadeout = fadeOut + 1;
     }
 
-    private float getFadeOut(float delta) {
+    protected float getFadeOut(float delta) {
         float fadeOut = 1;
         if(remainingFadeout > 0 && instructedFadeout > 0) {
             float current = Math.max(remainingFadeout - delta , 0);
             fadeOut = current / ((float)instructedFadeout);
-            Math.min(fadeOut, 1F);
+            fadeOut = Math.min(fadeOut, 1F);
             return fadeOut;
         }
         IAnimation animation = this.getAnim();
@@ -170,12 +170,12 @@ public final class AdjustmentModifier extends AbstractModifier {
         }
     }
 
-    private Vec3f transformVector(Vec3f vector, TransformType type, PartModifier partModifier, float fade) {
+    protected Vec3f transformVector(Vec3f vector, TransformType type, PartModifier partModifier, float fade) {
         switch (type) {
             case POSITION:
-                return vector.add(partModifier.offset);
+                return vector.add(partModifier.offset().scale(fade));
             case ROTATION:
-                return vector.add(partModifier.rotation.scale(fade));
+                return vector.add(partModifier.rotation().scale(fade));
             case BEND:
                 break;
         }
