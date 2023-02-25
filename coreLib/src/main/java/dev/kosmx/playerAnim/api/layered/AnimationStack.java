@@ -108,7 +108,7 @@ public class AnimationStack implements IAnimation {
             Pair<Integer, IAnimation> layer = layers.get(--i);
             if (layer.getRight().isActive()) { // layer.right.requestFirstPersonMode(tickDelta).takeIf{ it != NONE }?.let{ return@requestFirstPersonMode it }
                 FirstPersonMode mode = layer.getRight().getFirstPersonMode(tickDelta);
-                if (mode != FirstPersonMode.NONE) layer.getRight().getFirstPersonConfiguration(tickDelta);
+                if (mode != FirstPersonMode.NONE) return layer.getRight().getFirstPersonConfiguration(tickDelta);
             }
         }
         return IAnimation.super.getFirstPersonConfiguration(tickDelta);
