@@ -28,7 +28,7 @@ public class MirrorModifier extends AbstractModifier {
 
     @Override
     public @NotNull Vec3f get3DTransform(@NotNull String modelName, @NotNull TransformType type, float tickDelta, @NotNull Vec3f value0) {
-        if (!enabled) return super.get3DTransform(modelName, type, tickDelta, value0);
+        if (!isEnabled()) return super.get3DTransform(modelName, type, tickDelta, value0);
 
         if (mirrorMap.containsKey(modelName)) modelName = mirrorMap.get(modelName);
         value0 = transformVector(value0, type);
@@ -41,7 +41,7 @@ public class MirrorModifier extends AbstractModifier {
     @Override
     public @NotNull FirstPersonConfiguration getFirstPersonConfiguration(float tickDelta) {
         FirstPersonConfiguration configuration = super.getFirstPersonConfiguration(tickDelta);
-        if (enabled) {
+        if (isEnabled()) {
             return new FirstPersonConfiguration()
                     .setShowLeftArm(configuration.isShowRightArm())
                     .setShowRightArm(configuration.isShowLeftArm())
