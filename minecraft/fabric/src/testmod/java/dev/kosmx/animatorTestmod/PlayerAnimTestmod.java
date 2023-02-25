@@ -83,7 +83,7 @@ public class PlayerAnimTestmod implements ClientModInitializer {
             testAnimation.replaceAnimationWithFade(AbstractFadeModifier.functionalFadeIn(20, (modelName, type, value) -> value),
                     new KeyframeAnimationPlayer(PlayerAnimationRegistry.getAnimation(new ResourceLocation("testmod", "two_handed_slash_vertical_right")))
                             .setFirstPersonMode(FirstPersonMode.THIRD_PERSON_MODEL)
-                            .setFirstPersonConfiguration(new FirstPersonConfiguration().setShowRightArm(true))
+                            .setFirstPersonConfiguration(new FirstPersonConfiguration().setShowRightArm(true).setShowLeftItem(false))
             );
         }
 
