@@ -59,7 +59,7 @@ public class KeyframeAnimationPlayer implements IAnimation {
     @Setter
     @Accessors(chain = true)
     @NotNull
-    private FirstPersonMode firstPersonMode = FirstPersonMode.THIRD_PERSON_MODEL;
+    private FirstPersonMode firstPersonMode = FirstPersonMode.NONE;
 
 
     @Override
