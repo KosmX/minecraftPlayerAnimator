@@ -10,10 +10,12 @@ import java.util.Optional;
 import java.util.function.Function;
 
 /**
- * Adjusts body parts during animations.
+ * Adjusts body parts during animations.<br>
  * Make sure this instance is the very first one, over the KeyframeAnimationPlayer, in the animation stack.
- *
+ * <p>
  * Example use (adjusting the vertical angle of a custom attack animation):
+ * <pre>
+ * {@code
  * new AdjustmentModifier((partName) -> {
  *     float rotationX = 0;
  *     float rotationY = 0;
@@ -41,6 +43,8 @@ import java.util.function.Function;
  *             new Vec3f(offsetX, offsetY, offsetZ))
  *     );
  * });
+ * }
+ * </pre>
  */
 public final class AdjustmentModifier extends AbstractModifier {
     public static final class PartModifier {
