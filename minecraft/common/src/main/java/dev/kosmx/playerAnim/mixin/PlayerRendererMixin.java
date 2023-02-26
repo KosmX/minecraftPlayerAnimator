@@ -1,9 +1,7 @@
 package dev.kosmx.playerAnim.mixin;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector3f;
 import com.mojang.math.Axis;
-import dev.kosmx.playerAnim.api.AnimUtils;
 import dev.kosmx.playerAnim.api.TransformType;
 import dev.kosmx.playerAnim.api.firstPerson.FirstPersonMode;
 import dev.kosmx.playerAnim.core.util.Vec3f;
