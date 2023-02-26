@@ -3,6 +3,7 @@ package dev.kosmx.playerAnim.api.layered;
 import dev.kosmx.playerAnim.api.TransformType;
 import dev.kosmx.playerAnim.core.util.Pair;
 import dev.kosmx.playerAnim.core.util.Vec3f;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -65,7 +66,7 @@ public abstract class PlayerAnimationFrame implements IAnimation {
 
 
     @Override
-    public Vec3f get3DTransform(String modelName, TransformType type, float tickDelta, Vec3f value0) {
+    public @NotNull Vec3f get3DTransform(@NotNull String modelName, @NotNull TransformType type, float tickDelta, @NotNull Vec3f value0) {
         PlayerPart part = parts.get(modelName);
         if (part == null) return value0;
         switch (type) {

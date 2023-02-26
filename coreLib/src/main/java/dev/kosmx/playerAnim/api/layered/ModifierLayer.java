@@ -1,12 +1,15 @@
 package dev.kosmx.playerAnim.api.layered;
 
 import dev.kosmx.playerAnim.api.TransformType;
+import dev.kosmx.playerAnim.api.firstPerson.FirstPersonConfiguration;
+import dev.kosmx.playerAnim.api.firstPerson.FirstPersonMode;
 import dev.kosmx.playerAnim.api.layered.modifier.AbstractFadeModifier;
 import dev.kosmx.playerAnim.api.layered.modifier.AbstractModifier;
 import dev.kosmx.playerAnim.core.util.Ease;
 import dev.kosmx.playerAnim.core.util.Vec3f;
 import lombok.Getter;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -49,17 +52,17 @@ public class ModifierLayer<T extends IAnimation> implements IAnimation {
         } else if (animation != null) animation.tick();
     }
 
-    public void addModifier(AbstractModifier modifier, int idx) {
+    public void addModifier(@NotNull AbstractModifier modifier, int idx) {
         modifier.setHost(this);
         modifiers.add(idx, modifier);
         this.linkModifiers();
     }
 
-    public void addModifierBefore(AbstractModifier modifier) {
+    public void addModifierBefore(@NotNull AbstractModifier modifier) {
         this.addModifier(modifier, 0);
     }
 
-    public void addModifierLast(AbstractModifier modifier) {
+    public void addModifierLast(@NotNull AbstractModifier modifier) {
         this.addModifier(modifier, modifiers.size());
     }
 
@@ -80,7 +83,7 @@ public class ModifierLayer<T extends IAnimation> implements IAnimation {
      * @param fadeModifier Fade modifier, use {@link AbstractFadeModifier#standardFadeIn(int, Ease)} for simple fade.
      * @param newAnimation New animation, can be null to fade into default state.
      */
-    public void replaceAnimationWithFade(AbstractFadeModifier fadeModifier, @Nullable T newAnimation) {
+    public void replaceAnimationWithFade(@NotNull AbstractFadeModifier fadeModifier, @Nullable T newAnimation) {
         replaceAnimationWithFade(fadeModifier, newAnimation, false);
     }
 
@@ -90,7 +93,7 @@ public class ModifierLayer<T extends IAnimation> implements IAnimation {
      * @param newAnimation    New animation, can be null to fade into default state.
      * @param fadeFromNothing Do fade even if we go from nothing. (for KeyframeAnimation, it can be false by default)
      */
-    public void replaceAnimationWithFade(AbstractFadeModifier fadeModifier, @Nullable T newAnimation, boolean fadeFromNothing) {
+    public void replaceAnimationWithFade(@NotNull AbstractFadeModifier fadeModifier, @Nullable T newAnimation, boolean fadeFromNothing) {
         if (fadeFromNothing || getAnimation() != null && getAnimation().isActive()) {
             fadeModifier.setBeginAnimation(this.getAnimation());
             addModifierLast(fadeModifier);
@@ -125,7 +128,7 @@ public class ModifierLayer<T extends IAnimation> implements IAnimation {
     }
 
     @Override
-    public Vec3f get3DTransform(String modelName, TransformType type, float tickDelta, Vec3f value0) {
+    public @NotNull Vec3f get3DTransform(@NotNull String modelName, @NotNull TransformType type, float tickDelta, @NotNull Vec3f value0) {
         if (modifiers.size() > 0) {
             return modifiers.get(0).get3DTransform(modelName, type, tickDelta, value0);
         } else if (animation != null) return animation.get3DTransform(modelName, type, tickDelta, value0);
@@ -137,5 +140,21 @@ public class ModifierLayer<T extends IAnimation> implements IAnimation {
         if (modifiers.size() > 0) {
             modifiers.get(0).setupAnim(tickDelta);
         } else if (animation != null) animation.setupAnim(tickDelta);
+    }
+
+    @Override
+    public @NotNull FirstPersonMode getFirstPersonMode(float tickDelta) {
+        if (modifiers.size() > 0) {
+            return modifiers.get(0).getFirstPersonMode(tickDelta);
+        } else if (animation != null) return animation.getFirstPersonMode(tickDelta);
+        return IAnimation.super.getFirstPersonMode(tickDelta);
+    }
+
+    @Override
+    public @NotNull FirstPersonConfiguration getFirstPersonConfiguration(float tickDelta) {
+        if (modifiers.size() > 0) {
+            return modifiers.get(0).getFirstPersonConfiguration(tickDelta);
+        } else if (animation != null) return animation.getFirstPersonConfiguration(tickDelta);
+        return IAnimation.super.getFirstPersonConfiguration(tickDelta);
     }
 }

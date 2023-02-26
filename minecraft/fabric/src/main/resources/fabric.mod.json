@@ -23,6 +23,9 @@
     "minecraft": ">=1.18",
     "fabric-resource-loader-v0": "*"
   },
+  "breaks": {
+    "bettercombat": "<1.6.0"
+  },
   "custom": {
     "modmenu": {
       "badges": ["library"]
