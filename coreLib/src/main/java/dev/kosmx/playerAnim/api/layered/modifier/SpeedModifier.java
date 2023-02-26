@@ -3,6 +3,7 @@ package dev.kosmx.playerAnim.api.layered.modifier;
 import dev.kosmx.playerAnim.api.TransformType;
 import dev.kosmx.playerAnim.core.util.Vec3f;
 import lombok.NoArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Modifies the animation speed.
@@ -49,7 +50,7 @@ public class SpeedModifier extends AbstractModifier {
     }
 
     @Override
-    public Vec3f get3DTransform(String modelName, TransformType type, float tickDelta, Vec3f value0) {
+    public @NotNull Vec3f get3DTransform(@NotNull String modelName, @NotNull TransformType type, float tickDelta, @NotNull Vec3f value0) {
         return super.get3DTransform(modelName, type, shiftedDelta, value0);
     }
 }

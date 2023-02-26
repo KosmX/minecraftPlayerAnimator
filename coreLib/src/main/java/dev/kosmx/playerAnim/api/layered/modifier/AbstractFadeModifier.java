@@ -5,6 +5,7 @@ import dev.kosmx.playerAnim.api.layered.IAnimation;
 import dev.kosmx.playerAnim.core.util.Ease;
 import dev.kosmx.playerAnim.core.util.Vec3f;
 import lombok.Setter;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -53,7 +54,7 @@ public abstract class AbstractFadeModifier extends AbstractModifier {
     }
 
     @Override
-    public Vec3f get3DTransform(String modelName, TransformType type, float tickDelta, Vec3f value0) {
+    public @NotNull Vec3f get3DTransform(@NotNull String modelName, @NotNull TransformType type, float tickDelta, @NotNull Vec3f value0) {
         if (calculateProgress(tickDelta) > 1) {
             return super.get3DTransform(modelName, type, tickDelta, value0);
         }

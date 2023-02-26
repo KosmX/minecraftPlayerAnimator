@@ -11,7 +11,7 @@ public class Easing {
      * EasingFromString
      * <p>
      * All function needs an input between 0 and 1
-     * except
+     *
      * @deprecated Just use {@link Ease#invoke(float)}
      */
     @Deprecated

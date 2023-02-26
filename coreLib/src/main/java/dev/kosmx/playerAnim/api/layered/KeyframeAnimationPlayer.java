@@ -1,16 +1,33 @@
 package dev.kosmx.playerAnim.api.layered;
 
 import dev.kosmx.playerAnim.api.TransformType;
+import dev.kosmx.playerAnim.api.firstPerson.FirstPersonConfiguration;
+import dev.kosmx.playerAnim.api.firstPerson.FirstPersonMode;
 import dev.kosmx.playerAnim.core.data.KeyframeAnimation;
 import dev.kosmx.playerAnim.core.util.*;
 
+import lombok.Setter;
+import lombok.experimental.Accessors;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Animation player for EmoteX emote format,
- * It does not mean, you can not use it, It means Emotecraft uses this too!
+ * <h2>KeyframeAnimationPlayer</h2>
+ * If you're here, you're probably looking for this (except if you want to animate from code) <br>
+ * It plays {@link KeyframeAnimation}
+ * <p>
+ * {@code new KeyframeAnimationPlayer(animation)}
+ *
+ * <hr>
+ * New FirstPerson mode is supported with chainable setters :D <br>
+ * <code>
+ *     new KeyframeAnimationPlayer(animation) <br>
+ *        .setFirstPersonConfiguration(new FirstPersonConfiguration()) <br>
+ *        .setFirstPersonMode(FirstPersonMode.THIRD_PERSON_MODEL); <br>
+ * </code>
+ *
  */
 @SuppressWarnings({"unused", "ConstantConditions"})
 public class KeyframeAnimationPlayer implements IAnimation {
@@ -27,19 +44,42 @@ public class KeyframeAnimationPlayer implements IAnimation {
     public final HashMap<String, BodyPart> bodyParts;
     public int perspective = 0;
 
+
+    @Setter
+    @Accessors(chain = true)
+    @NotNull
+    private FirstPersonConfiguration firstPersonConfiguration = new FirstPersonConfiguration();
+
+
+    @Override
+    public @NotNull FirstPersonConfiguration getFirstPersonConfiguration(float tickDelta) {
+        return firstPersonConfiguration;
+    }
+
+    @Setter
+    @Accessors(chain = true)
+    @NotNull
+    private FirstPersonMode firstPersonMode = FirstPersonMode.NONE;
+
+
+    @Override
+    public @NotNull FirstPersonMode getFirstPersonMode(float tickDelta) {
+        return firstPersonMode;
+    }
+
     /**
      *
-     * @param emote emote to play
+     * @param animation animation to play
      * @param t begin playing from tick
      * @param mutable if true, the part data will be copied as a construction step.
      *                The copied version can be changed while playing the animation but the copy takes time.
      */
-    public KeyframeAnimationPlayer(KeyframeAnimation emote, int t, boolean mutable) {
-        if (emote == null) throw new IllegalArgumentException("Animation can not be null");
-        this.data = emote;
+    public KeyframeAnimationPlayer(@NotNull KeyframeAnimation animation, int t, boolean mutable) {
+        if (animation == null) throw new IllegalArgumentException("Animation can not be null");
+        this.data = animation;
 
-        this.bodyParts = new HashMap<>(emote.getBodyParts().size());
-        for(Map.Entry<String, KeyframeAnimation.StateCollection> part:emote.getBodyParts().entrySet()){
+        this.bodyParts = new HashMap<>(animation.getBodyParts().size());
+        for(Map.Entry<String, KeyframeAnimation.StateCollection> part:animation.getBodyParts().entrySet()){
             this.bodyParts.put(part.getKey(), new BodyPart(mutable ? part.getValue().copy() : part.getValue()));
         }
 
@@ -52,14 +92,14 @@ public class KeyframeAnimationPlayer implements IAnimation {
 
     /**
      *
-     * @param emote emote to play
+     * @param animation {@link KeyframeAnimation} to play
      * @param t begin playing from tick
      */
-    public KeyframeAnimationPlayer(KeyframeAnimation emote, int t) {
-        this(emote, t, false);
+    public KeyframeAnimationPlayer(@NotNull KeyframeAnimation animation, int t) {
+        this(animation, t, false);
     }
 
-    public KeyframeAnimationPlayer(KeyframeAnimation animation) {
+    public KeyframeAnimationPlayer(@NotNull KeyframeAnimation animation) {
         this(animation, 0);
     }
 
@@ -92,7 +132,7 @@ public class KeyframeAnimationPlayer implements IAnimation {
     }
 
     @Override
-    public Vec3f get3DTransform(String modelName, TransformType type, float tickDelta, Vec3f value0) {
+    public @NotNull Vec3f get3DTransform(@NotNull String modelName, @NotNull TransformType type, float tickDelta, @NotNull Vec3f value0) {
         BodyPart part = bodyParts.get(modelName);
         if (part == null) return value0;
         switch (type) {
