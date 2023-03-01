@@ -19,7 +19,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class ItemInHandRendererMixin {
     @Inject(method = "renderHandsWithItems", at = @At("HEAD"), cancellable = true)
     private void disableDefaultItemIfNeeded(float f, PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, LocalPlayer localPlayer, int i, CallbackInfo ci) {
-        if (((IAnimatedPlayer)localPlayer).playerAnimator_getAnimation().getFirstPersonMode() == FirstPersonMode.THIRD_PERSON_MODEL) {
+        if (localPlayer instanceof IAnimatedPlayer player && player.playerAnimator_getAnimation().getFirstPersonMode() == FirstPersonMode.THIRD_PERSON_MODEL) {
             ci.cancel();
         }
     }
@@ -36,8 +36,8 @@ public class ItemInHandRendererMixin {
         if (entity != Minecraft.getInstance().getCameraEntity()) {
             return;
         }
-        if (FirstPersonMode.isFirstPersonPass()) {
-            var config = ((IAnimatedPlayer)entity).playerAnimator_getAnimation().getFirstPersonConfiguration();
+        if (FirstPersonMode.isFirstPersonPass() && entity instanceof IAnimatedPlayer player) {
+            var config = player.playerAnimator_getAnimation().getFirstPersonConfiguration();
             if (transformType == ItemTransforms.TransformType.FIRST_PERSON_RIGHT_HAND || transformType == ItemTransforms.TransformType.THIRD_PERSON_RIGHT_HAND) {
                 if (!config.isShowRightItem()) {
                     ci.cancel();
