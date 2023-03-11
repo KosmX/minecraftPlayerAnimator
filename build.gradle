@@ -40,7 +40,6 @@ allprojects {
                 includeGroup "maven.modrinth"
             }
         }
-        mavenLocal()
     }
 
     dependencies {
