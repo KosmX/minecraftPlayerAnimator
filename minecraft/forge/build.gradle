@@ -137,7 +137,7 @@ if(keysExists) {
         versionNumber = "${rootProject.mod_version}-forge"
         versionName = "${rootProject.mod_version}-forge"
 
-        gameVersions = ["1.19.3"]
+        gameVersions = ["1.19.4"]
         changelog = changes
         loaders = ["forge"]
         failSilently = false
@@ -156,7 +156,7 @@ if(keysExists) {
             //changelog = '[See on Github](https://github.com/KosmX/emotes/commits/master)'
             changelog = changes
             releaseType = project.cfType
-            addGameVersion "1.19.3"
+            addGameVersion "1.19.4"
             addGameVersion "Forge"
 
 

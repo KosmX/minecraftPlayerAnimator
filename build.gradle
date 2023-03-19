@@ -12,7 +12,7 @@ architectury {
     minecraft = rootProject.minecraft_version
 }
 
-project.mod_version = mod_version + "+1.19.4-rc2"
+project.mod_version = mod_version + "+1.19.4"
 
 allprojects {
     apply plugin: "java"
