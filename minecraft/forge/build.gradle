@@ -1,7 +1,5 @@
-plugins {
-    id "com.github.johnrengelman.shadow" version "7.1.2"
-}
 
+apply plugin: 'com.github.johnrengelman.shadow'
 apply plugin: 'com.modrinth.minotaur'
 apply plugin: 'com.matthewprenger.cursegradle'
 
@@ -61,17 +59,17 @@ shadowJar {
     exclude "architectury.common.json"
 
     configurations = [project.configurations.shadowCommon]
-    classifier "dev-shadow"
+    archiveClassifier.set("dev-shadow")
 }
 
 remapJar {
     inputFile.set shadowJar.archiveFile
     dependsOn shadowJar
-    classifier null
+    archiveClassifier.set(null)
 }
 
 jar {
-    classifier "dev"
+    archiveClassifier.set("dev")
 }
 
 sourcesJar {

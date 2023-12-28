@@ -449,9 +449,14 @@ public final class KeyframeAnimation implements Supplier<UUID> {
              * @return given keyframe
              */
             public int findAtTick(int tick) {
-                int i = -1;
-                while (this.keyFrames.size() > i + 1 && this.keyFrames.get(i + 1).tick <= tick) {
-                    i++;
+                int i = Collections.binarySearch(this.keyFrames, null, (frame, ignore) -> Integer.compare(frame.tick, tick));
+                if (i < 0) {
+                    i = -i - 2;
+                }
+
+                // small correction for edge-case: it is possible to have two keyframes with the same tick in the array, in that case, I should return the later one.
+                if (i + 1 < keyFrames.size() && keyFrames.get(i + 1).tick == tick) {
+                    return i + 1;
                 }
                 return i;
             }
