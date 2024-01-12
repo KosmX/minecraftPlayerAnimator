@@ -156,9 +156,9 @@ if(keysExists) {
         versionNumber = "${rootProject.mod_version}-fabric"
         versionName = "${rootProject.mod_version}-fabric"
 
-        gameVersions = ["1.20", "1.20.1"]
+        gameVersions = ["1.20.4"]
         changelog = changes
-        loaders = ["fabric", "quilt"]
+        loaders = ["fabric"]
         failSilently = false
 
         dependencies {
@@ -175,11 +175,8 @@ if(keysExists) {
             //changelog = '[See on Github](https://github.com/KosmX/emotes/commits/master)'
             changelog = changes
             releaseType = project.cfType
-            addGameVersion "1.20"
-            addGameVersion "1.20.1"
+            addGameVersion "1.20.4"
             addGameVersion "Fabric"
-            addGameVersion "Quilt"
-
 
             relations {
                 optionalDependency 'bendy-lib'
