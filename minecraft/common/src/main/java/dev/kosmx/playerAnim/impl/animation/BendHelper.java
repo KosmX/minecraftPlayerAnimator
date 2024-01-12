@@ -14,8 +14,13 @@ public class BendHelper implements IBendHelper {
 
 
     @Override
-    public void bend(ModelPart modelPart, float a, float b){
-        ModelPartAccessor.optionalGetCuboid(modelPart, 0).ifPresent(mutableCuboid -> ((BendableCuboid)mutableCuboid.getAndActivateMutator("bend")).applyBend(a, b));
+    public void bend(ModelPart modelPart, float axis, float rotation){
+        // Don't enable bend until rotation is bigger than epsilon. This should avoid unnecessary heavy calculations.
+        if (Math.abs(rotation) >= 0.0001f) {
+            ModelPartAccessor.optionalGetCuboid(modelPart, 0).ifPresent(mutableCuboid -> ((BendableCuboid) mutableCuboid.getAndActivateMutator("bend")).applyBend(axis, rotation));
+        } else {
+            ModelPartAccessor.optionalGetCuboid(modelPart, 0).ifPresent(mutableCuboid -> mutableCuboid.getAndActivateMutator(null));
+        }
     }
 
     @Override
