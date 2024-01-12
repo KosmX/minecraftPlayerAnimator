@@ -1,5 +1,5 @@
 modLoader = "javafml"
-loaderVersion = "[46.0.0,)"
+loaderVersion = "*"
 #issueTrackerURL = ""
 license = "MIT"
 
@@ -8,14 +8,12 @@ modId = "playeranimator"
 version = "${version}"
 displayName = "Player Animator"
 authors = "KosmX"
-description = '''
-Look for FabricMC (or QuiltMC) builds...
-'''
+description = "A lightweight library to easily animate the player"
 #logoFile = ""
 
 [[dependencies.playeranimator]]
 modId = "minecraft"
-mandatory = true
-versionRange = "[1.20,)"
+type = "required"
+versionRange = "[1.20.4,)"
 ordering = "NONE"
 side = "BOTH"
