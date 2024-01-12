@@ -1,5 +1,7 @@
 package dev.kosmx.playerAnim.core.util;
 
+import lombok.Getter;
+
 /**
  * Easings form <a href="https://easings.net/">easings.net</a><br>
  * + constant + linear
@@ -17,6 +19,7 @@ public enum Ease {
     INELASTIC(30, Easing::inElastic), OUTELASTIC(31, Easing::outElastic), INOUTELASTIC(32, Easing::inOutElastic),
     INBOUNCE(33, Easing::inBounce), OUTBOUNCE(34, Easing::outBack), INOUTBOUNCE(35, Easing::inOutBounce);
 
+    @Getter
     final byte id;
     private final _F impl;
 
@@ -35,10 +38,6 @@ public enum Ease {
      */
     Ease(int id, _F impl) {
         this((byte) id, impl);
-    }
-
-    public byte getId() {
-        return id;
     }
 
     /**

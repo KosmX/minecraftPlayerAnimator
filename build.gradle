@@ -24,7 +24,6 @@ allprojects {
     group = rootProject.maven_group
 
     repositories {
-        mavenLocal() // TODO remove
         maven { url "https://maven.neoforged.net/releases" }
         mavenCentral()
         maven {
