@@ -37,7 +37,7 @@ dependencies {
     common(shadowCommon(project(path: ":coreLib")) {transitive false}) {transitive false} //Why can I nest these?
 
     //Testing libraries
-    //*
+    /*
     modLocalRuntime "io.github.kosmx.bendy-lib:bendy-lib-forge:${project.bendy_lib}"
     modLocalRuntime "maven.modrinth:3dskinlayers:1.5.2-forge-1.19"
     modLocalRuntime "maven.modrinth:emotecraft:2.2.6-SNAPSHOT-build.44-MC1.19.2-forge"
@@ -137,7 +137,7 @@ if(keysExists) {
         versionNumber = "${rootProject.mod_version}-forge"
         versionName = "${rootProject.mod_version}-forge"
 
-        gameVersions = ["1.19", "1.19.1", "1.19.2"]
+        gameVersions = ["1.20", "1.20.1"]
         changelog = changes
         loaders = ["forge"]
         failSilently = false
@@ -156,9 +156,8 @@ if(keysExists) {
             //changelog = '[See on Github](https://github.com/KosmX/emotes/commits/master)'
             changelog = changes
             releaseType = project.cfType
-            addGameVersion "1.19"
-            addGameVersion "1.19.1"
-            addGameVersion "1.19.2"
+            addGameVersion "1.20"
+            addGameVersion "1.20.1"
             addGameVersion "Forge"
 
 
