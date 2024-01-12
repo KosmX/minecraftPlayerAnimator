@@ -5,17 +5,11 @@ apply plugin: 'com.matthewprenger.cursegradle'
 
 architectury {
     platformSetupLoomIde()
-    forge()
+    neoForge()
 }
 
 loom {
     accessWidenerPath = project(":${project.module_name}:common").loom.accessWidenerPath
-
-    forge {
-        convertAccessWideners = true
-        extraAccessWideners.add loom.accessWidenerPath.get().asFile.name
-        mixinConfig "playerAnimator-common.mixins.json"
-    }
 }
 
 configurations {
@@ -23,16 +17,16 @@ configurations {
     shadowCommon // Don't use shadow from the shadow plugin because we don't want IDEA to index this.
     compileClasspath.extendsFrom common
     runtimeClasspath.extendsFrom common
-    developmentForge.extendsFrom common
+    developmentNeoForge.extendsFrom common
 }
 
 dependencies {
-    forge "net.minecraftforge:forge:${rootProject.forge_version}"
+    neoForge "net.neoforged:neoforge:${rootProject.forge_version}"
 
     //modApi "dev.architectury:architectury-forge:${rootProject.architectury_version}"
 
     common(project(path: ":${project.module_name}:common", configuration: "namedElements")) { transitive false }
-    shadowCommon(project(path: ":${project.module_name}:common", configuration: "transformProductionForge")) { transitive = false }
+    shadowCommon(project(path: ":${project.module_name}:common", configuration: "transformProductionNeoForge")) { transitive = false }
 
     common(shadowCommon(project(path: ":coreLib")) {transitive false}) {transitive false} //Why can I nest these?
 
@@ -63,6 +57,8 @@ shadowJar {
 }
 
 remapJar {
+    atAccessWideners.add(loom.accessWidenerPath.get().asFile.name)
+
     inputFile.set shadowJar.archiveFile
     dependsOn shadowJar
     archiveClassifier.set(null)
@@ -90,7 +86,7 @@ components.java {
 
 publishing {
     publications {
-        mavenForge(MavenPublication) {
+        mavenNeoForge(MavenPublication) {
             artifactId = rootProject.archives_base_name + "-" + project.name
             from components.java
         }
@@ -137,9 +133,9 @@ if(keysExists) {
         versionNumber = "${rootProject.mod_version}-forge"
         versionName = "${rootProject.mod_version}-forge"
 
-        gameVersions = ["1.20", "1.20.1"]
+        gameVersions = ["1.20.4"]
         changelog = changes
-        loaders = ["forge"]
+        loaders = ["neoforge"]
         failSilently = false
 
         dependencies {
@@ -156,9 +152,8 @@ if(keysExists) {
             //changelog = '[See on Github](https://github.com/KosmX/emotes/commits/master)'
             changelog = changes
             releaseType = project.cfType
-            addGameVersion "1.20"
-            addGameVersion "1.20.1"
-            addGameVersion "Forge"
+            addGameVersion "1.20.4"
+            addGameVersion "NeoForge"
 
 
             relations {
