@@ -11,6 +11,9 @@ authors = "KosmX"
 description = "A lightweight library to easily animate the player"
 #logoFile = ""
 
+[[mixins]]
+config = "playerAnimator-common.mixins.json"
+
 [[dependencies.playeranimator]]
 modId = "minecraft"
 type = "required"
