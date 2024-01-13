@@ -50,6 +50,8 @@ dependencies {
 
     common(shadowCommon(project(path: ":coreLib")) {transitive false}) {transitive false} //Why can I nest these?
 
+    include (project(":fabric-placeholder"))
+
     //Testing libraries
     //*
     modLocalRuntime "io.github.kosmx.bendy-lib:bendy-lib-fabric:${project.bendy_lib}"

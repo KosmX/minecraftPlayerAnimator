@@ -1,0 +1,13 @@
+plugins {
+    id('java')
+}
+
+// Technically this is a fabric mod, but without code, no loom is actually required
+
+processResources {
+    inputs.property "version", project.version
+
+    filesMatching("fabric.mod.json") {
+        expand "version": project.version
+    }
+}

@@ -21,7 +21,6 @@ allprojects {
 
     archivesBaseName = rootProject.archives_base_name
     version = rootProject.mod_version
-    group = rootProject.maven_group
 
     repositories {
         maven { url "https://maven.neoforged.net/releases" }

@@ -1,4 +1,4 @@
-package dev.kosmx.playerAnim.impl.forge;
+package dev.kosmx.playerAnim.impl.neoforge;
 
 import org.jetbrains.annotations.ApiStatus;
 import org.spongepowered.asm.service.MixinService;

@@ -2,6 +2,8 @@ package dev.kosmx.playerAnim.core.util;
 
 //I Didn't find any pair in Java common... so here is it
 
+import lombok.Getter;
+
 import javax.annotation.concurrent.Immutable;
 import java.util.Objects;
 
@@ -10,6 +12,7 @@ import java.util.Objects;
  * @param <L> Left object
  * @param <R> Right object
  */
+@Getter
 @Immutable
 public class Pair<L, R> {
     final L left;
@@ -23,13 +26,6 @@ public class Pair<L, R> {
     public Pair(L left, R right){
         this.left = left;
         this.right = right;
-    }
-
-    public L getLeft() {
-        return left;
-    }
-    public R getRight() {
-        return right;
     }
 
     @Override

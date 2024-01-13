@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "id": "player-animator",
+  "id": "playeranimator",
   "version": "${version}",
   "name": "Player Animator",
   "description": "A lightweight library to easily animate the player",

@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "version": "${version}",
+  "id": "player-animator",
+  "depends": {
+    "playeranimator": "*"
+  },
+  "license": "MIT",
+  "description": "Placeholder mod for the id: player-animator",
+  "custom": {
+    "modmenu": {
+      "badges": [ "library", "deprecated" ],
+      "parent": "playeranimator"
+    }
+  }
+}
