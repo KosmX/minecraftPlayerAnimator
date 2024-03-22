@@ -22,12 +22,15 @@ public enum AnimationFormat {
         FORMATS = new HashMap<>(formatsValues.length);
 
         for (AnimationFormat format : formatsValues) {
-            if (format.extension != null) 
+            if (format.extension != null)
                 FORMATS.putIfAbsent(format.extension, format);
         }
     }
 
     public static AnimationFormat byFileName(String fileName) {
+        if (fileName == null || fileName.isEmpty())
+            return AnimationFormat.UNKNOWN;
+
         int i = fileName.lastIndexOf('.');
         if (i > 0) {
             fileName = fileName.substring(i + 1);
@@ -37,7 +40,7 @@ public enum AnimationFormat {
     }
 
     public static AnimationFormat byExtension(String extension) {
-        return FORMATS.getOrDefault(extension, AnimationFormat.UNKNOWN);
+        return FORMATS.getOrDefault(extension.toLowerCase(), AnimationFormat.UNKNOWN);
     }
 
     private final String extension;
