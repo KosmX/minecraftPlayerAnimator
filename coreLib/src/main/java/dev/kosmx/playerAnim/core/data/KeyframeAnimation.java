@@ -599,6 +599,7 @@ public final class KeyframeAnimation implements Supplier<UUID> {
         public boolean isEasingBefore = false;
         //public float validationThreshold = staticThreshold;
         public boolean nsfw = false;
+        @Getter
         private final HashMap<String, StateCollection> bodyParts = new HashMap<>();
 
         /**
