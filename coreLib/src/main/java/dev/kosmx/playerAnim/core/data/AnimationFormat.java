@@ -40,6 +40,9 @@ public enum AnimationFormat {
     }
 
     public static AnimationFormat byExtension(String extension) {
+        if (extension == null || extension.isEmpty())
+            return AnimationFormat.UNKNOWN;
+
         return FORMATS.getOrDefault(extension.toLowerCase(), AnimationFormat.UNKNOWN);
     }
 
