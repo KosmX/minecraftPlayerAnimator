@@ -44,7 +44,7 @@ jobs:
       - uses: actions/setup-java@v3
         with:
           distribution: 'microsoft'
-          java-version: '17'
+          java-version: '21'
 
       # Runs a single command using the runners shell
       - name: validate gradle wrapper
