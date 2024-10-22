@@ -49,15 +49,6 @@ public enum Ease {
         return impl.invoke(f);
     }
 
-    /**
-     * Run the easing
-     * @param f float between 0 and 1
-     * @return ease(f)
-     */
-    public float invoke(float f) {
-        return impl.invoke(f);
-    }
-
     //To be able to send these as bytes instead of String names.
     public static Ease getEase(byte b){
         for(Ease ease:Ease.values()){

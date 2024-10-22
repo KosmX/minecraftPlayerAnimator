@@ -38,10 +38,11 @@ dependencies {
 
     //Testing libraries
     /*
+    modLocalRuntime files("../libs/bendy-lib-2.1.1-forge.jar")
     modLocalRuntime "io.github.kosmx.bendy-lib:bendy-lib-forge:${project.bendy_lib}"
     modLocalRuntime "maven.modrinth:3dskinlayers:1.5.2-forge-1.19"
     modLocalRuntime "maven.modrinth:emotecraft:2.2.6-SNAPSHOT-build.44-MC1.19.2-forge"
-    //*/
+    */
 }
 
 project.archivesBaseName = rootProject.archives_base_name + "-" + project.name

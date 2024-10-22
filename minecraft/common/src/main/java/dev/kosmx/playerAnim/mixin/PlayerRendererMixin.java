@@ -3,6 +3,7 @@ package dev.kosmx.playerAnim.mixin;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
 import dev.kosmx.playerAnim.api.TransformType;
+import dev.kosmx.playerAnim.api.firstPerson.FirstPersonConfiguration;
 import dev.kosmx.playerAnim.api.firstPerson.FirstPersonMode;
 import dev.kosmx.playerAnim.core.util.Vec3f;
 import dev.kosmx.playerAnim.impl.IAnimatedPlayer;
@@ -35,15 +36,15 @@ public abstract class PlayerRendererMixin extends LivingEntityRenderer<AbstractC
                                         MultiBufferSource vertexConsumerProvider,
                                         int i, CallbackInfo ci) {
         if (FirstPersonMode.isFirstPersonPass()) {
-            var animationApplier = ((IAnimatedPlayer) entity).playerAnimator_getAnimation();
-            var config = animationApplier.getFirstPersonConfiguration();
+            AnimationApplier animationApplier = ((IAnimatedPlayer) entity).playerAnimator_getAnimation();
+            FirstPersonConfiguration config = animationApplier.getFirstPersonConfiguration();
 
             if (entity == Minecraft.getInstance().getCameraEntity()) {
                 // Hiding all parts, because they should not be visible in first person
                 setAllPartsVisible(false);
                 // Showing arms based on configuration
-                var showRightArm = config.isShowRightArm();
-                var showLeftArm = config.isShowLeftArm();
+                boolean showRightArm = config.isShowRightArm();
+                boolean showLeftArm = config.isShowLeftArm();
                 this.model.rightArm.visible = showRightArm;
                 this.model.rightSleeve.visible = showRightArm;
                 this.model.leftArm.visible = showLeftArm;
@@ -91,8 +92,9 @@ public abstract class PlayerRendererMixin extends LivingEntityRenderer<AbstractC
 
     @Inject(method = "renderHand", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/model/PlayerModel;setupAnim(Lnet/minecraft/world/entity/LivingEntity;FFFFF)V"))
     private void notifyModelOfFirstPerson(PoseStack poseStack, MultiBufferSource multiBufferSource, int i, AbstractClientPlayer abstractClientPlayer, ModelPart modelPart, ModelPart modelPart2, CallbackInfo ci) {
-        if (this.getModel() instanceof IPlayerModel playerModel && !((IAnimatedPlayer)abstractClientPlayer).playerAnimator_getAnimation().getFirstPersonMode().isEnabled()) {
-            playerModel.playerAnimator_prepForFirstPersonRender();
+        PlayerModel<AbstractClientPlayer> m = this.getModel();
+        if (m instanceof IPlayerModel && !((IAnimatedPlayer)abstractClientPlayer).playerAnimator_getAnimation().getFirstPersonMode().isEnabled()) {
+            ((IPlayerModel)m).playerAnimator_prepForFirstPersonRender();
         }
     }
 }

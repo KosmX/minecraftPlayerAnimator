@@ -25,7 +25,9 @@ public class AnimationApplier extends AnimationProcessor {
                 MathHelper.clampToRadian(part.xRot),
                 MathHelper.clampToRadian(part.yRot),
                 MathHelper.clampToRadian(part.zRot)));
-        part.setRotation(rot.getX(), rot.getY(), rot.getZ());
+        part.xRot = rot.getX();
+        part.yRot = rot.getY();
+        part.zRot = rot.getZ();
         if (!partName.equals("head")) {
             if (partName.equals("torso")) {
                 Pair<Float, Float> torsoBend = getBend(partName);

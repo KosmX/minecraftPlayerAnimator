@@ -5,7 +5,7 @@ import dev.kosmx.playerAnim.api.firstPerson.FirstPersonMode;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
-import net.minecraft.client.renderer.entity.layers.PlayerItemInHandLayer;
+import net.minecraft.client.renderer.entity.layers.ItemInHandLayer;
 import net.minecraft.world.entity.LivingEntity;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Final;
@@ -15,6 +15,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Mixin(value = LivingEntityRenderer.class, priority = 2000)
 public class LivingEntityRendererMixin {
@@ -25,7 +26,7 @@ public class LivingEntityRendererMixin {
     at = @At(value = "FIELD", target = "Lnet/minecraft/client/renderer/entity/LivingEntityRenderer;layers:Ljava/util/List;", opcode = Opcodes.GETFIELD))
     private List<Object> filterLayers(LivingEntityRenderer instance, LivingEntity entity, float f, float g, PoseStack poseStack, MultiBufferSource multiBufferSource, int i) {
         if (entity instanceof LocalPlayer && FirstPersonMode.isFirstPersonPass()) {
-            return layers.stream().filter(layer -> layer instanceof PlayerItemInHandLayer).toList();
+            return layers.stream().filter(layer -> layer instanceof ItemInHandLayer).collect(Collectors.toList());
         } else return layers;
     }
 }
