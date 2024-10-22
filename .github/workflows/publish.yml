@@ -5,13 +5,23 @@ on:
   workflow_dispatch:
     inputs:
       type:
-        description: 'alpha/beta/release'
+        description: 'release type'
         required: false
-        default: 'alpha'
+        type: choice
+        options:
+          - alpha
+          - beta
+          - release
       changelog:
         description: 'changelog'
         required: false
         default: ''
+      upload:
+        required: true
+        type: choice
+        options:
+          - true
+          - false
 
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
@@ -37,8 +47,13 @@ jobs:
           java-version: '17'
 
       # Runs a single command using the runners shell
+      - name: validate gradle wrapper
+        uses: gradle/wrapper-validation-action@v1
+      - name: make gradle wrapper executable
+        if: ${{ runner.os != 'Windows' }}
+        run: chmod +x ./gradlew
       - name: Publish package
-        run: gradle publish --no-daemon
+        run: ./gradlew publish --no-daemon
         env:
           KOSMX_MAVEN_USER: ${{ secrets.MAVEN_USER }}
           KOSMX_MAVEN_TOKEN: ${{ secrets.MAVEN_PASS }}
@@ -47,3 +62,4 @@ jobs:
           CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
           CHANGELOG: ${{github.event.inputs.changelog}}
           RELEASE_TYPE: ${{github.event.inputs.type}}
+          UPLOAD_TO_PORTAL: ${{github.event.inputs.upload}}

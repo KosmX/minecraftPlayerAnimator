@@ -1,7 +1,5 @@
-plugins {
-    id "com.github.johnrengelman.shadow" version "7.1.2"
-}
 
+apply plugin: 'com.github.johnrengelman.shadow'
 apply plugin: 'com.modrinth.minotaur'
 apply plugin: 'com.matthewprenger.cursegradle'
 
@@ -53,7 +51,12 @@ dependencies {
     common(shadowCommon(project(path: ":coreLib")) {transitive false}) {transitive false} //Why can I nest these?
 
     //Testing libraries
-    //modImplementation "io.github.kosmx.bendy-lib:bendy-lib-fabric:${project.bendy_lib}"
+    // modLocalRuntime files("../libs/bendy-lib-2.1.1-fabric.jar")
+    modLocalRuntime "io.github.kosmx.bendy-lib:bendy-lib-fabric:${project.bendy_lib}"
+    modLocalRuntime "maven.modrinth:3dskinlayers:1.6.7"
+    modLocalRuntime "maven.modrinth:emotecraft:2.2.6-SNAPSHOT-build.44-MC1.16.5-fabric"
+    modLocalRuntime "maven.modrinth:modmenu:1.16.23"
+    modLocalRuntime "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_api_version}"
 
     modImplementation fabricApi.module("fabric-resource-loader-v0", project.fabric_api_version)
 
@@ -73,18 +76,18 @@ shadowJar {
     exclude "architectury.common.json"
 
     configurations = [project.configurations.shadowCommon]
-    classifier "dev-shadow"
+    archiveClassifier.set("dev-shadow")
 }
 
 remapJar {
     injectAccessWidener = true
     inputFile.set shadowJar.archiveFile
     dependsOn shadowJar
-    classifier null
+    archiveClassifier.set(null)
 }
 
 jar {
-    classifier "dev"
+    archiveClassifier.set("dev")
 }
 
 sourcesJar {

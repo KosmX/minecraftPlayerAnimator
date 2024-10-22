@@ -1,10 +1,11 @@
 plugins {
     id "architectury-plugin" version "3.4-SNAPSHOT"
-    id "dev.architectury.loom" version "1.0.+" apply false
+     id "dev.architectury.loom" version "1.6-SNAPSHOT" apply false
 
     //Publishing
     id 'com.matthewprenger.cursegradle' version '1.4.0' apply false
-    id "com.modrinth.minotaur" version "2.4.3" apply false
+    id "com.modrinth.minotaur" version "2.8.7" apply false
+    id 'com.github.johnrengelman.shadow' version '8.1.1' apply false
 }
 
 architectury {
@@ -60,6 +61,7 @@ ext.ENV = System.getenv()
 ext.cfType = ENV.RELEASE_TYPE ? ENV.RELEASE_TYPE : "alpha"
 ext.changes = ENV.CHANGELOG ? ENV.CHANGELOG.replaceAll("\\\\n", "\n") : ""
 ext.ENV = System.getenv()
+boolean upload = ENV.UPLOAD_TO_PORTAL ? ENV.UPLOAD_TO_PORTAL == "true" : false
 
 ext.keysExists = ENV.KOSMX_MAVEN_USER != null || project.getGradle().getStartParameter().isDryRun()
 
@@ -81,6 +83,8 @@ if(keysExists) {
     }
 
     publish {
-        finalizedBy(':minecraft:publishMod')
+        if (upload) {
+            finalizedBy(':minecraft:publishMod')
+        }
     }
 }

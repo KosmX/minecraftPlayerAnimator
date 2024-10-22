@@ -19,8 +19,9 @@ public abstract class AnimUtils {
     }
 
     /**
-     * Disable first person animation see-through.
-     * Has no effect if using mod like FirstPersonModel
+     * Unused, use proper first person library instead
+     * will be removed after next release (1.1)
      */
+    @Deprecated
     public static boolean disableFirstPersonAnim = true;
 }

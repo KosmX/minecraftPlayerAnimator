@@ -7,13 +7,18 @@
   "client": [
     "ArmorFeatureRendererMixin",
     "BipedEntityModelMixin",
+    "firstPerson.CameraAccessor",
+    "firstPerson.EntityRenderDispatcherMixin",
     "FeatureRendererMixin",
     "HeldItemMixin",
+    "firstPerson.ItemInHandRendererMixin",
+    "firstPerson.LevelRendererMixin",
+    "firstPerson.LivingEntityRendererMixin",
+    "LivingEntityRenderRedirect_bendOnly",
     "ModelPartMixin",
     "PlayerEntityMixin",
     "PlayerModelMixin",
-    "PlayerRendererMixin",
-    "LivingEntityRenderRedirect_bendOnly"
+    "PlayerRendererMixin"
   ],
   "mixins": [
   ],

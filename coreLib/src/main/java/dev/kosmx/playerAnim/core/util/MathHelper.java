@@ -22,6 +22,11 @@ public class MathHelper {
         return ((a & 255) << 24) | ((r & 255) << 16) | ((g & 255) << 8) | (b & 255);  //Sometimes minecraft uses ints as color...
     }
 
+    /**
+     * Clamp f to -Pi until Pi range
+     * @param f radians
+     * @return radians
+     */
     public static float clampToRadian(float f){
         final double a = Math.PI*2;
         double b = ((f + Math.PI)%a);

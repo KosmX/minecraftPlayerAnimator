@@ -2,7 +2,10 @@ package dev.kosmx.playerAnim.api.layered;
 
 
 import dev.kosmx.playerAnim.api.TransformType;
+import dev.kosmx.playerAnim.api.firstPerson.FirstPersonConfiguration;
+import dev.kosmx.playerAnim.api.firstPerson.FirstPersonMode;
 import dev.kosmx.playerAnim.core.util.Vec3f;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * An entry in {@link AnimationStack}, used to get the animated parts current transform
@@ -30,7 +33,7 @@ public interface IAnimation {
      * @param value0    The value before the transform. For identity transform return with it.
      * @return The new transform value
      */
-    Vec3f get3DTransform(String modelName, TransformType type, float tickDelta, Vec3f value0);
+    @NotNull Vec3f get3DTransform(@NotNull String modelName, @NotNull TransformType type, float tickDelta, @NotNull Vec3f value0);
 
     /**
      * Called before rendering a character
@@ -38,4 +41,22 @@ public interface IAnimation {
      */
     void setupAnim(float tickDelta);
 
+    /**
+     * Active animation can request first person render mode.
+     * @param tickDelta current tickDelta
+     * @return {@link FirstPersonMode}
+     */
+    @NotNull
+    default FirstPersonMode getFirstPersonMode(float tickDelta) {
+        return FirstPersonMode.NONE;
+    }
+
+    /**
+     * @param tickDelta
+     * @return current first person configuration, only requested when playing this animation
+     */
+    @NotNull
+    default FirstPersonConfiguration getFirstPersonConfiguration(float tickDelta) {
+        return new FirstPersonConfiguration();
+    }
 }

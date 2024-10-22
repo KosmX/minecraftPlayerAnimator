@@ -2,10 +2,13 @@ package dev.kosmx.playerAnim.core.impl;
 
 
 import dev.kosmx.playerAnim.api.TransformType;
+import dev.kosmx.playerAnim.api.firstPerson.FirstPersonConfiguration;
+import dev.kosmx.playerAnim.api.firstPerson.FirstPersonMode;
 import dev.kosmx.playerAnim.api.layered.IAnimation;
 import dev.kosmx.playerAnim.core.util.Pair;
 import dev.kosmx.playerAnim.core.util.Vec3f;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Tool to easily play animation to the player.
@@ -35,6 +38,18 @@ public class AnimationProcessor {
     public void setTickDelta(float tickDelta) {
         this.tickDelta = tickDelta;
         this.animation.setupAnim(tickDelta);
+    }
+
+    public boolean isFirstPersonAnimationDisabled() {
+        return !animation.getFirstPersonMode(tickDelta).isEnabled();
+    }
+
+    public @NotNull FirstPersonMode getFirstPersonMode() {
+        return animation.getFirstPersonMode(tickDelta);
+    }
+
+    public @NotNull FirstPersonConfiguration getFirstPersonConfiguration() {
+        return animation.getFirstPersonConfiguration(tickDelta);
     }
 
     public Pair<Float, Float> getBend(String modelName) {

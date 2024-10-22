@@ -1,11 +1,13 @@
 package dev.kosmx.playerAnim.api.layered;
 
 import dev.kosmx.playerAnim.api.TransformType;
+import dev.kosmx.playerAnim.api.firstPerson.FirstPersonConfiguration;
+import dev.kosmx.playerAnim.api.firstPerson.FirstPersonMode;
 import dev.kosmx.playerAnim.core.util.Pair;
 import dev.kosmx.playerAnim.core.util.Vec3f;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Player animation stack, can contain multiple active or passive layers, will always be evaluated from the lowest index.
@@ -13,7 +15,7 @@ import java.util.List;
  */
 public class AnimationStack implements IAnimation {
 
-    private final List<Pair<Integer, IAnimation>> layers = new ArrayList<>();
+    private final ArrayList<Pair<Integer, IAnimation>> layers = new ArrayList<>();
 
     /**
      *
@@ -37,9 +39,9 @@ public class AnimationStack implements IAnimation {
     }
 
     @Override
-    public Vec3f get3DTransform(String modelName, TransformType type, float tickDelta, Vec3f value0) {
+    public @NotNull Vec3f get3DTransform(@NotNull String modelName, @NotNull TransformType type, float tickDelta, @NotNull Vec3f value0) {
         for (Pair<Integer, IAnimation> layer : layers) {
-            if (layer.getRight().isActive()) {
+            if (layer.getRight().isActive() && (!FirstPersonMode.isFirstPersonPass() || layer.getRight().getFirstPersonMode(tickDelta).isEnabled())) {
                 value0 = layer.getRight().get3DTransform(modelName, type, tickDelta, value0);
             }
         }
@@ -88,4 +90,27 @@ public class AnimationStack implements IAnimation {
         return layers.removeIf(integerIAnimationPair -> integerIAnimationPair.getLeft() == layerLevel);
     }
 
+    @Override
+    public @NotNull FirstPersonMode getFirstPersonMode(float tickDelta) {
+        for (int i = layers.size(); i > 0;) {
+            Pair<Integer, IAnimation> layer = layers.get(--i);
+            if (layer.getRight().isActive()) { // layer.right.requestFirstPersonMode(tickDelta).takeIf{ it != NONE }?.let{ return@requestFirstPersonMode it }
+                FirstPersonMode mode = layer.getRight().getFirstPersonMode(tickDelta);
+                if (mode != FirstPersonMode.NONE) return mode;
+            }
+        }
+        return FirstPersonMode.NONE;
+    }
+
+    @Override
+    public @NotNull FirstPersonConfiguration getFirstPersonConfiguration(float tickDelta) {
+        for (int i = layers.size(); i > 0;) {
+            Pair<Integer, IAnimation> layer = layers.get(--i);
+            if (layer.getRight().isActive()) { // layer.right.requestFirstPersonMode(tickDelta).takeIf{ it != NONE }?.let{ return@requestFirstPersonMode it }
+                FirstPersonMode mode = layer.getRight().getFirstPersonMode(tickDelta);
+                if (mode != FirstPersonMode.NONE) return layer.getRight().getFirstPersonConfiguration(tickDelta);
+            }
+        }
+        return IAnimation.super.getFirstPersonConfiguration(tickDelta);
+    }
 }
