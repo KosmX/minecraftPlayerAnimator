@@ -98,8 +98,6 @@ public class PlayerModelMixin<T extends LivingEntity> extends HumanoidModel<Play
             ((IMutableModel)this).playerAnimator$setAnimation(emote);
 
             emote.updatePart(PartKey.HEAD, this.head);
-            this.hat.copyFrom(this.head);
-
             emote.updatePart(PartKey.RIGHT_ARM, this.rightArm);
             emote.updatePart(PartKey.LEFT_ARM, this.leftArm);
             emote.updatePart(PartKey.RIGHT_LEG, this.rightLeg);
