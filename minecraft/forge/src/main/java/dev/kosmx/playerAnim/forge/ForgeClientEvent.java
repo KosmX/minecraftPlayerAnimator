@@ -6,8 +6,7 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
-import net.neoforged.neoforge.client.event.RegisterClientReloadListenersEvent;
-import org.jetbrains.annotations.NotNull;
+import net.neoforged.neoforge.client.event.AddClientReloadListenersEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,7 +23,9 @@ public class ForgeClientEvent {
 
     }
 
-    public void resourceLoadingListener(@NotNull RegisterClientReloadListenersEvent event) {
-        event.registerReloadListener((ResourceManagerReloadListener) PlayerAnimationRegistry::resourceLoaderCallback);
+    public void resourceLoadingListener(AddClientReloadListenersEvent event) {
+        event.addListener(PlayerAnimationRegistry.KEY,
+                (ResourceManagerReloadListener) PlayerAnimationRegistry::resourceLoaderCallback
+        );
     }
 }

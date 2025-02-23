@@ -22,7 +22,7 @@ public class FabricClientInitializer implements ClientModInitializer {
         ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(new SimpleSynchronousResourceReloadListener() {
             @Override
             public ResourceLocation getFabricId() {
-                return ResourceLocation.fromNamespaceAndPath("playeranimator", "animation");
+                return PlayerAnimationRegistry.KEY;
             }
 
             @Override
