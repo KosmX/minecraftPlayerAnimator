@@ -5,6 +5,7 @@ import dev.kosmx.playerAnim.api.firstPerson.FirstPersonMode;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
+import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
 import net.minecraft.client.renderer.entity.layers.PlayerItemInHandLayer;
 import net.minecraft.world.entity.LivingEntity;
 import org.objectweb.asm.Opcodes;
@@ -25,7 +26,7 @@ public class LivingEntityRendererMixin {
     at = @At(value = "FIELD", target = "Lnet/minecraft/client/renderer/entity/LivingEntityRenderer;layers:Ljava/util/List;", opcode = Opcodes.GETFIELD))
     private List<Object> filterLayers(LivingEntityRenderer instance, LivingEntity entity, float f, float g, PoseStack poseStack, MultiBufferSource multiBufferSource, int i) {
         if (entity instanceof LocalPlayer && FirstPersonMode.isFirstPersonPass()) {
-            return layers.stream().filter(layer -> layer instanceof PlayerItemInHandLayer).toList();
+            return layers.stream().filter(layer -> layer instanceof PlayerItemInHandLayer || layer instanceof HumanoidArmorLayer<?,?,?>).toList();
         } else return layers;
     }
 }

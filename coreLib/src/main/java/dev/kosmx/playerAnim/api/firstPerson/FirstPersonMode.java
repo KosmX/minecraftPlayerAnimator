@@ -15,7 +15,8 @@ public enum FirstPersonMode {
     VANILLA(true),
 
     /**
-     * Use the 3rd person player model (only arms/items) to render accurate first-person perspective
+     * Use the 3rd person player model (only arms/items/shoulder armor) to render accurate first-person perspective.
+     * Note that armor rendering is disabled in the default FirstPersonConfiguration. {@link FirstPersonConfiguration#showShoulder}
      */
     THIRD_PERSON_MODEL(true),
 
@@ -24,7 +25,7 @@ public enum FirstPersonMode {
      */
     DISABLED(false),
 
-;
+    ;
     @Getter
     private final boolean enabled;
 

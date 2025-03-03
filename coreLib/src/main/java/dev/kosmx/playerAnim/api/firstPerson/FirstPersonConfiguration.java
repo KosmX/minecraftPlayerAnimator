@@ -14,4 +14,12 @@ public class FirstPersonConfiguration {
     boolean showLeftArm = false;
     boolean showRightItem = true;
     boolean showLeftItem = true;
+    boolean showArmor = false;
+
+    public FirstPersonConfiguration(boolean showRightArm, boolean showLeftArm, boolean showRightItem, boolean showLeftItem) {
+        this.showRightArm = showRightArm;
+        this.showLeftArm = showLeftArm;
+        this.showRightItem = showRightItem;
+        this.showLeftItem = showLeftItem;
+    }
 }
