@@ -61,6 +61,10 @@ dependencies {
 
     modImplementation fabricApi.module("fabric-resource-loader-v0", project.fabric_api_version)
 
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
+    modImplementation "software.bernie.geckolib:geckolib-fabric-${minecraft_version}:${geckolib_version}"
+    modImplementation "mod.azure.azurelibarmor:azurelibarmor-fabric-${minecraft_version}:${azure_lib_armor_version}"
+    modImplementation "mod.azure.azurelib:azurelib-fabric-${minecraft_version}:${azure_lib_version}"
 }
 
 project.archivesBaseName = rootProject.archives_base_name + "-" + project.name

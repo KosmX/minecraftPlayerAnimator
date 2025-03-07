@@ -1,5 +1,8 @@
 package dev.kosmx.playerAnim.fabric.client;
 
+import dev.kosmx.playerAnim.compatibility.AzureArmorRenderHandler;
+import dev.kosmx.playerAnim.compatibility.AzureLibArmorRenderHandler;
+import dev.kosmx.playerAnim.compatibility.GeckoArmorRenderHandler;
 import dev.kosmx.playerAnim.impl.Helper;
 import dev.kosmx.playerAnim.impl.compat.skinLayers.SkinLayersTransformer;
 import dev.kosmx.playerAnim.minecraftApi.PlayerAnimationRegistry;
@@ -22,7 +25,7 @@ public class FabricClientInitializer implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
 
-        if (Helper.isBendEnabled() && FabricLoader.getInstance().isModLoaded("skinlayers")) {
+        if (Helper.isBendEnabled() && isModLoaded("skinlayers")) {
             try {
                 SkinLayersTransformer.init(LOGGER);
             } catch(Error e) {
@@ -41,6 +44,22 @@ public class FabricClientInitializer implements ClientModInitializer {
                 PlayerAnimationRegistry.resourceLoaderCallback(manager);
             }
         });
+
+        if (isModLoaded("geckolib")) {
+            GeckoArmorRenderHandler.register();
+            LOGGER.info("GeckoLib and PlayerAnimator detected. Registering GeckoArmorRenderHandler.");
+        }
+        if (isModLoaded("azurelibarmor")) {
+            AzureArmorRenderHandler.register();
+            LOGGER.info("AzureLibArmor and PlayerAnimator detected. Registering AzureArmorRenderHandler.");
+        }
+        if (isModLoaded("azurelib")) {
+            AzureLibArmorRenderHandler.register();
+            LOGGER.info("AzureLib and PlayerAnimator detected. Registering AzureLibArmorRenderHandler.");
+        }
     }
 
+    public static boolean isModLoaded(String modId) {
+        return FabricLoader.getInstance().isModLoaded(modId);
+    }
 }
