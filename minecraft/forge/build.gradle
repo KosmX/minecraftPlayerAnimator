@@ -36,6 +36,10 @@ dependencies {
     modLocalRuntime "maven.modrinth:3dskinlayers:1.5.2-forge-1.19"
     modLocalRuntime "maven.modrinth:emotecraft:2.2.6-SNAPSHOT-build.44-MC1.19.2-forge"
     //*/
+
+    implementation "software.bernie.geckolib:geckolib-neoforge-${minecraft_version}:${geckolib_version}"
+    implementation "mod.azure.azurelibarmor:azurelibarmor-neo-${minecraft_version}:${azure_lib_armor_version}"
+    implementation "mod.azure.azurelib:azurelib-neo-${minecraft_version}:${azure_lib_version}"
 }
 
 project.archivesBaseName = rootProject.archives_base_name + "-" + project.name
