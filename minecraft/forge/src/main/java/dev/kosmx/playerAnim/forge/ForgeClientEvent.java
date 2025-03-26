@@ -1,12 +1,13 @@
 package dev.kosmx.playerAnim.forge;
 
 import dev.kosmx.playerAnim.minecraftApi.PlayerAnimationRegistry;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
-import net.neoforged.neoforge.client.event.RegisterClientReloadListenersEvent;
+import net.neoforged.neoforge.client.event.AddClientReloadListenersEvent;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +25,7 @@ public class ForgeClientEvent {
 
     }
 
-    public void resourceLoadingListener(@NotNull RegisterClientReloadListenersEvent event) {
-        event.registerReloadListener((ResourceManagerReloadListener) PlayerAnimationRegistry::resourceLoaderCallback);
+    public void resourceLoadingListener(@NotNull AddClientReloadListenersEvent event) {
+        event.addListener(ResourceLocation.fromNamespaceAndPath("playeranimator", "animation_registry"), (ResourceManagerReloadListener) PlayerAnimationRegistry::resourceLoaderCallback);
     }
 }
