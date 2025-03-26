@@ -1,5 +1,6 @@
 package dev.kosmx.playerAnim.api.layered;
 
+import dev.kosmx.playerAnim.api.PartKey;
 import dev.kosmx.playerAnim.api.TransformType;
 import dev.kosmx.playerAnim.api.firstPerson.FirstPersonConfiguration;
 import dev.kosmx.playerAnim.api.firstPerson.FirstPersonMode;
@@ -44,7 +45,7 @@ public class KeyframeAnimationPlayer implements IActualAnimation<KeyframeAnimati
 
     protected float tickDelta;
 
-    public final HashMap<String, BodyPart> bodyParts;
+    public final HashMap<PartKey, BodyPart> bodyParts;
     public int perspective = 0;
 
 
@@ -82,7 +83,7 @@ public class KeyframeAnimationPlayer implements IActualAnimation<KeyframeAnimati
         this.data = animation;
 
         this.bodyParts = new HashMap<>(animation.getBodyParts().size());
-        for(Map.Entry<String, KeyframeAnimation.StateCollection> part:animation.getBodyParts().entrySet()){
+        for(Map.Entry<PartKey, KeyframeAnimation.StateCollection> part:animation.getKeyBodyParts().entrySet()){
             this.bodyParts.put(part.getKey(), new BodyPart(mutable ? part.getValue().copy() : part.getValue()));
         }
 
@@ -135,23 +136,22 @@ public class KeyframeAnimationPlayer implements IActualAnimation<KeyframeAnimati
     }
 
     @Override
-    public @NotNull Vec3f get3DTransform(@NotNull String modelName, @NotNull TransformType type, float tickDelta, @NotNull Vec3f value0) {
-        BodyPart part = bodyParts.get(modelName);
+    public @NotNull Vec3f get3DTransform(@NotNull PartKey modelKey, @NotNull TransformType type, float tickDelta, @NotNull Vec3f value0) {
+        BodyPart part = bodyParts.get(modelKey);
         if (part == null) return value0;
-        switch (type) {
-            case POSITION:
-                return part.getBodyOffset(value0);
-            case ROTATION:
+        return switch (type) {
+            case POSITION -> part.getBodyOffset(value0);
+            case ROTATION -> {
                 Vector3<Float> rot = part.getBodyRotation(value0);
-                return new Vec3f(rot.getX(), rot.getY(), rot.getZ());
-            case BEND:
+                yield new Vec3f(rot.getX(), rot.getY(), rot.getZ());
+            }
+            case BEND -> {
                 Pair<Float, Float> bend = part.getBend(new Pair<>(value0.getX(), value0.getY()));
-                return new Vec3f(bend.getLeft(), bend.getRight(), 0f);
-            case SCALE:
-                return part.getScale(value0);
-            default:
-                return value0;
-        }
+                yield new Vec3f(bend.getLeft(), bend.getRight(), 0f);
+            }
+            case SCALE -> part.getScale(value0);
+            default -> value0;
+        };
     }
 
     @Override

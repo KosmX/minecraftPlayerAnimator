@@ -1,5 +1,6 @@
 package dev.kosmx.playerAnim.api.layered;
 
+import dev.kosmx.playerAnim.api.PartKey;
 import dev.kosmx.playerAnim.api.TransformType;
 import dev.kosmx.playerAnim.api.firstPerson.FirstPersonConfiguration;
 import dev.kosmx.playerAnim.api.firstPerson.FirstPersonMode;
@@ -43,6 +44,16 @@ public class AnimationStack implements IAnimation {
         for (Pair<Integer, IAnimation> layer : layers) {
             if (layer.getRight().isActive() && (!FirstPersonMode.isFirstPersonPass() || layer.getRight().getFirstPersonMode(tickDelta).isEnabled())) {
                 value0 = layer.getRight().get3DTransform(modelName, type, tickDelta, value0);
+            }
+        }
+        return value0;
+    }
+
+    @Override
+    public @NotNull Vec3f get3DTransform(@NotNull PartKey partKey, @NotNull TransformType type, float tickDelta, @NotNull Vec3f value0) {
+        for (Pair<Integer, IAnimation> layer : layers) {
+            if (layer.getRight().isActive() && (!FirstPersonMode.isFirstPersonPass() || layer.getRight().getFirstPersonMode(tickDelta).isEnabled())) {
+                value0 = layer.getRight().get3DTransform(partKey, type, tickDelta, value0);
             }
         }
         return value0;
@@ -112,5 +123,17 @@ public class AnimationStack implements IAnimation {
             }
         }
         return IAnimation.super.getFirstPersonConfiguration(tickDelta);
+    }
+
+    public int getPriority() {
+        int priority = 0;
+        for (int i=layers.size()-1; i>=0; i--) {
+            Pair<Integer, IAnimation> layer = layers.get(i);
+            if (layer.getRight().isActive()) {
+                priority = layer.getLeft();
+                break;
+            }
+        }
+        return priority;
     }
 }

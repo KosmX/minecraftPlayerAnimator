@@ -3,18 +3,20 @@ package dev.kosmx.playerAnim.mixin;
 import dev.kosmx.playerAnim.impl.IUpperPartHelper;
 import net.minecraft.client.model.geom.ModelPart;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 
 @Mixin(ModelPart.class)
 public class ModelPartMixin implements IUpperPartHelper {
-    private boolean Emotecraft_upper = false;
+    @Unique
+    private boolean playerAnimator$isUpper = false;
 
     @Override
-    public boolean isUpperPart() {
-        return Emotecraft_upper;
+    public boolean playerAnimator$isUpperPart() {
+        return playerAnimator$isUpper;
     }
 
     @Override
-    public void setUpperPart(boolean bl) {
-        Emotecraft_upper = bl;
+    public void playerAnimator$setUpperPart(boolean bl) {
+        playerAnimator$isUpper = bl;
     }
 }

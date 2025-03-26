@@ -1,6 +1,7 @@
 package dev.kosmx.playerAnim.api.layered;
 
 
+import dev.kosmx.playerAnim.api.PartKey;
 import dev.kosmx.playerAnim.api.TransformType;
 import dev.kosmx.playerAnim.api.firstPerson.FirstPersonConfiguration;
 import dev.kosmx.playerAnim.api.firstPerson.FirstPersonMode;
@@ -32,8 +33,31 @@ public interface IAnimation {
      * @param tickDelta Time since the last tick. 0-1
      * @param value0    The value before the transform. For identity transform return with it.
      * @return The new transform value
+     *
+     * @deprecated use {@link IAnimation#get3DTransform(PartKey, TransformType, float, Vec3f)} instead.
+     * {@link PartKey} is supposed to be faster than string comparisons.
      */
-    @NotNull Vec3f get3DTransform(@NotNull String modelName, @NotNull TransformType type, float tickDelta, @NotNull Vec3f value0);
+    @Deprecated(forRemoval = true)
+    default @NotNull Vec3f get3DTransform(@NotNull String modelName, @NotNull TransformType type, float tickDelta, @NotNull Vec3f value0) {
+        throw new AssertionError("this, of get3DTransform must be implemented.");
+    }
+
+
+    /**
+     * Get the transformed value to a model part, transform type.
+     * <p>
+     * API note <br>
+     * DO NOT CALL super.get3DTransform() as the default implementation will be removed.
+     * @param modelKey The questionable model part
+     * @param type      Transform type
+     * @param tickDelta Time since the last tick. 0-1
+     * @param value0    The value before the transform. For identity transform return with it.
+     * @return The new transform value
+     */
+    default @NotNull Vec3f get3DTransform(@NotNull PartKey modelKey, @NotNull TransformType type, float tickDelta, @NotNull Vec3f value0) {
+        return get3DTransform(modelKey.getKey(), type, tickDelta, value0);
+    }
+
 
     /**
      * Called before rendering a character

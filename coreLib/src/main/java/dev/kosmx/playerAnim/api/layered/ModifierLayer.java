@@ -1,5 +1,6 @@
 package dev.kosmx.playerAnim.api.layered;
 
+import dev.kosmx.playerAnim.api.PartKey;
 import dev.kosmx.playerAnim.api.TransformType;
 import dev.kosmx.playerAnim.api.firstPerson.FirstPersonConfiguration;
 import dev.kosmx.playerAnim.api.firstPerson.FirstPersonMode;
@@ -124,7 +125,7 @@ public class ModifierLayer<T extends IAnimation> implements IAnimation {
 
     @Override
     public boolean isActive() {
-        if (modifiers.size() > 0) {
+        if (!modifiers.isEmpty()) {
             return modifiers.get(0).isActive();
         } else if (animation != null) return animation.isActive();
         return false;
@@ -132,7 +133,15 @@ public class ModifierLayer<T extends IAnimation> implements IAnimation {
 
     @Override
     public @NotNull Vec3f get3DTransform(@NotNull String modelName, @NotNull TransformType type, float tickDelta, @NotNull Vec3f value0) {
-        if (modifiers.size() > 0) {
+        if (!modifiers.isEmpty()) {
+            return modifiers.get(0).get3DTransform(modelName, type, tickDelta, value0);
+        } else if (animation != null) return animation.get3DTransform(modelName, type, tickDelta, value0);
+        return value0;
+    }
+
+    @Override
+    public @NotNull Vec3f get3DTransform(@NotNull PartKey modelName, @NotNull TransformType type, float tickDelta, @NotNull Vec3f value0) {
+        if (!modifiers.isEmpty()) {
             return modifiers.get(0).get3DTransform(modelName, type, tickDelta, value0);
         } else if (animation != null) return animation.get3DTransform(modelName, type, tickDelta, value0);
         return value0;
@@ -140,7 +149,7 @@ public class ModifierLayer<T extends IAnimation> implements IAnimation {
 
     @Override
     public void setupAnim(float tickDelta) {
-        if (modifiers.size() > 0) {
+        if (!modifiers.isEmpty()) {
             modifiers.get(0).setupAnim(tickDelta);
         } else if (animation != null) animation.setupAnim(tickDelta);
     }

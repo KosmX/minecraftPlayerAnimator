@@ -25,46 +25,46 @@ public abstract class PlayerEntityMixin implements IAnimatedPlayer {
 
     //Unique params might be renamed
     @Unique
-    private final Map<ResourceLocation, IAnimation> modAnimationData = new HashMap<>();
+    private final Map<ResourceLocation, IAnimation> playerAnimator$modAnimationData = new HashMap<>();
     @Unique
-    private final AnimationStack animationStack = createAnimationStack();
+    private final AnimationStack playerAnimator$animationStack = playerAnimator$createAnimationStack();
     @Unique
-    private final AnimationApplier animationApplier = new AnimationApplier(animationStack);
+    private final AnimationApplier playerAnimator$animationApplier = new AnimationApplier(playerAnimator$animationStack);
 
 
 
     @SuppressWarnings("ConstantConditions")
     @Unique
-    private AnimationStack createAnimationStack() {
+    private AnimationStack playerAnimator$createAnimationStack() {
         AnimationStack stack = new AnimationStack();
         if (AbstractClientPlayer.class.isInstance(this)) {
-            PlayerAnimationFactory.ANIMATION_DATA_FACTORY.prepareAnimations((AbstractClientPlayer)(Object) this, stack, modAnimationData);
+            PlayerAnimationFactory.ANIMATION_DATA_FACTORY.prepareAnimations((AbstractClientPlayer)(Object) this, stack, playerAnimator$modAnimationData);
             PlayerAnimationAccess.REGISTER_ANIMATION_EVENT.invoker().registerAnimation((AbstractClientPlayer)(Object) this, stack);
         }
         return stack;
     }
 
     @Override
-    public AnimationStack getAnimationStack() {
-        return animationStack;
+    public @NotNull AnimationStack playerAnimator$getAnimationStack() {
+        return playerAnimator$animationStack;
     }
 
     @Override
     public AnimationApplier playerAnimator_getAnimation() {
-        return animationApplier;
+        return playerAnimator$animationApplier;
     }
 
     @Override
     public @Nullable IAnimation playerAnimator_getAnimation(@NotNull ResourceLocation id) {
-        return modAnimationData.get(id);
+        return playerAnimator$modAnimationData.get(id);
     }
 
     @Override
     public @Nullable IAnimation playerAnimator_setAnimation(@NotNull ResourceLocation id, @Nullable IAnimation animation) {
         if (animation == null) {
-            return modAnimationData.remove(id);
+            return playerAnimator$modAnimationData.remove(id);
         } else {
-            return modAnimationData.put(id, animation);
+            return playerAnimator$modAnimationData.put(id, animation);
         }
     }
 
@@ -72,7 +72,7 @@ public abstract class PlayerEntityMixin implements IAnimatedPlayer {
     @Inject(method = "tick", at = @At("HEAD"))
     private void tick(CallbackInfo ci) {
         if (AbstractClientPlayer.class.isInstance(this)) {
-            animationStack.tick();
+            playerAnimator$animationStack.tick();
         }
     }
 }

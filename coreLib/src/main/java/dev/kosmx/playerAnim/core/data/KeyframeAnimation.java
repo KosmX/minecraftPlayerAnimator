@@ -2,6 +2,7 @@ package dev.kosmx.playerAnim.core.data;
 
 
 import dev.kosmx.playerAnim.api.IPlayable;
+import dev.kosmx.playerAnim.api.PartKey;
 import dev.kosmx.playerAnim.api.layered.IActualAnimation;
 import dev.kosmx.playerAnim.api.layered.KeyframeAnimationPlayer;
 import dev.kosmx.playerAnim.core.data.opennbs.NBS;
@@ -44,7 +45,8 @@ public final class KeyframeAnimation implements IPlayable {
     public final int returnToTick;
 
     @Getter
-    private final Map<String, StateCollection> bodyParts;
+    private final Map<PartKey, StateCollection> keyBodyParts;
+
     //Deprecated variables will be removed in the animation rework part.
     public final boolean isEasingBefore;
     public final boolean nsfw;
@@ -81,12 +83,12 @@ public final class KeyframeAnimation implements IPlayable {
         this.isInfinite = isInfinite;
         if (isInfinite && (returnToTick < 0 || returnToTick > endTick)) throw new IllegalArgumentException("Trying to construct invalid animation");
         this.returnToTick = returnToTick;
-        HashMap<String, StateCollection> bodyMap = new HashMap<>();
+        HashMap<PartKey, StateCollection> bodyMap = new HashMap<>();
         for (Map.Entry<String, StateCollection> entry : bodyParts.entrySet()) {
-            bodyMap.put(entry.getKey(), entry.getValue().copy());
+            bodyMap.put(PartKey.keyForId(entry.getKey()), entry.getValue().copy());
         }
         bodyMap.forEach((s, stateCollection) -> stateCollection.verifyAndLock(getLength()));
-        this.bodyParts = Collections.unmodifiableMap(bodyMap);
+        this.keyBodyParts = Collections.unmodifiableMap(bodyMap);
 
         this.isEasingBefore = isEasingBefore;
         this.nsfw = nsfw;
@@ -123,7 +125,7 @@ public final class KeyframeAnimation implements IPlayable {
         if (isEasingBefore != emoteData.isEasingBefore) return false;
         //if (!Objects.equals(this.extraData, emoteData.extraData)) return false;
 
-        return bodyParts.equals(emoteData.bodyParts);
+        return keyBodyParts.equals(emoteData.keyBodyParts);
     }
 
     @Override
@@ -134,7 +136,7 @@ public final class KeyframeAnimation implements IPlayable {
         result = 31 * result + (isInfinite ? 1 : 0);
         result = 31 * result + returnToTick;
         result = 31 * result + (isEasingBefore ? 1 : 0);
-        result = 31 * result + bodyParts.hashCode();
+        result = 31 * result + keyBodyParts.hashCode();
         return result;
     }
 
@@ -146,7 +148,8 @@ public final class KeyframeAnimation implements IPlayable {
         result = 31 * result + returnToTick;
         result = 31 * result + (isEasingBefore ? 1 : 0);
 
-        long dataHash = result * 31L + this.bodyParts.hashCode();
+        // slow, but reliable :D
+        long dataHash = result * 31L + this.getBodyParts().hashCode();
 
         long nameHash = this.extraData.hashCode();
         long descHash = 0;
@@ -164,8 +167,8 @@ public final class KeyframeAnimation implements IPlayable {
 
     public AnimationBuilder mutableCopy() {
         HashMap<String, StateCollection> newParts = new HashMap<>();
-        for (Map.Entry<String, StateCollection> part : this.bodyParts.entrySet()) {
-            newParts.put(part.getKey(), part.getValue().copy());
+        for (Map.Entry<PartKey, StateCollection> part : this.keyBodyParts.entrySet()) {
+            newParts.put(part.getKey().getKey(), part.getValue().copy());
         }
         return new AnimationBuilder(beginTick, endTick, stopTick, isInfinite, returnToTick, newParts, isEasingBefore, nsfw, uuid, animationFormat, extraData);
     }
@@ -194,12 +197,30 @@ public final class KeyframeAnimation implements IPlayable {
     }
 
 
+    /**
+     * @param partID part ID string
+     * @deprecated use {@link KeyframeAnimation#getPart(PartKey)} instead. that is faster if you know the key. (PartKey.HEAD) for example
+     */
     @Nullable
+    @Deprecated
     public StateCollection getPart(String partID) {
-        return this.bodyParts.get(partID);
+        return this.keyBodyParts.get(PartKey.keyForId(partID));
     }
 
-    public Optional<StateCollection> getPartOptional(String id) {
+    @Nullable
+    public StateCollection getPart(@NotNull PartKey partID) {
+        return this.keyBodyParts.get(partID);
+    }
+
+    /**
+     * @param id part ID string
+     * @deprecated use {@link KeyframeAnimation#getPartOptional(PartKey)} instead. that is faster if you know the key.
+     */
+    public @NotNull Optional<StateCollection> getPartOptional(@NotNull String id) {
+        return Optional.ofNullable(getPart(id));
+    }
+
+    public @NotNull Optional<StateCollection> getPartOptional(@NotNull PartKey id) {
         return Optional.ofNullable(getPart(id));
     }
 
@@ -211,6 +232,21 @@ public final class KeyframeAnimation implements IPlayable {
     @Override
     public @NotNull String getName() {
         return ((String)extraData.get("name")).toLowerCase(Locale.ROOT);
+    }
+
+    //@Deprecated
+
+    /**
+     * The old string to part map getter, it may be the only method that does not get removed after the PartKey refactor.
+     * It is still used by network an many other tools.
+     * @return Parts in string to part map
+     */
+    public @NotNull Map<String, StateCollection> getBodyParts() {
+        Map<String, StateCollection> newMap = new HashMap<>();
+        for (var entry: keyBodyParts.entrySet()) {
+            newMap.put(entry.getKey().getKey(), entry.getValue());
+        }
+        return newMap;
     }
 
 

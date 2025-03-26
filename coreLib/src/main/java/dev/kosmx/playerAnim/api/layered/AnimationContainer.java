@@ -1,5 +1,6 @@
 package dev.kosmx.playerAnim.api.layered;
 
+import dev.kosmx.playerAnim.api.PartKey;
 import dev.kosmx.playerAnim.api.TransformType;
 import dev.kosmx.playerAnim.api.firstPerson.FirstPersonConfiguration;
 import dev.kosmx.playerAnim.api.firstPerson.FirstPersonMode;
@@ -47,6 +48,11 @@ public class AnimationContainer<T extends IAnimation> implements IAnimation {
     @Override
     public @NotNull Vec3f get3DTransform(@NotNull String modelName, @NotNull TransformType type, float tickDelta, @NotNull Vec3f value0) {
         return anim == null ? value0 : anim.get3DTransform(modelName, type, tickDelta, value0);
+    }
+
+    @Override
+    public @NotNull Vec3f get3DTransform(@NotNull PartKey partKey, @NotNull TransformType type, float tickDelta, @NotNull Vec3f value0) {
+        return anim == null ? value0 : anim.get3DTransform(partKey, type, tickDelta, value0);
     }
 
     @Override

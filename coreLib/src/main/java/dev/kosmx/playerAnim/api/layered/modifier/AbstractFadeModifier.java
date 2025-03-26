@@ -1,5 +1,6 @@
 package dev.kosmx.playerAnim.api.layered.modifier;
 
+import dev.kosmx.playerAnim.api.PartKey;
 import dev.kosmx.playerAnim.api.TransformType;
 import dev.kosmx.playerAnim.api.layered.IAnimation;
 import dev.kosmx.playerAnim.core.util.Ease;
@@ -64,6 +65,17 @@ public abstract class AbstractFadeModifier extends AbstractModifier {
         return animatedVec.scale(a).add(source.scale(1 - a)); //This would look much better in Kotlin... (operator overloading)
     }
 
+    @Override
+    public @NotNull Vec3f get3DTransform(@NotNull PartKey partKey, @NotNull TransformType type, float tickDelta, @NotNull Vec3f value0) {
+        if (calculateProgress(tickDelta) > 1) {
+            return super.get3DTransform(partKey, type, tickDelta, value0);
+        }
+        Vec3f animatedVec = super.get3DTransform(partKey, type, tickDelta, value0);
+        float a = getAlpha(partKey, type, calculateProgress(tickDelta));
+        Vec3f source = beginAnimation != null && beginAnimation.isActive() ? beginAnimation.get3DTransform(partKey, type, tickDelta, value0) : value0;
+        return animatedVec.scale(a).add(source.scale(1 - a)); //This would look much better in Kotlin... (operator overloading)
+    }
+
     protected float calculateProgress(float f) {
         float actualTime = time + f;
         return actualTime / length;
@@ -75,8 +87,25 @@ public abstract class AbstractFadeModifier extends AbstractModifier {
      * @param type      Transform type
      * @param progress  animation progress, float between 0 and 1
      * @return alpha, float between 0 and 1, lower value means less visible from animation
+     *
+     * @deprecated for removal, in the next version.
+     * use {@link AbstractFadeModifier#getAlpha(PartKey, TransformType, float)} instead
      */
-    protected abstract float getAlpha(String modelName, TransformType type, float progress);
+    @Deprecated(forRemoval = true)
+    protected float getAlpha(String modelName, TransformType type, float progress) {
+        return getAlpha(PartKey.keyForId(modelName), type, progress);
+    }
+
+    /**
+     * Get the alpha at the given progress
+     * @param modelKey  modelName if you want to handle parts differently
+     * @param type      Transform type
+     * @param progress  animation progress, float between 0 and 1
+     * @return alpha, float between 0 and 1, lower value means less visible from animation
+     */
+    protected float getAlpha(PartKey modelKey, TransformType type, float progress) {
+        return getAlpha(modelKey.getKey(), type, progress);
+    }
 
     /**
      * Creates a standard fade with some easing in it.
@@ -88,6 +117,10 @@ public abstract class AbstractFadeModifier extends AbstractModifier {
         return new AbstractFadeModifier(length) {
             @Override
             protected float getAlpha(String modelName, TransformType type, float progress) {
+                return ease.invoke(progress);
+            }
+            @Override
+            protected float getAlpha(@NotNull PartKey modelName, TransformType type, float progress) {
                 return ease.invoke(progress);
             }
         };

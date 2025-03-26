@@ -1,5 +1,6 @@
 package dev.kosmx.playerAnim.api.layered.modifier;
 
+import dev.kosmx.playerAnim.api.PartKey;
 import dev.kosmx.playerAnim.api.TransformType;
 import dev.kosmx.playerAnim.api.firstPerson.FirstPersonConfiguration;
 import dev.kosmx.playerAnim.core.util.Vec3f;
@@ -9,15 +10,13 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 
 @NoArgsConstructor
 @AllArgsConstructor
 public class MirrorModifier extends AbstractModifier {
 
-    public static final Map<String, String> mirrorMap;
+    public static final Map<PartKey, PartKey> mirrorMap;
 
     /**
      * Enable the modifier
@@ -28,12 +27,17 @@ public class MirrorModifier extends AbstractModifier {
 
     @Override
     public @NotNull Vec3f get3DTransform(@NotNull String modelName, @NotNull TransformType type, float tickDelta, @NotNull Vec3f value0) {
-        if (!isEnabled()) return super.get3DTransform(modelName, type, tickDelta, value0);
+        return get3DTransform(PartKey.keyForId(modelName), type, tickDelta, value0);
+    }
 
-        if (mirrorMap.containsKey(modelName)) modelName = mirrorMap.get(modelName);
+    @Override
+    public @NotNull Vec3f get3DTransform(@NotNull PartKey partKey, @NotNull TransformType type, float tickDelta, @NotNull Vec3f value0) {
+        if (!isEnabled()) return super.get3DTransform(partKey, type, tickDelta, value0);
+
+        if (mirrorMap.containsKey(partKey)) partKey = mirrorMap.get(partKey);
         value0 = transformVector(value0, type);
 
-        Vec3f vec3f = super.get3DTransform(modelName, type, tickDelta, value0);
+        Vec3f vec3f = super.get3DTransform(partKey, type, tickDelta, value0);
         return transformVector(vec3f, type);
     }
 
@@ -64,13 +68,13 @@ public class MirrorModifier extends AbstractModifier {
     }
 
     static {
-        HashMap<String, String> partMap = new HashMap<>();
-        partMap.put("leftArm", "rightArm");
-        partMap.put("leftLeg", "rightLeg");
-        partMap.put("leftItem", "rightItem");
-        partMap.put("rightArm", "leftArm");
-        partMap.put("rightLeg", "leftLeg");
-        partMap.put("rightItem", "leftItem");
-        mirrorMap = Collections.unmodifiableMap(partMap);
+        // this looks better in Kotlin
+        mirrorMap = Map.of(
+                PartKey.LEFT_ARM, PartKey.RIGHT_ARM,
+                PartKey.LEFT_LEG, PartKey.RIGHT_LEG,
+                PartKey.LEFT_ITEM, PartKey.RIGHT_ITEM,
+                PartKey.RIGHT_ARM, PartKey.LEFT_ARM,
+                PartKey.RIGHT_LEG, PartKey.LEFT_LEG,
+                PartKey.RIGHT_ITEM, PartKey.LEFT_ITEM);
     }
 }

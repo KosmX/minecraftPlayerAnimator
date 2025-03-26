@@ -4,7 +4,7 @@ import org.jetbrains.annotations.ApiStatus;
 
 @ApiStatus.Internal
 public interface IUpperPartHelper {
-    boolean isUpperPart();
+    boolean playerAnimator$isUpperPart();
 
-    void setUpperPart(boolean bl);
+    void playerAnimator$setUpperPart(boolean bl);
 }

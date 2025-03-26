@@ -12,23 +12,23 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(RenderLayer.class)
 public class FeatureRendererMixin implements IUpperPartHelper {
     @Unique
-    private boolean isUpperPart = true;
+    private boolean playerAnimator$isUpperPart = true;
 
 
     @Inject(method = "<init>", at = @At("RETURN"))
-    private void init(RenderLayerParent renderLayerParent, CallbackInfo ci) {
+    private void init(RenderLayerParent<?, ?> renderLayerParent, CallbackInfo ci) {
         if (this.getClass().getPackageName().contains("skinlayers") && !this.getClass().getSimpleName().toLowerCase().contains("head")) {
-            isUpperPart = false;
+            playerAnimator$isUpperPart = false;
         }
     }
 
     @Override
-    public boolean isUpperPart() {
-        return this.isUpperPart;
+    public boolean playerAnimator$isUpperPart() {
+        return this.playerAnimator$isUpperPart;
     }
 
     @Override
-    public void setUpperPart(boolean bl) {
-        this.isUpperPart = bl;
+    public void playerAnimator$setUpperPart(boolean bl) {
+        this.playerAnimator$isUpperPart = bl;
     }
 }

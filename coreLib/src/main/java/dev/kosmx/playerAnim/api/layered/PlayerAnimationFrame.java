@@ -1,5 +1,6 @@
 package dev.kosmx.playerAnim.api.layered;
 
+import dev.kosmx.playerAnim.api.PartKey;
 import dev.kosmx.playerAnim.api.TransformType;
 import dev.kosmx.playerAnim.core.util.Pair;
 import dev.kosmx.playerAnim.core.util.Vec3f;
@@ -26,17 +27,17 @@ public abstract class PlayerAnimationFrame implements IAnimation {
     protected PlayerPart rightItem = new PlayerPart();
     protected PlayerPart leftItem = new PlayerPart();
 
-    HashMap<String, PlayerPart> parts = new HashMap<>();
+    HashMap<PartKey, PlayerPart> parts = new HashMap<>();
 
     public PlayerAnimationFrame() {
-        parts.put("head", head);
-        parts.put("body", body);
-        parts.put("rightArm", rightArm);
-        parts.put("leftArm", leftArm);
-        parts.put("rightLeg", rightLeg);
-        parts.put("leftLeg", leftLeg);
-        parts.put("rightItem", rightItem);
-        parts.put("leftItem", leftItem);
+        parts.put(PartKey.HEAD, head);
+        parts.put(PartKey.BODY, body);
+        parts.put(PartKey.RIGHT_ARM, rightArm);
+        parts.put(PartKey.LEFT_ARM, leftArm);
+        parts.put(PartKey.RIGHT_LEG, rightLeg);
+        parts.put(PartKey.LEFT_LEG, leftLeg);
+        parts.put(PartKey.RIGHT_ITEM, rightItem);
+        parts.put(PartKey.LEFT_ITEM, leftItem);
     }
 
 
@@ -47,7 +48,7 @@ public abstract class PlayerAnimationFrame implements IAnimation {
 
     @Override
     public boolean isActive() {
-        for (Map.Entry<String, PlayerPart> entry: parts.entrySet()) {
+        for (Map.Entry<PartKey, PlayerPart> entry: parts.entrySet()) {
             PlayerPart part = entry.getValue();
             if (part.bend != null || part.pos != null || part.rot != null || part.scale != null) return true;
         }
@@ -59,28 +60,23 @@ public abstract class PlayerAnimationFrame implements IAnimation {
      * Don't use it if you don't want to set every part in every frame
      */
     public void resetPose() {
-        for (Map.Entry<String, PlayerPart> entry: parts.entrySet()) {
+        for (Map.Entry<PartKey, PlayerPart> entry: parts.entrySet()) {
             entry.getValue().setNull();
         }
     }
 
 
     @Override
-    public @NotNull Vec3f get3DTransform(@NotNull String modelName, @NotNull TransformType type, float tickDelta, @NotNull Vec3f value0) {
-        PlayerPart part = parts.get(modelName);
+    public @NotNull Vec3f get3DTransform(@NotNull PartKey modelKey, @NotNull TransformType type, float tickDelta, @NotNull Vec3f value0) {
+        PlayerPart part = parts.get(modelKey);
         if (part == null) return value0;
-        switch (type) {
-            case POSITION:
-                return part.pos == null ? value0 : part.pos;
-            case ROTATION:
-                return part.rot == null ? value0 : part.rot;
-            case SCALE:
-                return part.scale == null ? value0 : part.scale;
-            case BEND:
-                return part.bend == null ? value0 : new Vec3f(part.bend.getLeft(), part.bend.getRight(), 0f);
-            default:
-                return value0;
-        }
+        return switch (type) {
+            case POSITION -> part.pos == null ? value0 : part.pos;
+            case ROTATION -> part.rot == null ? value0 : part.rot;
+            case SCALE -> part.scale == null ? value0 : part.scale;
+            case BEND -> part.bend == null ? value0 : new Vec3f(part.bend.getLeft(), part.bend.getRight(), 0f);
+            default -> value0;
+        };
     }
 
     public static class PlayerPart {

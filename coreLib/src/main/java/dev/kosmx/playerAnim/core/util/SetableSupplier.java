@@ -8,6 +8,10 @@ import java.util.function.Supplier;
 public class SetableSupplier<T> implements Supplier<T> {
     T object;
 
+    public SetableSupplier(T initialValue) {
+        object = initialValue;
+    }
+
     /**
      * :D
      * @param object T

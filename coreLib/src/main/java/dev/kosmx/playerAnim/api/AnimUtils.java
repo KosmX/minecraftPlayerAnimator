@@ -14,14 +14,7 @@ public abstract class AnimUtils {
      */
     public static AnimationStack getPlayerAnimLayer(Object player) throws IllegalArgumentException {
         if (player instanceof IPlayer) {
-            return ((IPlayer) player).getAnimationStack();
+            return ((IPlayer) player).playerAnimator$getAnimationStack();
         } else throw new IllegalArgumentException(player + " is not a player or library mixins failed");
     }
-
-    /**
-     * Unused, use proper first person library instead
-     * will be removed after next release (1.1)
-     */
-    @Deprecated
-    public static boolean disableFirstPersonAnim = true;
 }

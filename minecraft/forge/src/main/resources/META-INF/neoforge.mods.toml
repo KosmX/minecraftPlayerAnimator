@@ -19,6 +19,6 @@ config = "playerAnimator-common.mixins.json"
 modId = "minecraft"
 type = "required"
 mandatory = true
-versionRange = "[1.21,1.21.2)"
+versionRange = "[1.21.4, 1.22)"
 ordering = "NONE"
 side = "BOTH"

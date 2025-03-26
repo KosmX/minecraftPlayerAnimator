@@ -13,10 +13,6 @@ dependencies {
     implementation project(':coreLib')
 
     //modApi "dev.architectury:architectury:${rootProject.architectury_version}"
-
-    modCompileOnly "io.github.kosmx.bendy-lib:bendy-lib:${project.bendy_lib}"
-    //modCompileOnly "maven.modrinth:3dskinlayers:1.5.2-fabric-1.19"
-
     }
 
 publishing {

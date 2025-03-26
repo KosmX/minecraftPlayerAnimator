@@ -52,10 +52,10 @@ dependencies {
 
     //Testing libraries
     //*
-    modLocalRuntime "io.github.kosmx.bendy-lib:bendy-lib-fabric:${project.bendy_lib}"
+    //modLocalRuntime "io.github.kosmx.bendy-lib:bendy-lib-fabric:${project.bendy_lib}"
     //modLocalRuntime "maven.modrinth:3dskinlayers:1.5.2-fabric-1.19"
     //modLocalRuntime "maven.modrinth:emotecraft:2.2.6-SNAPSHOT-build.44-MC1.19.2-fabric"
-    //modLocalRuntime "maven.modrinth:modmenu:4.0.4"
+    modLocalRuntime "maven.modrinth:modmenu:12.0.0"
     modLocalRuntime "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_api_version}"
     //*/
 
@@ -156,7 +156,7 @@ if(keysExists) {
         versionNumber = "${rootProject.mod_version}-fabric"
         versionName = "${rootProject.mod_version}-fabric"
 
-        gameVersions = ["1.21", "1.21.1"]
+        gameVersions = ["1.21.4"]
         changelog = changes
         loaders = ["fabric"]
         failSilently = false
@@ -175,8 +175,7 @@ if(keysExists) {
             //changelog = '[See on Github](https://github.com/KosmX/emotes/commits/master)'
             changelog = changes
             releaseType = project.cfType
-            addGameVersion "1.21"
-            addGameVersion "1.21.1"
+            addGameVersion "1.21.4"
             addGameVersion "Fabric"
 
             relations {

@@ -1,19 +1,16 @@
 package dev.kosmx.playerAnim.mixin;
 
-import dev.kosmx.playerAnim.core.impl.AnimationProcessor;
-import dev.kosmx.playerAnim.core.util.SetableSupplier;
-import dev.kosmx.playerAnim.impl.IAnimatedPlayer;
+import dev.kosmx.playerAnim.api.PartKey;
+import dev.kosmx.playerAnim.api.firstPerson.FirstPersonMode;
 import dev.kosmx.playerAnim.impl.IMutableModel;
+import dev.kosmx.playerAnim.impl.IPlayerAnimationState;
 import dev.kosmx.playerAnim.impl.IPlayerModel;
-import dev.kosmx.playerAnim.impl.IUpperPartHelper;
 import dev.kosmx.playerAnim.impl.animation.AnimationApplier;
-import dev.kosmx.playerAnim.impl.animation.IBendHelper;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.model.geom.ModelPart;
-import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.core.Direction;
+import net.minecraft.client.renderer.entity.state.PlayerRenderState;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import org.spongepowered.asm.mixin.Final;
@@ -27,7 +24,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.function.Function;
 
 @Mixin(value = PlayerModel.class, priority = 2000)//Apply after NotEnoughAnimation's inject
-public class PlayerModelMixin<T extends LivingEntity> extends HumanoidModel<T> implements IPlayerModel {
+public class PlayerModelMixin<T extends LivingEntity> extends HumanoidModel<PlayerRenderState> implements IPlayerModel {
     @Shadow
     @Final
     public ModelPart jacket;
@@ -39,10 +36,6 @@ public class PlayerModelMixin<T extends LivingEntity> extends HumanoidModel<T> i
     public ModelPart leftSleeve;
     @Shadow @Final public ModelPart rightPants;
     @Shadow @Final public ModelPart leftPants;
-    @Shadow @Final private ModelPart cloak;
-    @Unique
-    private final SetableSupplier<AnimationProcessor> emoteSupplier = new SetableSupplier<>();
-
     @Unique
     private boolean firstPersonNext = false;
 
@@ -50,31 +43,8 @@ public class PlayerModelMixin<T extends LivingEntity> extends HumanoidModel<T> i
         super(modelPart, function);
     }
 
-    @Inject(method = "<init>", at = @At("RETURN"))
-    private void initBendableStuff(ModelPart modelPart, boolean bl, CallbackInfo ci){
-        IMutableModel thisWithMixin = (IMutableModel) this;
-        emoteSupplier.set(null);
-
-        thisWithMixin.setEmoteSupplier(emoteSupplier);
-
-        addBendMutator(this.jacket, Direction.DOWN);
-        addBendMutator(this.rightPants, Direction.UP);
-        addBendMutator(this.rightSleeve, Direction.UP);
-        addBendMutator(this.leftPants, Direction.UP);
-        addBendMutator(this.leftSleeve, Direction.UP);
-        IBendHelper.INSTANCE.initCapeBend(this.cloak);
-
-        ((IUpperPartHelper)rightSleeve).setUpperPart(true);
-        ((IUpperPartHelper)leftSleeve).setUpperPart(true);
-    }
-
     @Unique
-    private void addBendMutator(ModelPart part, Direction d){
-        IBendHelper.INSTANCE.initBend(part, d);
-    }
-
-    @Unique
-    private void setDefaultPivot(){
+    private void playerAnimator$setDefaultPivot(){
         this.leftLeg.setPos(1.9F, 12.0F, 0.0F);
         this.rightLeg.setPos(- 1.9F, 12.0F, 0.0F);
         this.head.setPos(0.0F, 0.0F, 0.0F);
@@ -115,40 +85,62 @@ public class PlayerModelMixin<T extends LivingEntity> extends HumanoidModel<T> i
         this.leftLeg.zScale = ModelPart.DEFAULT_SCALE;
     }
 
-    @Inject(method = "setupAnim(Lnet/minecraft/world/entity/LivingEntity;FFFFF)V", at = @At(value = "HEAD"))
-    private void setDefaultBeforeRender(T livingEntity, float f, float g, float h, float i, float j, CallbackInfo ci){
-        setDefaultPivot(); //to not make everything wrong
+    @Inject(method = "setupAnim(Lnet/minecraft/client/renderer/entity/state/PlayerRenderState;)V", at = @At(value = "HEAD"))
+    private void setDefaultBeforeRender(PlayerRenderState playerRenderState, CallbackInfo ci){
+        playerAnimator$setDefaultPivot(); //to not make everything wrong
     }
 
-    @Inject(method = "setupAnim(Lnet/minecraft/world/entity/LivingEntity;FFFFF)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/model/geom/ModelPart;copyFrom(Lnet/minecraft/client/model/geom/ModelPart;)V", ordinal = 0))
-    private void setEmote(T livingEntity, float f, float g, float h, float i, float j, CallbackInfo ci){
-        if(!firstPersonNext && livingEntity instanceof AbstractClientPlayer && ((IAnimatedPlayer)livingEntity).playerAnimator_getAnimation().isActive()){
-            AnimationApplier emote = ((IAnimatedPlayer) livingEntity).playerAnimator_getAnimation();
-            emoteSupplier.set(emote);
+    @Inject(method = "setupAnim(Lnet/minecraft/client/renderer/entity/state/PlayerRenderState;)V", at = @At(value = "RETURN"))
+    private void setupPlayerAnimation(PlayerRenderState playerRenderState, CallbackInfo ci) {
+        if(!firstPersonNext && playerRenderState instanceof IPlayerAnimationState state && state.playerAnimator$getAnimationApplier().isActive()){
+            AnimationApplier emote = state.playerAnimator$getAnimationApplier();
+            ((IMutableModel)this).playerAnimator$setAnimation(emote);
 
-            emote.updatePart("head", this.head);
+            emote.updatePart(PartKey.HEAD, this.head);
             this.hat.copyFrom(this.head);
 
-            emote.updatePart("leftArm", this.leftArm);
-            emote.updatePart("rightArm", this.rightArm);
-            emote.updatePart("leftLeg", this.leftLeg);
-            emote.updatePart("rightLeg", this.rightLeg);
-            emote.updatePart("torso", this.body);
+            emote.updatePart(PartKey.RIGHT_ARM, this.rightArm);
+            emote.updatePart(PartKey.LEFT_ARM, this.leftArm);
+            emote.updatePart(PartKey.RIGHT_LEG, this.rightLeg);
+            emote.updatePart(PartKey.LEFT_LEG, this.leftLeg);
+            emote.updatePart(PartKey.TORSO, this.body);
         }
         else {
             firstPersonNext = false;
-            emoteSupplier.set(null);
-            resetBend(this.body);
-            resetBend(this.leftArm);
-            resetBend(this.rightArm);
-            resetBend(this.leftLeg);
-            resetBend(this.rightLeg);
+            ((IMutableModel)this).playerAnimator$setAnimation(AnimationApplier.EMPTY);
+        }
+
+        if (FirstPersonMode.isFirstPersonPass() && playerRenderState instanceof IPlayerAnimationState state
+                && state.playerAnimator$isCameraEntity()) {
+            var config = state.playerAnimator$getAnimationApplier().getFirstPersonConfiguration();
+            // Hiding all parts, because they should not be visible in first person
+            playerAnimator$setAllPartsVisible(false);
+            // Showing arms based on configuration
+            var showRightArm = config.isShowRightArm();
+            var showLeftArm = config.isShowLeftArm();
+            this.rightArm.visible = showRightArm;
+            this.rightSleeve.visible = showRightArm;
+            this.leftArm.visible = showLeftArm;
+            this.leftSleeve.visible = showLeftArm;
         }
     }
 
     @Unique
-    private static void resetBend(ModelPart part) {
-        IBendHelper.INSTANCE.bend(part, null);
+    private void playerAnimator$setAllPartsVisible(boolean visible) {
+        this.head.visible = visible;
+        this.body.visible = visible;
+        this.leftLeg.visible = visible;
+        this.rightLeg.visible = visible;
+        this.rightArm.visible = visible;
+        this.leftArm.visible = visible;
+
+        // these are children of those ^^^
+        //this.hat.visible = visible;
+        //this.leftSleeve.visible = visible;
+        //this.rightSleeve.visible = visible;
+        //this.leftPants.visible = visible;
+        //this.rightPants.visible = visible;
+        //this.jacket.visible = visible;
     }
 
     /**

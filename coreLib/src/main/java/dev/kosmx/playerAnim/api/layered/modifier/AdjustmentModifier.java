@@ -1,9 +1,11 @@
 package dev.kosmx.playerAnim.api.layered.modifier;
 
+import dev.kosmx.playerAnim.api.PartKey;
 import dev.kosmx.playerAnim.api.TransformType;
 import dev.kosmx.playerAnim.api.layered.IAnimation;
 import dev.kosmx.playerAnim.api.layered.KeyframeAnimationPlayer;
 import dev.kosmx.playerAnim.core.util.Vec3f;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -111,9 +113,9 @@ public class AdjustmentModifier extends AbstractModifier {
 
     public boolean enabled = true;
 
-    protected Function<String, Optional<PartModifier>> source;
+    protected Function<PartKey, Optional<PartModifier>> source;
 
-    public AdjustmentModifier(Function<String, Optional<PartModifier>> source) {
+    public AdjustmentModifier(Function<PartKey, Optional<PartModifier>> source) {
         this.source = source;
     }
 
@@ -173,20 +175,26 @@ public class AdjustmentModifier extends AbstractModifier {
     }
 
     @Override
-    public Vec3f get3DTransform(String modelName, TransformType type, float tickDelta, Vec3f value0) {
+    @Deprecated(forRemoval = true)
+    public @NotNull Vec3f get3DTransform(@NotNull String modelName, @NotNull TransformType type, float tickDelta, @NotNull Vec3f value0) {
+        return get3DTransform(PartKey.keyForId(modelName), type, tickDelta, value0);
+    }
+
+    @Override
+    public @NotNull Vec3f get3DTransform(@NotNull PartKey partKey, @NotNull TransformType type, float tickDelta, @NotNull Vec3f value0) {
         if (!enabled) {
-            return super.get3DTransform(modelName, type, tickDelta, value0);
+            return super.get3DTransform(partKey, type, tickDelta, value0);
         }
 
-        Optional<PartModifier> partModifier = source.apply(modelName);
+        Optional<PartModifier> partModifier = source.apply(partKey);
 
         Vec3f modifiedVector = value0;
         float fade = getFadeIn(tickDelta) * getFadeOut(tickDelta);
         if (partModifier.isPresent()) {
-            modifiedVector = super.get3DTransform(modelName, type, tickDelta, modifiedVector);
+            modifiedVector = super.get3DTransform(partKey, type, tickDelta, modifiedVector);
             return transformVector(modifiedVector, type, partModifier.get(), fade);
         } else {
-            return super.get3DTransform(modelName, type, tickDelta, value0);
+            return super.get3DTransform(partKey, type, tickDelta, value0);
         }
     }
 

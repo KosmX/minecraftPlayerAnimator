@@ -25,7 +25,7 @@ public final class PlayerAnimationAccess {
      */
     public static AnimationStack getPlayerAnimLayer(AbstractClientPlayer player) throws IllegalArgumentException {
         if (player instanceof IPlayer) {
-            return ((IPlayer) player).getAnimationStack();
+            return ((IPlayer) player).playerAnimator$getAnimationStack();
         } else throw new IllegalArgumentException(player + " is not a player or library mixins failed");
     }
 
@@ -47,7 +47,7 @@ public final class PlayerAnimationAccess {
      * If you don't want to create your own mixin, you can use this event to add animation to players<br>
      * <b>The event will fire for every player</b> and if the player reloads, it will fire again.<br>
      * <hr>
-     * NOTE: When the event fires, {@link IPlayer#getAnimationStack()} will be <code>null</code>, you'll have to use the given stack.
+     * NOTE: When the event fires, {@link IPlayer#playerAnimator$getAnimationStack()} will be <code>null</code>, you'll have to use the given stack.
      */
     public static final Event<AnimationRegister> REGISTER_ANIMATION_EVENT = new Event<>(AnimationRegister.class, listeners -> (player, animationStack) -> {
         for (AnimationRegister listener : listeners) {

@@ -1,0 +1,2 @@
+gradle.bat text eol=crlf
+gradle text eol=lf

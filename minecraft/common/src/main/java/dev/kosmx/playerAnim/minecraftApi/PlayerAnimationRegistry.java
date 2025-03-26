@@ -20,7 +20,7 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * Load resources from <code>assets/{modid}/player_animation</code>
+ * Load resources from <code>assets/{modid}/player_animations</code>
  * <br>
  * The animation identifier:
  * <table border="1">

@@ -2,6 +2,7 @@ package dev.kosmx.playerAnim.mixin.firstPerson;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
+import dev.kosmx.playerAnim.api.PartKey;
 import dev.kosmx.playerAnim.api.TransformType;
 import dev.kosmx.playerAnim.api.firstPerson.FirstPersonMode;
 import dev.kosmx.playerAnim.core.impl.AnimationProcessor;
@@ -71,11 +72,12 @@ public class ItemInHandRendererMixin {
             if (player.playerAnimator_getAnimation().isActive()) {
                 AnimationProcessor anim = player.playerAnimator_getAnimation();
 
-                Vec3f scale = anim.get3DTransform(bl ? "leftItem" : "rightItem", TransformType.SCALE,
+                final var key = bl ? PartKey.LEFT_ITEM : PartKey.RIGHT_ITEM;
+                Vec3f scale = anim.get3DTransform(key, TransformType.SCALE,
                         new Vec3f(ModelPart.DEFAULT_SCALE, ModelPart.DEFAULT_SCALE, ModelPart.DEFAULT_SCALE)
                 );
-                Vec3f rot = anim.get3DTransform(bl ? "leftItem" : "rightItem", TransformType.ROTATION, Vec3f.ZERO);
-                Vec3f pos = anim.get3DTransform(bl ? "leftItem" : "rightItem", TransformType.POSITION, Vec3f.ZERO).scale(1/16f);
+                Vec3f rot = anim.get3DTransform(key, TransformType.ROTATION, Vec3f.ZERO);
+                Vec3f pos = anim.get3DTransform(key, TransformType.POSITION, Vec3f.ZERO).scale(1/16f);
 
                 poseStack.scale(scale.getX(), scale.getY(), scale.getZ());
                 poseStack.translate(pos.getX(), pos.getY(), pos.getZ());
