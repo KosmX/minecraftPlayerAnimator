@@ -300,7 +300,7 @@ public class KeyframeAnimationPlayer implements IActualAnimation<KeyframeAnimati
             }
             KeyframeAnimation.KeyFrame frame = this.keyframes.getKeyFrames().get(pos);
             if (!isInfinite() && currentTick >= getData().endTick && pos == keyframes.length() - 1 && frame.tick < getData().endTick) {
-                return new KeyframeAnimation.KeyFrame(getData().endTick, frame.value, frame.ease);
+                return new KeyframeAnimation.KeyFrame(getData().endTick, frame.value, frame.ease, frame.easingArg);
             }
             return frame;
         }
@@ -325,7 +325,7 @@ public class KeyframeAnimationPlayer implements IActualAnimation<KeyframeAnimati
 
             if (currentTick < getData().endTick && this.keyframes.length() > 0) {
                 KeyframeAnimation.KeyFrame lastFrame = this.keyframes.getKeyFrames().get(this.keyframes.length() - 1);
-                return new KeyframeAnimation.KeyFrame(getData().endTick, lastFrame.value, lastFrame.ease);
+                return new KeyframeAnimation.KeyFrame(getData().endTick, lastFrame.value, lastFrame.ease, lastFrame.easingArg);
             }
 
             return currentTick >= data.endTick ?
@@ -374,7 +374,8 @@ public class KeyframeAnimationPlayer implements IActualAnimation<KeyframeAnimati
             }
             if (tickBefore == tickAfter) return before.value;
             float f = (currentTick + tickDelta - (float) tickBefore) / (tickAfter - tickBefore);
-            return MathHelper.lerp((data.isEasingBefore ? after.ease : before.ease).invoke(f), before.value, after.value);
+            KeyframeAnimation.KeyFrame getEaseFrom = data.isEasingBefore ? after : before;
+            return MathHelper.lerp(getEaseFrom.ease.invoke(f, getEaseFrom.easingArg), before.value, after.value);
         }
 
     }

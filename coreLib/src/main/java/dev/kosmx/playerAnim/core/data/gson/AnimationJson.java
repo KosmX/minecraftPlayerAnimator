@@ -137,17 +137,28 @@ public class AnimationJson implements JsonDeserializer<List<KeyframeAnimation>>,
             JsonObject obj = n.getAsJsonObject();
             int tick = obj.get("tick").getAsInt();
             String easing = obj.has("easing") ? obj.get("easing").getAsString() : "linear";
+            Float easingArg = null;
+            try {
+                if (obj.has("easingArg")) {
+                    easingArg = obj.get("easingArg").getAsFloat();
+                }
+            }
+            catch (NullPointerException ignore) {}
             int turn = obj.has("turn") ? obj.get("turn").getAsInt() : 0;
             for(Map.Entry<String, JsonElement> entry:obj.entrySet()){
                 if(entry.getKey().equals("tick") || entry.getKey().equals("comment") || entry.getKey().equals("easing") || entry.getKey().equals("turn")){
                     continue;
                 }
-                addBodyPartIfExists(emote, entry.getKey(), entry.getValue(), degrees, tick, easing, turn, version);
+                addBodyPartIfExists(emote, entry.getKey(), entry.getValue(), degrees, tick, easing, easingArg, turn, version);
             }
         }
     }
 
     private void addBodyPartIfExists(KeyframeAnimation.AnimationBuilder emote, String name, JsonElement node, boolean degrees, int tick, String easing, int turn, int version){
+        addBodyPartIfExists(emote, name, node, degrees, tick, easing, null, turn, version);
+    }
+
+    private void addBodyPartIfExists(KeyframeAnimation.AnimationBuilder emote, String name, JsonElement node, boolean degrees, int tick, String easing, Float easingArg, int turn, int version) {
         if(version < 3 && name.equals("torso"))name = "body";// rename part
         KeyframeAnimation.StateCollection part = emote.getOrCreatePart(name);
         JsonObject partNode = node.getAsJsonObject();
@@ -166,13 +177,14 @@ public class AnimationJson implements JsonDeserializer<List<KeyframeAnimation>>,
     }
 
     private void addPartIfExists(KeyframeAnimation.StateCollection.State part, String name, JsonObject node, boolean degrees, int tick, String easing, int turn){
-        if(node.has(name)){
-            part.addKeyFrame(tick, node.get(name).getAsFloat(), Easing.easeFromString(easing), turn, degrees);
-        }
+        addPartIfExists(part, name, node, degrees, tick, easing, null, turn);
     }
 
-
-
+    private void addPartIfExists(KeyframeAnimation.StateCollection.State part, String name, JsonObject node, boolean degrees, int tick, String easing, Float easingArg, int turn){
+        if(node.has(name)){
+            part.addKeyFrame(tick, node.get(name).getAsFloat(), Easing.easeFromString(easing), turn, degrees, easingArg);
+        }
+    }
 
     /**
      * Animation to emotecraft format JSON
@@ -274,6 +286,9 @@ public class AnimationJson implements JsonDeserializer<List<KeyframeAnimation>>,
             JsonObject node = new JsonObject();
             node.addProperty("tick", keyFrame.tick);
             node.addProperty("easing", keyFrame.ease.toString());
+            if (keyFrame.easingArg != null) {
+                node.addProperty("easingArg", keyFrame.easingArg);
+            }
             JsonObject jsonMove = new JsonObject();
             jsonMove.addProperty(part.name, keyFrame.value);
             node.add(partName, jsonMove);

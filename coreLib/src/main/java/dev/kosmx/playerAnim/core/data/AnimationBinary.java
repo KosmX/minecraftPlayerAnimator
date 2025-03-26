@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.nio.BufferOverflowException;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -18,12 +19,6 @@ import java.util.UUID;
  */
 @SuppressWarnings("unused")
 public final class AnimationBinary {
-
-    /**
-     * Size needed for one keyframe
-     */
-    private static final byte keyframeSize = 9;
-
     /**
      * Write the animation into the ByteBuffer.
      * Versioning:
@@ -46,7 +41,7 @@ public final class AnimationBinary {
         buf.putInt(animation.returnToTick);
         putBoolean(buf, animation.isEasingBefore);
         putBoolean(buf, animation.nsfw);
-        buf.put(keyframeSize);
+        buf.put(keyframeSize(version));
         if (version >= 2) {
             buf.putInt(animation.getBodyParts().size());
             for (Map.Entry<String, KeyframeAnimation.StateCollection> part : animation.getBodyParts().entrySet()) {
@@ -98,7 +93,7 @@ public final class AnimationBinary {
         }
     }
 
-    private static void writeKeyframes(ByteBuffer buf, KeyframeAnimation.StateCollection.State part, int version){
+    private static void writeKeyframes(ByteBuffer buf, KeyframeAnimation.StateCollection.State part, int version) {
         List<KeyframeAnimation.KeyFrame> list = part.getKeyFrames();
         if (version >= 2) {
             putBoolean(buf, part.isEnabled());
@@ -111,6 +106,9 @@ public final class AnimationBinary {
                 buf.putInt(move.tick);
                 buf.putFloat(move.value);
                 buf.put(move.ease.getId());
+                if (version >= 4) {
+                    buf.putFloat(move.easingArg != null ? move.easingArg : Float.NaN);
+                }
             }
         }
     }
@@ -194,9 +192,22 @@ public final class AnimationBinary {
             enabled = length >= 0;
         }
         for (int i = 0; i < length; i++) {
-
             int currentPos = buf.position();
-            if(! part.addKeyFrame(buf.getInt(), buf.getFloat(), Ease.getEase(buf.get()))){
+
+            int tick = buf.getInt();
+            float value = buf.getFloat();
+            Ease ease = Ease.getEase(buf.get());
+            Float easingArg = null;
+
+            if (version >= 4) {
+                easingArg = buf.getFloat();
+
+                if (Float.isNaN(easingArg)) {
+                    easingArg = null;
+                }
+            }
+
+            if (!part.addKeyFrame(tick, value, ease, easingArg)) {
                 valid = false;
             }
             buf.position(currentPos + keyframeSize);
@@ -210,7 +221,7 @@ public final class AnimationBinary {
      * @return version
      */
     public static int getCurrentVersion() {
-        return 3;
+        return 4;
     }
 
 
@@ -263,9 +274,15 @@ public final class AnimationBinary {
     }
 
     private static int axisSize(KeyframeAnimation.StateCollection.State axis, int version){
-        return axis.getKeyFrames().size()*keyframeSize + (version >= 2 ? 5 : 4);// count*IFB + I (for count)
+        return axis.getKeyFrames().size()*keyframeSize(version) + (version >= 2 ? 5 : 4);// count*IFB + I (for count)
     }
 
+    /**
+     * Size needed for one keyframe
+     */
+    private static byte keyframeSize(int version) {
+        return version < 4 ? (byte) 9 /* 4 (int) + 4 (float) + 1 (byte) */ : (byte) 13; /* + 4 (float) */
+    }
 
     /**
      * Writes a bool value into byteBuffer, using 1 byte per bool

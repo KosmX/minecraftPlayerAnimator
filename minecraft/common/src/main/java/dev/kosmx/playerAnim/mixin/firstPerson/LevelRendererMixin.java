@@ -34,7 +34,6 @@ public class LevelRendererMixin {
         return original;
     }
 
-
     @Inject(method = "renderEntity", at = @At("TAIL"))
     private void dontRenderEntity_End(Entity entity, double cameraX, double cameraY, double cameraZ,
                                       float tickDelta, PoseStack matrices, MultiBufferSource vertexConsumers, CallbackInfo ci) {

@@ -3,6 +3,8 @@ package dev.kosmx.playerAnim.core.util;
 
 import org.jetbrains.annotations.Nullable;
 
+import java.util.function.Function;
+
 public class Easing {
 
     /**
@@ -25,7 +27,6 @@ public class Easing {
      */
     public static Ease easeFromString(String string){
         try{
-            if(string.equals("step"))return Ease.CONSTANT;
             if(string.substring(0, 4).equalsIgnoreCase("EASE")){
                 string = string.substring(4);
             }
@@ -37,140 +38,94 @@ public class Easing {
         }
     }
 
-    private static final float c1 = 1.70158f;
-    private static final float c2 = c1 * 1.525f;
-    private static final float c3 = c1 + 1;
-    private static final float c4 = (float) ((2 * Math.PI) / 3);
-    private static final float c5 = (float) ((2 * Math.PI) / 4.5);
-    private static final float n1 = 7.5625f;
-    private static final float d1 = 2.75f;
-
-
-    public static float inSine(float f){
-        return (float) (1 - Math.cos((f * Math.PI) / 2));
+    public static float sine(float n) {
+        return 1 - (float) Math.cos(n * Math.PI / 2F);
     }
 
-    public static float outSine(float f){
-        return (float) (Math.sin((f * Math.PI) / 2));
+    public static float cubic(float n) {
+        return n * n * n;
     }
 
-    public static float inOutSine(float f){
-        return (float) (- (Math.cos(Math.PI * f) - 1) / 2);
+    public static float quadratic(float n) {
+        return n * n;
     }
 
-    public static float inCubic(float f){
-        return f * f * f;
+    public static Function<Float, Float> pow(float n) {
+        return t -> (float) Math.pow(t, n);
     }
 
-    public static float outCubic(float f){
-        return (float) (1 - Math.pow(1 - f, 3));
+    public static float exp(float n) {
+        return (float) Math.pow(2, 10 * (n - 1));
     }
 
-    public static float inOutCubic(float x){
-        return (float) ((x < 0.5) ? 4 * x * x * x : 1 - Math.pow(- 2 * x + 2, 3) / 2);
+    public static float circle(float n) {
+        return 1 - (float) Math.sqrt(1 - n * n);
     }
 
-    public static float inQuad(float x){
-        return (x * x);
+    public static Function<Float, Float> back(Float n) {
+        final float n2 = n == null ? 1.70158F : n * 1.70158F;
+
+        return t -> t * t * ((n2 + 1) * t - n2);
     }
 
-    public static float outQuad(float x){
-        return (1 - (1 - x) * (1 - x));
+    public static Function<Float, Float> elastic(Float n) {
+        float n2 = n == null ? 1 : n;
+
+        return t -> (float) (1 - Math.pow(Math.cos(t * Math.PI / 2f), 3) * Math.cos(t * n2 * Math.PI));
     }
 
-    public static float inOutQuad(float x){
-        return (float) ((x < 0.5) ? 2 * x * x : 1 - Math.pow(- 2 * x + 2, 2) / 2);
+    public static Function<Float, Float> bounce(Float n) {
+        final float n2 = n == null ? 0.5F : n;
+
+        Function<Float, Float> one = x -> 121f / 16f * x * x;
+        Function<Float, Float> two = x -> (float) (121f / 4f * n2 * Math.pow(x - 6f / 11f, 2) + 1 - n2);
+        Function<Float, Float> three = x -> (float) (121 * n2 * n2 * Math.pow(x - 9f / 11f, 2) + 1 - n2 * n2);
+        Function<Float, Float> four = x -> (float) (484 * n2 * n2 * n2 * Math.pow(x - 10.5f / 11f, 2) + 1 - n2 * n2 * n2);
+
+        return t -> Math.min(Math.min(one.apply(t), two.apply(t)), Math.min(three.apply(t), four.apply(t)));
     }
 
-    public static float inQuart(float x){
-        return (x * x * x * x);
+    public static Function<Float, Float> step(Float n) {
+        float n2 = n == null ? 2 : n;
+
+        if (n2 < 2)
+            throw new IllegalArgumentException("Steps must be >= 2, got: " + n2);
+
+        final int steps = (int)n2;
+
+        return t -> {
+            float result = 0;
+
+            if (t < 0)
+                return result;
+
+            float stepLength = (1 / (float)steps);
+
+            if (t > (result = (steps - 1) * stepLength))
+                return result;
+
+            int testIndex;
+            int leftBorderIndex = 0;
+            int rightBorderIndex = steps - 1;
+
+            while (rightBorderIndex - leftBorderIndex != 1) {
+                testIndex = leftBorderIndex + (rightBorderIndex - leftBorderIndex) / 2;
+
+                if (t >= testIndex * stepLength) {
+                    leftBorderIndex = testIndex;
+                }
+                else {
+                    rightBorderIndex = testIndex;
+                }
+            }
+
+            return leftBorderIndex * stepLength;
+        };
     }
 
-    public static float outQuart(float x){
-        return (float) (1 - Math.pow(1 - x, 4));
-    }
-
-    public static float inOutQuart(float x){
-        return (float) (x < 0.5 ? 8 * x * x * x * x : 1 - Math.pow(- 2 * x + 2, 4) / 2);
-    }
-
-    public static float inQuint(float x){
-        return (x * x * x * x * x);
-    }
-
-    public static float outQuint(float x){
-        return (float) (1 - Math.pow(1 - x, 5));
-    }
-
-    public static float inOutQuint(float x){
-        return (float) (x < 0.5 ? 16 * x * x * x * x * x : 1 - Math.pow(- 2 * x + 2, 5) / 2);
-    }
-
-    public static float inExpo(float x){
-        return (float) (x == 0 ? 0 : Math.pow(2, 10 * x - 10));
-    }
-
-    public static float outExpo(float x){
-        return (float) (x == 1 ? 1 : 1 - Math.pow(2, - 10 * x));
-    }
-
-    public static float inOutExpo(float x){
-        return (float) (x == 0 ? 0 : x == 1 ? 1 : x < 0.5 ? Math.pow(2, 20 * x - 10) / 2 : (2 - Math.pow(2, - 20 * x + 10)) / 2);
-    }
-
-    public static float inCirc(float x){
-        return (float) (1 - Math.sqrt(1 - Math.pow(x, 2)));
-    }
-
-    public static float outCirc(float x){
-        return (float) (Math.sqrt(1 - Math.pow(x - 1, 2)));
-    }
-
-    public static float inOutCirc(float x){
-        return (float) (x < 0.5 ? (1 - Math.sqrt(1 - Math.pow(2 * x, 2))) / 2 : (Math.sqrt(1 - Math.pow(- 2 * x + 2, 2)) + 1) / 2);
-    }
-
-    public static float inBack(float x){
-        return c3 * x * x * x - c1 * x * x;
-    }
-
-    public static float outBack(float x){
-        return (float) (1 + c3 * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2));
-    }
-
-    public static float inOutBack(float x){
-        return (float) (x < 0.5 ? (Math.pow(2 * x, 2) * ((c2 + 1) * 2 * x - c2)) / 2 : (Math.pow(2 * x - 2, 2) * ((c2 + 1) * (x * 2 - 2) + c2) + 2) / 2);
-    }
-
-    public static float inElastic(float x){
-        return (float) (x == 0 ? 0 : x == 1 ? 1 : - Math.pow(2, 10 * x - 10) * Math.sin((x * 10 - 10.75) * c4));
-    }
-
-    public static float outElastic(float x){
-        return (float) (x == 0 ? 0 : x == 1 ? 1 : Math.pow(2, - 10 * x) * Math.sin((x * 10 - 0.75) * c4) + 1);
-    }
-
-    public static float inOutElastic(float x){
-        return (float) (x == 0 ? 0 : x == 1 ? 1 : x < 0.5 ? - (Math.pow(2, 20 * x - 10) * Math.sin((20 * x - 11.125) * c5)) / 2 : (Math.pow(2, - 20 * x + 10) * Math.sin((20 * x - 11.125) * c5)) / 2 + 1);
-    }
-
-    public static float inBounce(float x){
-        return 1 - outBounce(1 - x);
-    }
-
-    public static float outBounce(float x){
-        if(x < 1 / d1){
-            return n1 * x * x;
-        }else if(x < 2 / d1){
-            return (float) (n1 * (x -= 1.5 / d1) * x + 0.75);
-        }else if(x < 2.5 / d1){
-            return (float) (n1 * (x -= 2.25 / d1) * x + 0.9375);
-        }else{
-            return (float) (n1 * (x -= 2.625 / d1) * x + 0.984375);
-        }
-    }
-
-    public static float inOutBounce(float x){
-        return x < 0.5 ? (1 - outBounce(1 - 2 * x)) / 2 : (1 + outBounce(2 * x - 1)) / 2;
+    public static float catmullRom(float n) {
+        return (0.5f * (2.0f * (n + 1) + ((n + 2) - n) * 1
+                + (2.0f * n - 5.0f * (n + 1) + 4.0f * (n + 2) - (n + 3)) * 1
+                + (3.0f * (n + 1) - n - 3.0f * (n + 2) + (n + 3)) * 1));
     }
 }
