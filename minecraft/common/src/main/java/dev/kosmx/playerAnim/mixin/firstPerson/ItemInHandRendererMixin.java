@@ -38,8 +38,8 @@ public class ItemInHandRendererMixin {
         return null;
     }*/
 
-    @Inject(method = "renderItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/entity/ItemRenderer;renderStatic(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemDisplayContext;ZLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;Lnet/minecraft/world/level/Level;III)V"), cancellable = true)
-    private void cancelItemRender(LivingEntity entity, ItemStack itemStack, ItemDisplayContext transformType, boolean bl, PoseStack poseStack, MultiBufferSource multiBufferSource, int i, CallbackInfo ci) {
+    @Inject(method = "renderItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/entity/ItemRenderer;renderStatic(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemDisplayContext;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;Lnet/minecraft/world/level/Level;III)V"), cancellable = true)
+    private void cancelItemRender(LivingEntity entity, ItemStack itemStack, ItemDisplayContext transformType, PoseStack poseStack, MultiBufferSource multiBufferSource, int i, CallbackInfo ci) {
         if (entity != Minecraft.getInstance().getCameraEntity()) {
             return;
         }
@@ -62,7 +62,6 @@ public class ItemInHandRendererMixin {
             LivingEntity livingEntity,
             ItemStack itemStack,
             ItemDisplayContext itemDisplayContext,
-            boolean bl,
             PoseStack poseStack,
             MultiBufferSource multiBufferSource,
             int i,
@@ -72,7 +71,7 @@ public class ItemInHandRendererMixin {
             if (player.playerAnimator_getAnimation().isActive()) {
                 AnimationProcessor anim = player.playerAnimator_getAnimation();
 
-                final var key = bl ? PartKey.LEFT_ITEM : PartKey.RIGHT_ITEM;
+                final var key = itemDisplayContext.leftHand() ? PartKey.LEFT_ITEM : PartKey.RIGHT_ITEM;
                 Vec3f scale = anim.get3DTransform(key, TransformType.SCALE,
                         new Vec3f(ModelPart.DEFAULT_SCALE, ModelPart.DEFAULT_SCALE, ModelPart.DEFAULT_SCALE)
                 );
