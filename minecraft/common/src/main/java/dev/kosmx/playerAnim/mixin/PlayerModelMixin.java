@@ -1,5 +1,7 @@
 package dev.kosmx.playerAnim.mixin;
 
+import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
+import com.mojang.blaze3d.vertex.PoseStack;
 import dev.kosmx.playerAnim.api.PartKey;
 import dev.kosmx.playerAnim.api.firstPerson.FirstPersonMode;
 import dev.kosmx.playerAnim.impl.IMutableModel;
@@ -13,6 +15,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.state.PlayerRenderState;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
+import org.joml.Quaternionf;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -97,8 +100,6 @@ public class PlayerModelMixin<T extends LivingEntity> extends HumanoidModel<Play
             ((IMutableModel)this).playerAnimator$setAnimation(emote);
 
             emote.updatePart(PartKey.HEAD, this.head);
-            this.hat.copyFrom(this.head);
-
             emote.updatePart(PartKey.RIGHT_ARM, this.rightArm);
             emote.updatePart(PartKey.LEFT_ARM, this.leftArm);
             emote.updatePart(PartKey.RIGHT_LEG, this.rightLeg);
@@ -123,6 +124,20 @@ public class PlayerModelMixin<T extends LivingEntity> extends HumanoidModel<Play
             this.leftArm.visible = showLeftArm;
             this.leftSleeve.visible = showLeftArm;
         }
+    }
+
+    @WrapWithCondition(method = "translateToHand", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/model/geom/ModelPart;translateAndRotate(Lcom/mojang/blaze3d/vertex/PoseStack;)V"))
+    private boolean translateToHand(ModelPart modelPart, PoseStack poseStack) {
+        if (((IMutableModel)this).playerAnimator$getAnimation().isActive()) {
+            poseStack.translate(modelPart.x / 16.0F, modelPart.y / 16.0F, modelPart.z / 16.0F);
+            if (modelPart.xRot != 0.0F || modelPart.yRot != 0.0F || modelPart.zRot != 0.0F) {
+                poseStack.mulPose(new Quaternionf().rotationZYX(modelPart.zRot, modelPart.yRot, modelPart.xRot));
+            }
+            poseStack.translate(0, (modelPart.yScale - 1) * 0.609375, (modelPart.zScale - 1) * 0.0625);
+
+            return false;
+        }
+        return true;
     }
 
     @Unique

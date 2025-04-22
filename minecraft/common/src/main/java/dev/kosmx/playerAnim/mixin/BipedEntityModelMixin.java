@@ -51,6 +51,11 @@ public abstract class BipedEntityModelMixin<T extends HumanoidRenderState> exten
         this.playerAnimator$animation = emoteSupplier;
     }
 
+    @Override
+    public @NotNull AnimationProcessor playerAnimator$getAnimation() {
+        return this.playerAnimator$animation;
+    }
+
     @Inject(method = "copyPropertiesTo", at = @At("RETURN"))
     private void copyMutatedAttributes(HumanoidModel<T> bipedEntityModel, CallbackInfo ci){
         ((IMutableModel) bipedEntityModel).playerAnimator$setAnimation(playerAnimator$animation);

@@ -36,6 +36,11 @@ public class AnimationProcessor {
         return animation != null && animation.isActive();
     }
 
+    @Deprecated(forRemoval = true)
+    public Vec3f get3DTransform(String modelKey, TransformType type, Vec3f value0) {
+        return get3DTransform(PartKey.keyForId(modelKey), type, value0);
+    }
+
     public Vec3f get3DTransform(PartKey partKey, TransformType type, Vec3f value0) {
         if (animation == null) return value0;
         return animation.get3DTransform(partKey, type, this.tickDelta, value0);

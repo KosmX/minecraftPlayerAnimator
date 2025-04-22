@@ -50,6 +50,7 @@ public final class PlayerAnimationRegistry {
 
     private static final HashMap<ResourceLocation, IPlayable> animations = new HashMap<>();
     private static final Logger logger = LoggerFactory.getLogger(PlayerAnimationRegistry.class);
+    public static final ResourceLocation KEY = ResourceLocation.fromNamespaceAndPath("playeranimator", "animation");
 
     /**
      * Get an animation from the registry, using Identifier(MODID, animation_name) as key
