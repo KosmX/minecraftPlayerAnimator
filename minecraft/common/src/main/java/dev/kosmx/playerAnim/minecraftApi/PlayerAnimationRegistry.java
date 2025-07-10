@@ -1,13 +1,17 @@
 package dev.kosmx.playerAnim.minecraftApi;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
+import com.mojang.serialization.JsonOps;
 import dev.kosmx.playerAnim.api.IPlayable;
 import dev.kosmx.playerAnim.minecraftApi.codec.AnimationCodecs;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.core.RegistryAccess;
-import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.util.StrictJsonParser;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -139,7 +143,8 @@ public final class PlayerAnimationRegistry {
      */
     public static String serializeTextToString(String arg) {
         try {
-            var component = Component.Serializer.fromJson(arg, RegistryAccess.EMPTY);
+            JsonElement jsonElement = StrictJsonParser.parse(arg);
+            var component = ComponentSerialization.CODEC.parse(RegistryAccess.EMPTY.createSerializationContext(JsonOps.INSTANCE), jsonElement).getOrThrow(JsonParseException::new);
             if (component != null) {
                 return component.getString();
             }
