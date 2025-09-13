@@ -48,6 +48,9 @@ public class KeyframeAnimationPlayer implements IActualAnimation<KeyframeAnimati
     public final HashMap<PartKey, BodyPart> bodyParts;
     public int perspective = 0;
 
+    public float getTickDelta() {
+        return tickDelta;
+    }
 
     @Setter
     @Accessors(chain = true)

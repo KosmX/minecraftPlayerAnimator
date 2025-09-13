@@ -111,6 +111,13 @@ public class AdjustmentModifier extends AbstractModifier {
         }
     }
 
+    /// Whether the adjustment should be increasingly applied
+    /// between animation.start and animation.begin
+    public boolean fadeIn = true;
+    /// Whether the adjustment should be decreasingly applied
+    /// between animation.end and animation.stop
+    public boolean fadeOut = true;
+    /// Whether the adjustment should be applied at all
     public boolean enabled = true;
 
     protected Function<PartKey, Optional<PartModifier>> source;
@@ -119,12 +126,11 @@ public class AdjustmentModifier extends AbstractModifier {
         this.source = source;
     }
 
-    protected float getFadeIn(float delta) {
+    protected float getFadeIn() {
         float fadeIn = 1;
         IAnimation animation = this.getAnim();
-        if(animation instanceof KeyframeAnimationPlayer) {
-            KeyframeAnimationPlayer player = (KeyframeAnimationPlayer)anim;
-            float currentTick = player.getTick() + delta;
+        if(this.fadeIn && animation instanceof KeyframeAnimationPlayer player) {
+            float currentTick = player.getTick() + player.getTickDelta();
             fadeIn = currentTick / (float) player.getData().beginTick;
             fadeIn = Math.min(fadeIn, 1F);
         }
@@ -160,10 +166,8 @@ public class AdjustmentModifier extends AbstractModifier {
             return fadeOut;
         }
         IAnimation animation = this.getAnim();
-        if(animation instanceof KeyframeAnimationPlayer) {
-            KeyframeAnimationPlayer player = (KeyframeAnimationPlayer)anim;
-
-            float currentTick = player.getTick() + delta;
+        if(this.fadeOut && animation instanceof KeyframeAnimationPlayer player) {
+            float currentTick = player.getTick() + player.getTickDelta();
             float position = (-1F) * (currentTick - player.getData().stopTick);
             float length = player.getData().stopTick - player.getData().endTick;
             if (length > 0) {
@@ -189,7 +193,7 @@ public class AdjustmentModifier extends AbstractModifier {
         Optional<PartModifier> partModifier = source.apply(partKey);
 
         Vec3f modifiedVector = value0;
-        float fade = getFadeIn(tickDelta) * getFadeOut(tickDelta);
+        float fade = getFadeIn() * getFadeOut(tickDelta);
         if (partModifier.isPresent()) {
             modifiedVector = super.get3DTransform(partKey, type, tickDelta, modifiedVector);
             return transformVector(modifiedVector, type, partModifier.get(), fade);
