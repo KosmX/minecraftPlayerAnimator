@@ -69,7 +69,8 @@ public class ItemInHandRendererMixin {
             CallbackInfo ci
     ) {
         if(livingEntity instanceof IAnimatedPlayer player) {
-            if (player.playerAnimator_getAnimation().isActive()) {
+            var animation = player.playerAnimator_getAnimation();
+            if (animation.isActive() && !animation.isFirstPersonAnimationDisabled()) {
                 AnimationProcessor anim = player.playerAnimator_getAnimation();
 
                 final var key = bl ? PartKey.LEFT_ITEM : PartKey.RIGHT_ITEM;
