@@ -117,12 +117,14 @@ public class PlayerModelMixin<T extends LivingEntity> extends HumanoidModel<Play
             // Hiding all parts, because they should not be visible in first person
             playerAnimator$setAllPartsVisible(false);
             // Showing arms based on configuration
-            var showRightArm = config.isShowRightArm();
-            var showLeftArm = config.isShowLeftArm();
-            this.rightArm.visible = showRightArm;
-            this.rightSleeve.visible = showRightArm;
-            this.leftArm.visible = showLeftArm;
-            this.leftSleeve.visible = showLeftArm;
+            var skipRightArm = !config.isShowRightArm();
+            var skipLeftArm = !config.isShowLeftArm();
+            this.rightArm.skipDraw = skipRightArm;
+            this.rightSleeve.skipDraw = skipRightArm;
+            this.leftArm.skipDraw = skipLeftArm;
+            this.leftSleeve.skipDraw = skipLeftArm;
+        } else {
+            playerAnimator$setAllPartsVisible(true);
         }
     }
 
@@ -142,12 +144,19 @@ public class PlayerModelMixin<T extends LivingEntity> extends HumanoidModel<Play
 
     @Unique
     private void playerAnimator$setAllPartsVisible(boolean visible) {
-        this.head.visible = visible;
-        this.body.visible = visible;
-        this.leftLeg.visible = visible;
-        this.rightLeg.visible = visible;
-        this.rightArm.visible = visible;
-        this.leftArm.visible = visible;
+        var skip = !visible;
+        this.head.skipDraw = skip;
+        this.head.getAllParts().forEach(p -> p.skipDraw = skip);
+        this.body.skipDraw = skip;
+        this.body.getAllParts().forEach(p -> p.skipDraw = skip);
+        this.leftLeg.skipDraw = skip;
+        this.leftLeg.getAllParts().forEach(p -> p.skipDraw = skip);
+        this.rightLeg.skipDraw = skip;
+        this.rightLeg.getAllParts().forEach(p -> p.skipDraw = skip);
+        this.rightArm.skipDraw = skip;
+        this.rightArm.getAllParts().forEach(p -> p.skipDraw = skip);
+        this.leftArm.skipDraw = skip;
+        this.leftArm.getAllParts().forEach(p -> p.skipDraw = skip);
 
         // these are children of those ^^^
         //this.hat.visible = visible;
