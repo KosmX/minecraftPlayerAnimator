@@ -1,3 +1,10 @@
+# NO-LONGER-UPDATED
+I no longer wish to maintain this project.  
+
+Please use PAL instead: https://docs.zigythebird.com/pal/how_to_port_from_player_animator/
+
+Major bugfixes on existing releases will be done if needed, nothing else.
+
 # PlayerAnimator
 
 PlayerAnimator is a minecraft library to animate the **player** while trying to break as few mods as possible.    
