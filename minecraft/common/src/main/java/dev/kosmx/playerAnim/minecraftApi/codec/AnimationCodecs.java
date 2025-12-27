@@ -73,8 +73,8 @@ public class AnimationCodecs {
 
         for (AnimationCodec<?> deserializer: extension == null ? AnimationCodecs.INSTANCE.getAllCodecs() : AnimationCodecs.INSTANCE.getCodec(extension)) {
             try (var reader = inputStreamSupplier.get()) {
+                if (reader == null) break;
                 final var result = deserializer.decode(new BufferedInputStream(reader));
-                if (result.isEmpty()) throw new RuntimeException("Decoder is not obeying API");
 
                 animations.addAll(result);
                 break;

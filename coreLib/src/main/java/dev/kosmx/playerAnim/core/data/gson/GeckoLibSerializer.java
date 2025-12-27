@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -55,9 +56,8 @@ public class GeckoLibSerializer implements JsonDeserializer<List<KeyframeAnimati
     public static List<KeyframeAnimation> deserialize(JsonObject node){
         try {
             return readAnimations(node.get("animations").getAsJsonObject());
-        } catch(NumberFormatException e) {
-            throw new JsonParseException(e);
-        }
+        } catch(NumberFormatException ignore ) {} //Probably due to encountering PAL MoLang
+        return Collections.emptyList();
     }
 
     private static List<KeyframeAnimation> readAnimations(JsonObject jsonEmotes){
@@ -89,8 +89,6 @@ public class GeckoLibSerializer implements JsonDeserializer<List<KeyframeAnimati
                 builder.returnTick = 0;
 
                 keyframeSerializer(builder, node.get("bones").getAsJsonObject());
-            } else {
-                throw new JsonParseException("Could not recognise GeckoLib animation: " + name);
             }
 
             emotes.add(builder.build());

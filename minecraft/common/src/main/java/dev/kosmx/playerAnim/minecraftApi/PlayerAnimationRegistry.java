@@ -113,7 +113,11 @@ public final class PlayerAnimationRegistry {
                 }
             });
             for(var animation: a) {
-                animations.put(ResourceLocation.fromNamespaceAndPath(resource.getKey().getNamespace(), serializeTextToString(animation.getName())), animation);
+                try {
+                    animations.put(ResourceLocation.fromNamespaceAndPath(resource.getKey().getNamespace(), serializeTextToString(animation.getName())), animation);
+                } catch (Throwable e) {
+                    logger.debug("Failed to load animation with name space {} and name {}. Either a PAL animation or has an invalid name.", resource.getKey().getNamespace(), animation.getName());
+                }
             }
         }
         for (var resource: manager.listResources("player_animation", ignore -> true).entrySet()) {
