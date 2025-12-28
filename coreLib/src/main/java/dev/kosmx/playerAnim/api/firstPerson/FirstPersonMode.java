@@ -15,7 +15,7 @@ public enum FirstPersonMode {
     VANILLA(true),
 
     /**
-     * Use the 3rd person player model (only arms/items/shoulder armor) to render accurate first-person perspective.
+     * Use the 3rd person player model (only arms/items) to render accurate first-person perspective
      */
     THIRD_PERSON_MODEL(true),
 
