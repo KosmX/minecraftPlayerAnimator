@@ -1,14 +1,9 @@
 package dev.kosmx.playerAnim.mixin.firstPerson;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Axis;
-import dev.kosmx.playerAnim.api.TransformType;
 import dev.kosmx.playerAnim.api.firstPerson.FirstPersonMode;
-import dev.kosmx.playerAnim.core.impl.AnimationProcessor;
-import dev.kosmx.playerAnim.core.util.Vec3f;
 import dev.kosmx.playerAnim.impl.IAnimatedPlayer;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.ItemInHandRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -24,10 +19,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class ItemInHandRendererMixin {
     @Inject(method = "renderHandsWithItems", at = @At("HEAD"), cancellable = true)
     private void disableDefaultItemIfNeeded(float f, PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, LocalPlayer localPlayer, int i, CallbackInfo ci) {
-        if (localPlayer instanceof IAnimatedPlayer player && (player.playerAnimator_getAnimation().getFirstPersonMode() == FirstPersonMode.THIRD_PERSON_MODEL)) {
-                ci.cancel();
-            }
-
+        if (localPlayer instanceof IAnimatedPlayer player && player.playerAnimator_getAnimation().getFirstPersonMode() == FirstPersonMode.THIRD_PERSON_MODEL) {
+            ci.cancel();
+        }
     }
 
     /* AW needed, I may do it later
@@ -52,37 +46,6 @@ public class ItemInHandRendererMixin {
                 if (!config.isShowLeftItem()) {
                     ci.cancel();
                 }
-            }
-        }
-    }
-
-    @Inject(method = "renderItem", at = @At("HEAD"))
-    void changeItemLocation(
-            LivingEntity livingEntity,
-            ItemStack itemStack,
-            ItemDisplayContext itemDisplayContext,
-            boolean bl,
-            PoseStack poseStack,
-            MultiBufferSource multiBufferSource,
-            int i,
-            CallbackInfo ci
-    ) {
-        if(livingEntity instanceof IAnimatedPlayer player) {
-            if (player.playerAnimator_getAnimation().isActive()) {
-                AnimationProcessor anim = player.playerAnimator_getAnimation();
-
-                Vec3f scale = anim.get3DTransform(bl ? "leftItem" : "rightItem", TransformType.SCALE,
-                        new Vec3f(ModelPart.DEFAULT_SCALE, ModelPart.DEFAULT_SCALE, ModelPart.DEFAULT_SCALE)
-                );
-                Vec3f rot = anim.get3DTransform(bl ? "leftItem" : "rightItem", TransformType.ROTATION, Vec3f.ZERO);
-                Vec3f pos = anim.get3DTransform(bl ? "leftItem" : "rightItem", TransformType.POSITION, Vec3f.ZERO).scale(1/16f);
-
-                poseStack.scale(scale.getX(), scale.getY(), scale.getZ());
-                poseStack.translate(pos.getX(), pos.getY(), pos.getZ());
-
-                poseStack.mulPose(Axis.ZP.rotation(rot.getZ()));    //roll
-                poseStack.mulPose(Axis.YP.rotation(rot.getY()));    //pitch
-                poseStack.mulPose(Axis.XP.rotation(rot.getX()));    //yaw
             }
         }
     }
